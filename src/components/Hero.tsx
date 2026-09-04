@@ -1,4 +1,5 @@
-import { hero, site } from "@/lib/site";
+import { links, mailto } from "@/content/links";
+import { hero } from "@/lib/site";
 
 /** Display headline, one small context line, mono tools, mono links. No image. */
 export function Hero() {
@@ -12,7 +13,7 @@ export function Hero() {
 
       <ul className="mt-4 flex flex-wrap items-center gap-x-2 text-meta-mono text-fg-muted">
         <li>
-          <a href={site.github} className="link-quiet" rel="me noopener">
+          <a href={links.github} className="link-quiet" rel="me noopener">
             github
           </a>
         </li>
@@ -20,7 +21,7 @@ export function Hero() {
           ·
         </li>
         <li>
-          <a href={site.linkedin} className="link-quiet" rel="me noopener">
+          <a href={links.linkedin} className="link-quiet" rel="me noopener">
             linkedin
           </a>
         </li>
@@ -28,7 +29,7 @@ export function Hero() {
           ·
         </li>
         <li>
-          <a href={`mailto:${site.email}`} className="link-quiet">
+          <a href={mailto} className="link-quiet">
             email
           </a>
         </li>
