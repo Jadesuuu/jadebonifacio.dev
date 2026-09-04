@@ -4,7 +4,7 @@ export const site = {
   title: "Jade Bonifacio",
   description:
     "Full-stack developer. I ship production apps from zero, and fix the ones other people wrote.",
-  email: "jade@jadebonifacio.dev",
+  email: "jmabonifacio24@gmail.com",
   github: "https://github.com/Jadesuuu",
   linkedin: "https://www.linkedin.com/in/jade-mark-angelo-bonifacio-169b95288/",
   resume: "/resume.pdf",
