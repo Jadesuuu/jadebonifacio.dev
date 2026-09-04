@@ -1,43 +1,25 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { THEME_COOKIE, type Theme } from "@/lib/theme";
-
-const TRANSITION_MS = 300;
-
-function applyTheme(next: Theme) {
-  const root = document.documentElement;
-  root.classList.add("theme-transition");
-  root.dataset.theme = next;
-  document.cookie = `${THEME_COOKIE}=${next}; Path=/; Max-Age=31536000; SameSite=Lax`;
-  return window.setTimeout(() => {
-    root.classList.remove("theme-transition");
-  }, TRANSITION_MS);
-}
+import { useEffect, useState } from "react";
+import { applyTheme, THEME_EVENT } from "@/lib/apply-theme";
+import type { Theme } from "@/lib/theme";
 
 /**
  * 40x22 pill. Track is --border, thumb is --accent (one of the few sanctioned
  * accent-at-rest uses). Thumb right = dark, left = light (per the design).
- * Receives the server-resolved theme so the first render matches the cookie.
+ * Receives the server-resolved theme so the first render matches the cookie,
+ * and follows changes made elsewhere (the command palette) via THEME_EVENT.
  */
 export function ThemeToggle({ initialTheme }: { initialTheme: Theme }) {
   const [theme, setTheme] = useState<Theme>(initialTheme);
-  const timer = useRef<number | null>(null);
 
   useEffect(() => {
-    return () => {
-      if (timer.current !== null) window.clearTimeout(timer.current);
-    };
+    const onChange = (e: Event) => setTheme((e as CustomEvent<Theme>).detail);
+    window.addEventListener(THEME_EVENT, onChange);
+    return () => window.removeEventListener(THEME_EVENT, onChange);
   }, []);
 
   const isLight = theme === "light";
-
-  function toggle() {
-    const next: Theme = isLight ? "dark" : "light";
-    if (timer.current !== null) window.clearTimeout(timer.current);
-    timer.current = applyTheme(next);
-    setTheme(next);
-  }
 
   return (
     <button
@@ -45,7 +27,7 @@ export function ThemeToggle({ initialTheme }: { initialTheme: Theme }) {
       role="switch"
       aria-checked={isLight}
       aria-label={isLight ? "Switch to dark theme" : "Switch to light theme"}
-      onClick={toggle}
+      onClick={() => applyTheme(isLight ? "dark" : "light")}
       className="relative h-[22px] w-10 shrink-0 rounded-full bg-border"
     >
       <span

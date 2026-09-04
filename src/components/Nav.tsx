@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { CommandPalette } from "@/components/CommandPalette";
 import { Container } from "@/components/Container";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { navLinks, site } from "@/lib/site";
@@ -9,12 +10,14 @@ import type { Theme } from "@/lib/theme";
 
 /**
  * Sticky nav. Name left (mono, --fg), links right (mono, --fg-muted, hover
- * --fg), theme toggle far right. No border until the page has scrolled, then
- * a hairline. The border is always laid out (transparent at top) so toggling
- * it never shifts content.
+ * --fg), theme toggle, then the ⌘K palette hint (desktop only) at far right.
+ * No border until the page has scrolled, then a hairline. The border is
+ * always laid out (transparent at top) so toggling it never shifts content.
  */
 export function Nav({ theme }: { theme: Theme }) {
   const [scrolled, setScrolled] = useState(false);
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const paletteTrigger = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     let frame = 0;
@@ -72,10 +75,29 @@ export function Nav({ theme }: { theme: Theme }) {
                 )}
               </ul>
             </nav>
+
             <ThemeToggle initialTheme={theme} />
+
+            <button
+              ref={paletteTrigger}
+              type="button"
+              aria-label="Open command palette"
+              aria-keyshortcuts="Meta+K Control+K"
+              aria-haspopup="dialog"
+              aria-expanded={paletteOpen}
+              onClick={() => setPaletteOpen(true)}
+              className={[
+                "hidden items-center rounded-[4px] px-1 text-meta-mono text-fg-faint md:inline-flex",
+                "transition-colors duration-150 ease-out-quiet hover:text-fg motion-reduce:transition-none",
+              ].join(" ")}
+            >
+              ⌘K
+            </button>
           </div>
         </div>
       </Container>
+
+      <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} triggerRef={paletteTrigger} />
     </header>
   );
 }

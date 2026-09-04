@@ -1,8 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { cookies } from "next/headers";
-import { Footer } from "@/components/Footer";
-import { Nav } from "@/components/Nav";
 import { site } from "@/lib/site";
 import { parseTheme, THEME_COOKIE } from "@/lib/theme";
 import "./globals.css";
@@ -22,8 +20,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: { default: site.title, template: `%s · ${site.title}` },
+  metadataBase: new URL(site.url),
+  title: { default: site.defaultTitle, template: `%s · ${site.title}` },
   description: site.description,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: site.title,
+    locale: "en_US",
+    url: "/",
+    title: site.defaultTitle,
+    description: site.description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: site.defaultTitle,
+    description: site.description,
+  },
+  robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
@@ -31,6 +45,10 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+/**
+ * Root: fonts, theme attribute, body. The site shell (skip link, nav, main,
+ * footer) lives in app/(site)/layout.tsx so the 404 page can render without it.
+ */
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -45,11 +63,7 @@ export default async function RootLayout({
       data-theme={theme}
       className={`${geistSans.variable} ${geistMono.variable}`}
     >
-      <body className="flex min-h-dvh flex-col">
-        <Nav theme={theme} />
-        <main className="flex-1">{children}</main>
-        <Footer />
-      </body>
+      <body className="flex min-h-dvh flex-col">{children}</body>
     </html>
   );
 }

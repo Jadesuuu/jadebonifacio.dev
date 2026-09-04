@@ -30,6 +30,7 @@ Dark is the default theme. Defined as CSS custom properties on `:root` (dark) an
 | `--fg-faint` | `#5E5D58` | `#9A978F` | metadata, labels, mono text |
 | `--border` | `#232325` | `#DDD9CF` | hairline rules |
 | `--accent` | `#C9A961` | `#9C7C3A` | brass. Section labels, hover underlines, focus ring, callout border, toggle thumb, 404 |
+| `--fg-on-accent` | `#0E0E0F` | `#0E0E0F` | text on the 404 page only |
 
 Rules:
 - The accent is rare by design. It appears only on: section labels (including the case study header meta label), link hover underlines, focus rings, the callout's left border, the theme toggle thumb, and the 404 page background. Nowhere else. At rest, the only brass on a screen is a section label or the toggle thumb; anything else brass at rest is wrong.
@@ -61,7 +62,7 @@ Rules:
 
 ## Components
 
-**Nav** — Name (mono, `--fg`) left; links right (mono, `--fg-muted`, hover `--fg`). Theme toggle at far right. Sticky, `--bg` background, no border until scrolled, then hairline bottom border.
+**Nav** — Name (mono, `--fg`) left; links right (mono, `--fg-muted`, hover `--fg`). Theme toggle, then a mono `⌘K` palette hint (desktop only) at far right. Sticky, `--bg` background, no border until scrolled, then hairline bottom border.
 
 **Hero** — Display headline, one line of small `--fg-muted` context, one mono line of tools, one mono line of links. No image. Exact copy:
 - Headline: `Full-stack developer. I ship production apps from zero, and fix the ones other people wrote.`
