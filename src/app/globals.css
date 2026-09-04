@@ -124,12 +124,12 @@
    Base typography. Body 17/1.65, headings weight 500, two weights only.
    --------------------------------------------------------------------------- */
 @layer base {
+  /* Root stays at 16px so Tailwind rem spacing keeps the 8px rhythm.
+     The 17px body size is set on <body>. */
   html {
     background-color: var(--bg);
     color: var(--fg);
     font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-    font-size: 17px;
-    line-height: 1.65;
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -141,6 +141,8 @@
     min-height: 100dvh;
     background-color: var(--bg);
     color: var(--fg);
+    font-size: 17px;
+    line-height: 1.65;
   }
 
   h1,
