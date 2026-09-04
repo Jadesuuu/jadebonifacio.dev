@@ -99,6 +99,8 @@ Rules:
 - Ends with a "next project →" row (hairline top border, mono label, project title) so no page dead-ends.
 - Callouts for the one-line lessons.
 
+**About page** — Same 680px column. H1 "About" (32/500). Sections separated by the standard section gap, each with a lowercase mono section label. No photo. Prose per the body type scale. Ends with the same "next project →" style row, pointing to /work/jf-and-the-world with label "work".
+
 ## Motion
 
 All durations short. All easing `cubic-bezier(0.2, 0, 0, 1)` (ease-out) unless noted. Everything disabled under `prefers-reduced-motion: reduce`.
