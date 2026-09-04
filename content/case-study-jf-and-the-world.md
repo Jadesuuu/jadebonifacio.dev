@@ -1,0 +1,76 @@
+# JF & The World
+
+**A private, two-person map of where we've been and where we want to go.**
+Live in production · Next.js 15 · Supabase · Mapbox GL · Cloudinary · TanStack Query · Vercel
+
+---
+
+## Why I built it
+
+My girlfriend and I kept saving places in five different apps: screenshots, saved Instagram posts, links in chat, notes on our phones. None of it lived in one place, and none of it connected the "we want to go here" moment with the "we went, and here's what it was like" moment.
+
+So I built one app for both of us. You drop a pin somewhere you dream of visiting, attach the links and photos that inspired it, and when you finally go, the pin flips from a dream into a memory: photos, notes, the date. Go back a second time and it records that too. The whole world, just ours.
+
+## What it does
+
+- Shared map with pins that move through a lifecycle: dream → visited → revisited
+- Visit history per pin, with photo galleries and notes for each trip
+- Link preview cards for inspiration URLs, fetched server-side from Open Graph tags
+- Realtime sync, so a pin one of us adds shows up on the other's phone immediately
+- Magic-link login, no passwords
+- Four map themes (Dream, Night, Galaxy, Paper) built on CSS custom properties
+- Installable as a PWA with push notifications
+
+## Stack, and why
+
+**Next.js 15 App Router on Vercel.** Server components for the map shell and data loading, client components only where interaction needs them.
+
+**Supabase, with no separate backend.** Postgres, auth, storage rules, and realtime in one place. Access control lives in row-level security: a membership table defines who's in a "space," and every policy checks it through a `SECURITY DEFINER` helper. Only the creator of a pin can mutate it; both members can read everything. No API layer to keep in sync with the database.
+
+**Mapbox GL** for the map, because the theming flexibility is what makes four visual themes possible.
+
+**Cloudinary** for photos, via signed direct uploads so image data never routes through my server, and secrets never reach the client.
+
+**TanStack Query** for data fetching with optimistic updates. Deleting a pin removes it from the map instantly and rolls back if the request fails.
+
+## Hard parts
+
+### Magic links that only worked for one of us
+
+Login uses magic links. During the build they worked perfectly for me and never arrived for her. No errors anywhere: Supabase said the email was sent, the provider dashboard showed it accepted.
+
+The cause was Resend's free tier: in testing mode it only delivers to the account owner's email address. For an app whose entire point is a second user, that's a hard blocker, and I only found it by reading the fine print after ruling out everything on my side.
+
+I switched delivery to Brevo, which has no such restriction. Separately, Supabase rate-limits auth emails per address, so repeated login attempts would silently fail; I added a countdown on the login form so the user can see when they can try again instead of hammering a button that does nothing.
+
+Lesson: check a provider's free-tier constraints *before* wiring your auth flow to it, not after.
+
+### Magic links that broke after every deploy
+
+A second auth bug surfaced in production. A magic link would work, then a day later an identical link would land on a dead page.
+
+Every Vercel deployment gets its own preview URL. The auth redirect was being generated from whichever URL the app was running on at the time, so a link generated on one deployment pointed at a preview URL that no longer existed after the next push. The fix was to pin the redirect to the stable production domain and add it to Supabase's redirect allowlist, so links are valid regardless of which deployment sent them.
+
+### Getting the design to feel effortless
+
+The hardest work wasn't backend. It was making a map app that two non-technical people would actually open every day. Some of the iterations:
+
+- The bottom drawer on mobile kept dismissing when you scrolled inside it. Fixing it meant understanding the drawer library's modal and dismissible semantics rather than fighting it with event handlers.
+- The Galaxy and Paper themes originally looked too much like Night and Dream. I redesigned both from scratch, and replaced the Galaxy theme's fake "stars" (floating white circles) with a real starfield texture.
+- Cards on the Lived tab showed full note text, so the grid was ragged. Fixed heights with line-clamped text made the page read as a gallery instead of a list.
+- The app icon started as a bare ampersand. Nobody knew what it was. It became a J&F monogram.
+
+None of these are hard engineering. All of them are the difference between an app that gets used and one that doesn't.
+
+## What I'd change
+
+- **Magic links as the only login is too much friction** for an app two people open daily. Longer sessions, or passkeys, would have been a better fit.
+- **Four themes was four times the CSS.** Two would have shipped faster and been easier to maintain.
+- **No automated tests.** Acceptable for a two-user app, and the first thing I'd add before anyone else used it.
+- **Signed Cloudinary uploads through my own API route** added complexity that Supabase Storage might have avoided for this scale.
+- **I picked an email provider before reading its limits.** See above.
+
+## Links
+
+- Live app: private (two users, by design). Happy to walk through it on a call.
+- Source: [GitHub link]
