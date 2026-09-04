@@ -12,9 +12,9 @@ export default function HomePage() {
 
       <p className="mt-4 text-small text-fg-muted">{hero.context}</p>
 
-      <p className="mt-6 text-meta-mono text-fg-faint">{hero.tools}</p>
+      <p className="mt-2 text-meta-mono text-fg-faint">{hero.tools}</p>
 
-      <ul className="mt-2 flex flex-wrap items-center gap-x-2 text-meta-mono text-fg-muted">
+      <ul className="mt-4 flex flex-wrap items-center gap-x-2 text-meta-mono text-fg-muted">
         <li>
           <a href={site.github} className="link-quiet" rel="me noopener">
             github

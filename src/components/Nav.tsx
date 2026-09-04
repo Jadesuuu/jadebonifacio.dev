@@ -20,7 +20,7 @@ export function Nav({ theme }: { theme: Theme }) {
     let frame = 0;
     const update = () => {
       frame = 0;
-      setScrolled(window.scrollY > 0);
+      setScrolled(window.scrollY > 8);
     };
     const onScroll = () => {
       if (frame === 0) frame = window.requestAnimationFrame(update);
