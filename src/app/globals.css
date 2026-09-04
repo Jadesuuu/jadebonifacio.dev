@@ -247,3 +247,28 @@
     text-decoration-color: var(--accent);
   }
 }
+
+/* Project row title: a 1px accent underline that draws left to right on row
+   hover or keyboard focus. Transform only, 200ms. Needs a `.group` ancestor. */
+@utility underline-draw {
+  position: relative;
+  display: inline-block;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 1px;
+    background-color: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 200ms var(--ease-out-quiet);
+  }
+}
+
+.group:hover .underline-draw::after,
+.group:focus-visible .underline-draw::after {
+  transform: scaleX(1);
+}
