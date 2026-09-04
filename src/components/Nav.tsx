@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Container } from "@/components/Container";
+import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { navLinks, site } from "@/lib/site";
+import { navLinks } from "@/lib/site";
 import type { Theme } from "@/lib/theme";
 
 /**
@@ -43,8 +44,8 @@ export function Nav({ theme }: { theme: Theme }) {
     >
       <Container>
         <div className="flex h-14 items-center justify-between gap-4">
-          <Link href="/" className="text-meta-mono link-quiet text-fg">
-            {site.name}
+          <Link href="/" aria-label="jade bonifacio, home" className="link-quiet text-fg">
+            <Logo />
           </Link>
 
           <div className="flex items-center gap-4 md:gap-6">
