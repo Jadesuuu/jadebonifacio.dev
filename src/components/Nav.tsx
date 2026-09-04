@@ -3,9 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Container } from "@/components/Container";
-import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { navLinks } from "@/lib/site";
+import { navLinks, site } from "@/lib/site";
 import type { Theme } from "@/lib/theme";
 
 /**
@@ -43,14 +42,14 @@ export function Nav({ theme }: { theme: Theme }) {
       ].join(" ")}
     >
       <Container>
-        <div className="flex h-14 items-center justify-between gap-4">
-          <Link href="/" aria-label="jade bonifacio, home" className="link-quiet text-fg">
-            <Logo />
+        <div className="flex h-14 items-center justify-between gap-3 md:gap-4">
+          <Link href="/" className="text-meta-mono link-quiet whitespace-nowrap text-fg">
+            {site.name}
           </Link>
 
-          <div className="flex items-center gap-4 md:gap-6">
+          <div className="flex items-center gap-3 md:gap-6">
             <nav aria-label="Primary">
-              <ul className="flex items-center gap-4 md:gap-5">
+              <ul className="flex items-center gap-3 whitespace-nowrap md:gap-5">
                 {navLinks.map((link) =>
                   link.external ? (
                     <li key={link.href}>
