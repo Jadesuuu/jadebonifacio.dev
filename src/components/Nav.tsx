@@ -50,13 +50,26 @@ export function Nav({ theme }: { theme: Theme }) {
           <div className="flex items-center gap-4 md:gap-6">
             <nav aria-label="Primary">
               <ul className="flex items-center gap-4 md:gap-5">
-                {navLinks.map((link) => (
-                  <li key={link.href}>
-                    <Link href={link.href} className="text-meta-mono link-quiet">
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
+                {navLinks.map((link) =>
+                  link.external ? (
+                    <li key={link.href}>
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener"
+                        className="text-meta-mono link-quiet"
+                      >
+                        {link.label}
+                      </a>
+                    </li>
+                  ) : (
+                    <li key={link.href}>
+                      <Link href={link.href} className="text-meta-mono link-quiet">
+                        {link.label}
+                      </Link>
+                    </li>
+                  ),
+                )}
               </ul>
             </nav>
             <ThemeToggle initialTheme={theme} />

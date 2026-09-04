@@ -19,7 +19,11 @@ export const hero = {
 } as const;
 
 export const navLinks = [
-  { href: "/#work", label: "work" },
-  { href: "/about", label: "about" },
-  { href: site.resume, label: "resume" },
+  { href: "/#work", label: "work", external: false },
+  { href: "/#about", label: "about", external: false },
+  { href: site.resume, label: "resume", external: true },
 ] as const;
+
+/** "How I work" paragraph, quoted from DESIGN.md. */
+export const howIWork =
+  "The day job taught me how to be careful: read before writing, make small defensible changes. Side projects taught me how to ship. What I want now is somewhere I can do both: a smaller team, more ownership, features rather than maintenance.";
