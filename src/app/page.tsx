@@ -32,7 +32,7 @@ export default function HomePage() {
       </RevealItem>
 
       <RevealItem>
-        <Container as="section" id="about" className="mt-16 scroll-mt-14 md:mt-24">
+        <Container as="section" className="mt-16 md:mt-24">
           <SectionLabel>how i work</SectionLabel>
           <p>{howIWork}</p>
         </Container>

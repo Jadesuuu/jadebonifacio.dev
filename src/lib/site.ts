@@ -20,7 +20,7 @@ export const hero = {
 
 export const navLinks = [
   { href: "/#work", label: "work", external: false },
-  { href: "/#about", label: "about", external: false },
+  { href: "/about", label: "about", external: false },
   { href: site.resume, label: "resume", external: true },
 ] as const;
 
