@@ -17,7 +17,7 @@ function applyTheme(next: Theme) {
 
 /**
  * 40x22 pill. Track is --border, thumb is --accent (one of the few sanctioned
- * accent-at-rest uses). Thumb left = dark, right = light.
+ * accent-at-rest uses). Thumb right = dark, left = light (per the design).
  * Receives the server-resolved theme so the first render matches the cookie.
  */
 export function ThemeToggle({ initialTheme }: { initialTheme: Theme }) {
@@ -52,8 +52,8 @@ export function ThemeToggle({ initialTheme }: { initialTheme: Theme }) {
         aria-hidden="true"
         className={[
           "absolute top-[3px] left-[3px] block size-4 rounded-full bg-accent",
-          "transition-transform duration-200 ease-out-quiet motion-reduce:transition-none",
-          isLight ? "translate-x-[18px]" : "translate-x-0",
+          "transition-transform duration-300 ease-out-quiet motion-reduce:transition-none",
+          isLight ? "translate-x-0" : "translate-x-[18px]",
         ].join(" ")}
       />
     </button>

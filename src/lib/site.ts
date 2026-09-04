@@ -5,7 +5,7 @@ export const site = {
   description:
     "Full-stack developer. I ship production apps from zero, and fix the ones other people wrote.",
   // TODO: replace placeholders with real destinations.
-  email: "hello@jadebonifacio.dev",
+  email: "jade@jadebonifacio.dev",
   github: "https://github.com/jadebonifacio",
   linkedin: "https://www.linkedin.com/in/jadebonifacio",
   resume: "/resume.pdf",
