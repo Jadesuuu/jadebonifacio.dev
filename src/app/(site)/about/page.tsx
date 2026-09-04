@@ -3,12 +3,18 @@ import { Container } from "@/components/Container";
 import { NextRow } from "@/components/NextRow";
 import { SectionLabel } from "@/components/SectionLabel";
 import { howIWorkParagraphs, lookingFor, smallerThings, who } from "@/content/about";
+import { links, mailto } from "@/content/links";
 import { getProject } from "@/content/projects";
 import { site } from "@/lib/site";
 
+const title = "About";
+
 export const metadata: Metadata = {
-  title: "About",
+  title,
   description: who,
+  alternates: { canonical: "/about" },
+  openGraph: { url: "/about", title: `${title} · ${site.title}`, description: who },
+  twitter: { title: `${title} · ${site.title}`, description: who },
 };
 
 const next = getProject("jf-and-the-world");
@@ -21,7 +27,7 @@ const next = getProject("jf-and-the-world");
 export default function AboutPage() {
   return (
     <Container className="pt-16 md:pt-24">
-      <h1>About</h1>
+      <h1>{title}</h1>
 
       <section className="mt-12 md:mt-16">
         <SectionLabel>who</SectionLabel>
@@ -42,12 +48,16 @@ export default function AboutPage() {
         <ul className="space-y-6">
           {smallerThings.map((thing) => (
             <li key={thing.title} className="flex flex-col gap-1">
-              <a href={thing.href} className="link-body self-start font-medium" rel="noopener">
-                {thing.title}
-              </a>
+              {thing.href ? (
+                <a href={thing.href} className="link-body self-start font-medium" rel="noopener">
+                  {thing.title}
+                </a>
+              ) : (
+                <span className="font-medium">{thing.title}</span>
+              )}
               <p className="text-small text-fg-muted">
                 {thing.description}
-                {thing.title === "This site" ? (
+                {thing.title === "This site" && thing.href ? (
                   <>
                     {" "}
                     Source on{" "}
@@ -72,15 +82,15 @@ export default function AboutPage() {
         <SectionLabel>contact</SectionLabel>
         <ul className="flex flex-wrap items-center gap-x-2 text-meta-mono text-fg-muted">
           <li>
-            <a href={`mailto:${site.email}`} className="link-quiet">
-              {site.email}
+            <a href={mailto} className="link-quiet">
+              {links.email}
             </a>
           </li>
           <li aria-hidden="true" className="text-fg-faint">
             ·
           </li>
           <li>
-            <a href={site.github} className="link-quiet" rel="me noopener">
+            <a href={links.github} className="link-quiet" rel="me noopener">
               github
             </a>
           </li>
@@ -88,7 +98,7 @@ export default function AboutPage() {
             ·
           </li>
           <li>
-            <a href={site.linkedin} className="link-quiet" rel="me noopener">
+            <a href={links.linkedin} className="link-quiet" rel="me noopener">
               linkedin
             </a>
           </li>
@@ -96,7 +106,7 @@ export default function AboutPage() {
             ·
           </li>
           <li>
-            <a href={site.resume} className="link-quiet" target="_blank" rel="noopener">
+            <a href={links.resume} className="link-quiet" target="_blank" rel="noopener">
               resume (pdf)
             </a>
           </li>

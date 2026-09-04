@@ -1,3 +1,5 @@
+import { links } from "@/content/links";
+
 export type Project = {
   slug: string;
   title: string;
@@ -10,6 +12,8 @@ export type Project = {
   hasImage: boolean;
   /** 360x240 screenshot (2x for a 180x120 slot). Required when hasImage is true. */
   thumbnail?: string;
+  /** Public source, when there is one. */
+  repo?: string;
 };
 
 // TODO: /images/projects/*.png are transparent 360x240 placeholders so the
@@ -25,6 +29,7 @@ export const projects: Project[] = [
     status: "live in production",
     hasImage: true,
     thumbnail: "/images/projects/jf-and-the-world.png",
+    repo: links.repos.jfAndTheWorld,
   },
   {
     slug: "scoutboard",
@@ -35,6 +40,7 @@ export const projects: Project[] = [
     status: "public repo · ci green",
     hasImage: true,
     thumbnail: "/images/projects/scoutboard.png",
+    repo: links.repos.scoutboard,
   },
   {
     slug: "enterprise-platform-work",

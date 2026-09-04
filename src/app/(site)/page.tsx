@@ -9,7 +9,7 @@ import { howIWork } from "@/lib/site";
 /**
  * Home: hero, selected work, how i work. Sections are 64px apart on mobile
  * and 96px on desktop. Each block fades up once per session (RevealGroup).
- * Sections carry scroll-mt so nav anchors land below the sticky nav.
+ * The work section carries scroll-mt so the nav anchor lands below the nav.
  */
 export default function HomePage() {
   return (
