@@ -389,9 +389,22 @@
   box-shadow: inset 0 -1px 0 var(--accent);
 }
 
+/* cmdk's root is display:block by default, which breaks the dialog's flex
+   column and lets the list grow past the fixed height instead of scrolling.
+   Make the root fill the dialog as a flex column so the list can bound and
+   scroll. min-height:0 lets the scroll container shrink below its content. */
+.palette [cmdk-root] {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
 .palette [cmdk-list] {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 8px;
   scroll-padding-block: 8px;
 }
