@@ -29,10 +29,10 @@ Dark is the default theme. Defined as CSS custom properties on `:root` (dark) an
 | `--fg-muted` | `#9A9890` | `#66645E` | secondary text, descriptions |
 | `--fg-faint` | `#5E5D58` | `#9A978F` | metadata, labels, mono text |
 | `--border` | `#232325` | `#DDD9CF` | hairline rules |
-| `--accent` | `#C9A961` | `#9C7C3A` | brass. Hover underlines, focus ring, callout border, toggle thumb, 404 |
+| `--accent` | `#C9A961` | `#9C7C3A` | brass. Section labels, hover underlines, focus ring, callout border, toggle thumb, 404 |
 
 Rules:
-- The accent is rare by design. It appears only on: link hover underlines, focus rings, the callout's left border, the theme toggle thumb, and the 404 page background. Nowhere else. If a screen has brass on it at rest (not hovered), something is wrong.
+- The accent is rare by design. It appears only on: section labels (including the case study header meta label), link hover underlines, focus rings, the callout's left border, the theme toggle thumb, and the 404 page background. Nowhere else. At rest, the only brass on a screen is a section label or the toggle thumb; anything else brass at rest is wrong.
 - Never brighten the brass toward yellow. If it reads as "gold," it's too saturated.
 - No gradients, no shadows, no glassmorphism, no grain.
 - Both themes must pass WCAG AA for body text.
@@ -69,7 +69,7 @@ Rules:
 - Tools (mono, `--fg-faint`): `typescript · react · next.js · nestjs · node · postgres · mongodb · redis · aws`
 - Links (mono, `--fg-muted`): `github · linkedin · email`
 
-**Section label** — Mono, `--fg-faint`, `13px`, `margin-bottom: 16px`.
+**Section label** — Mono, `--accent`, `13px`, `margin-bottom: 16px`. Lowercase. The one sanctioned brass-at-rest text.
 
 **Project row** — Grid: text column `1fr`, image `180px` on desktop; stacked on mobile with image first. Top hairline border, `24px` vertical padding. Title `18px/500`, description `15px --fg-muted`, stack line mono `--fg-faint`. Entire row is a link. Image: real screenshot, `border-radius: 6px`, `--bg-subtle` background while loading. A row with no screenshot (the enterprise/NDA project) has no image slot at all; its text spans the full column. Never show a placeholder box.
 
@@ -77,7 +77,7 @@ Rules:
 
 **Meta line** — Mono `--fg-faint`, items separated by ` · `.
 
-**Case study header** — Mono label (year · type · status), H1, one-sentence summary in `--fg-muted`, meta line of stack, links row.
+**Case study header** — Mono label in `--accent` (year · type · status), H1, one-sentence summary in `--fg-muted`, meta line of stack, links row.
 
 **Code block** — `--bg-subtle` background, `6px` radius, `16px` padding, no border. Syntax theme: custom, built from the palette — strings in `--accent`, keywords `--fg`, comments `--fg-faint`, everything else `--fg-muted`. Shiki, one theme per color mode.
 
@@ -99,7 +99,7 @@ Rules:
 - Ends with a "next project →" row (hairline top border, mono label, project title) so no page dead-ends.
 - Callouts for the one-line lessons.
 
-**About page** — Same 680px column. H1 "About" (32/500). Sections separated by the standard section gap, each with a lowercase mono section label. No photo. Prose per the body type scale. Ends with the same "next project →" style row, pointing to /work/jf-and-the-world with label "work".
+**About page** — Same 680px column. H1 "About" (32/500). Sections separated by the standard section gap, each with a lowercase mono section label in `--accent`. No photo. Prose per the body type scale. Ends with the same "next project →" style row, pointing to /work/jf-and-the-world with label "work".
 
 ## Motion
 
