@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { cookies } from "next/headers";
+import { ViewTransitions } from "@/components/ViewTransitions";
 import { site } from "@/lib/site";
 import { parseTheme, THEME_COOKIE } from "@/lib/theme";
 import "./globals.css";
@@ -63,7 +64,10 @@ export default async function RootLayout({
       data-theme={theme}
       className={`${geistSans.variable} ${geistMono.variable}`}
     >
-      <body className="flex min-h-dvh flex-col">{children}</body>
+      <body className="flex min-h-dvh flex-col">
+        <ViewTransitions />
+        {children}
+      </body>
     </html>
   );
 }
