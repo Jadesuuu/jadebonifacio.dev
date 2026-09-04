@@ -4,10 +4,9 @@ export const site = {
   title: "Jade Bonifacio",
   description:
     "Full-stack developer. I ship production apps from zero, and fix the ones other people wrote.",
-  // TODO: replace placeholders with real destinations.
   email: "jade@jadebonifacio.dev",
-  github: "https://github.com/jadebonifacio",
-  linkedin: "https://www.linkedin.com/in/jadebonifacio",
+  github: "https://github.com/Jadesuuu",
+  linkedin: "https://www.linkedin.com/in/jade-mark-angelo-bonifacio-169b95288/",
   resume: "/resume.pdf",
 } as const;
 
