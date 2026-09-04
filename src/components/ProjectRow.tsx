@@ -22,7 +22,12 @@ export function ProjectRow({ project }: { project: Project }) {
       ].join(" ")}
     >
       <span className="flex flex-col gap-2">
-        <span className="underline-draw self-start text-h3">{project.title}</span>
+        <span
+          className="underline-draw self-start text-h3"
+          style={{ viewTransitionName: `work-title-${project.slug}` }}
+        >
+          {project.title}
+        </span>
         <span className="text-small text-fg-muted">{project.description}</span>
         <span className="text-meta-mono text-fg-faint">{project.stack.join(" · ")}</span>
       </span>
