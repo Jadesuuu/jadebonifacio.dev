@@ -1,13 +1,14 @@
-/** Site-wide copy and links. Copy here is quoted from DESIGN.md; keep in sync. */
+import { links } from "@/content/links";
+
+/** Site-wide copy. Quoted from DESIGN.md; keep in sync. URLs live in content/links.ts. */
 export const site = {
   name: "jade bonifacio",
   title: "Jade Bonifacio",
+  defaultTitle: "Jade Bonifacio — full-stack developer",
   description:
     "Full-stack developer. I ship production apps from zero, and fix the ones other people wrote.",
-  email: "jade@jadebonifacio.dev",
-  github: "https://github.com/Jadesuuu",
-  linkedin: "https://www.linkedin.com/in/jade-mark-angelo-bonifacio-169b95288/",
-  resume: "/resume.pdf",
+  url: "https://jadebonifacio.dev",
+  domain: "jadebonifacio.dev",
 } as const;
 
 export const hero = {
@@ -21,7 +22,7 @@ export const hero = {
 export const navLinks = [
   { href: "/#work", label: "work", external: false },
   { href: "/about", label: "about", external: false },
-  { href: site.resume, label: "resume", external: true },
+  { href: links.resume, label: "resume", external: true },
 ] as const;
 
 /** "How I work" paragraph, quoted from DESIGN.md. */

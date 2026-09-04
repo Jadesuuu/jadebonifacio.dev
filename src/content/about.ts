@@ -1,3 +1,5 @@
+import { links } from "@/content/links";
+
 /** Copy for /about. Quoted verbatim from the brief; edit here, not in the page. */
 
 export const who =
@@ -13,8 +15,8 @@ export const howIWorkParagraphs = [
 export type SmallerThing = {
   title: string;
   description: string;
-  /** GitHub repo. TODO: placeholders until the real repo URLs are confirmed. */
-  href: string;
+  /** GitHub repo, when public. Recogn has none yet. */
+  href?: string;
 };
 
 export const smallerThings: SmallerThing[] = [
@@ -22,18 +24,17 @@ export const smallerThings: SmallerThing[] = [
     title: "Recogn",
     description:
       "A cross-platform mobile app for on-device image recognition, React Native and a TensorFlow Lite model trained in Python, built for a research paper (2023–2024).",
-    href: "https://github.com/Jadesuuu/recogn",
   },
   {
     title: "HTTP Monitor",
     description:
       "A NestJS endpoint monitor: cron-driven checks, Redis, Socket.IO, an AI summary of failures. A companion to ScoutBoard.",
-    href: "https://github.com/Jadesuuu/http-monitor",
+    href: links.repos.httpMonitor,
   },
   {
     title: "This site",
     description: "Next.js 15, MDX, no component library.",
-    href: "https://github.com/Jadesuuu/jadebonifacio.dev",
+    href: links.repos.site,
   },
 ];
 

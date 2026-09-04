@@ -1,5 +1,5 @@
 import { Container } from "@/components/Container";
-import { site } from "@/lib/site";
+import { links, mailto } from "@/content/links";
 
 /** Hairline top border. Email left, resume right, both mono. Stacks on mobile. */
 export function Footer() {
@@ -7,10 +7,10 @@ export function Footer() {
     <footer className="mt-16 md:mt-24">
       <Container>
         <div className="flex flex-col gap-3 border-t border-border pt-6 pb-12 md:flex-row md:items-center md:justify-between">
-          <a href={`mailto:${site.email}`} className="text-meta-mono link-quiet">
-            {site.email}
+          <a href={mailto} className="text-meta-mono link-quiet">
+            {links.email}
           </a>
-          <a href={site.resume} className="text-meta-mono link-quiet">
+          <a href={links.resume} target="_blank" rel="noopener" className="text-meta-mono link-quiet">
             resume.pdf
           </a>
         </div>
