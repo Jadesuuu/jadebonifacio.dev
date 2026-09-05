@@ -80,6 +80,9 @@ export function CommandPalette({
                 <Command.Item value="about" onSelect={go("/about")}>
                   About
                 </Command.Item>
+                <Command.Item value="contact" onSelect={go("/#contact")}>
+                  Contact
+                </Command.Item>
               </Command.Group>
 
               <Command.Group heading="work">

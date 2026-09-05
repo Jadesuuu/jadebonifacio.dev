@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import { ContactForm } from "@/components/ContactForm";
 import { Container } from "@/components/Container";
 import { NextRow } from "@/components/NextRow";
 import { SectionLabel } from "@/components/SectionLabel";
 import { howIWorkParagraphs, lookingFor, smallerThings, who } from "@/content/about";
-import { links, mailto } from "@/content/links";
+import { links } from "@/content/links";
 import { getProject } from "@/content/projects";
 import { site } from "@/lib/site";
 
@@ -78,17 +79,10 @@ export default function AboutPage() {
         <p>{lookingFor}</p>
       </section>
 
-      <section className="mt-16 md:mt-24">
+      <section id="contact" className="mt-16 scroll-mt-14 md:mt-24">
         <SectionLabel>contact</SectionLabel>
-        <ul className="flex flex-wrap items-center gap-x-2 text-meta-mono text-fg-muted">
-          <li>
-            <a href={mailto} className="link-quiet tap-target">
-              {links.email}
-            </a>
-          </li>
-          <li aria-hidden="true" className="text-fg-faint">
-            ·
-          </li>
+        <ContactForm />
+        <ul className="mt-6 flex flex-wrap items-center gap-x-2 text-meta-mono text-fg-muted">
           <li>
             <a href={links.github} className="link-quiet tap-target" rel="me noopener">
               github
