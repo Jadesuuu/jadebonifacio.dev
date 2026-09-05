@@ -53,10 +53,13 @@ function theme(
   };
 }
 
+// Comments use a slightly stronger faint than the --fg-faint token: the code
+// background is --bg-subtle (lighter than --bg), where the token value would
+// fall just under AA 4.5:1. These values clear it on --bg-subtle in both themes.
 export const shikiDark = theme("jb-dark", "dark", {
   bg: "#18181A",
   muted: "#9A9890",
-  faint: "#5E5D58",
+  faint: "#83827E",
   accent: "#C9A961",
   fg: "#ECEAE4",
 });
@@ -64,7 +67,7 @@ export const shikiDark = theme("jb-dark", "dark", {
 export const shikiLight = theme("jb-light", "light", {
   bg: "#EAE7DF",
   muted: "#66645E",
-  faint: "#9A978F",
+  faint: "#676560",
   accent: "#9C7C3A",
   fg: "#1A1917",
 });
