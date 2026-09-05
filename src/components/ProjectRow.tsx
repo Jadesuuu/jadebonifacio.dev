@@ -36,11 +36,14 @@ export function ProjectRow({ project }: { project: Project }) {
         <Image
           src={project.thumbnail as string}
           alt={`${project.title} screenshot`}
-          width={360}
-          height={240}
-          sizes="180px"
+          width={720}
+          height={480}
+          // Full column width on mobile (stacked, image first), 180px on
+          // desktop. Matches the rendered box so the browser picks a ~720px
+          // variant on mobile and a ~360px one on desktop, never the source.
+          sizes="(max-width: 768px) 100vw, 180px"
           className={[
-            "h-[120px] w-[180px] rounded-[6px] bg-bg-subtle max-md:order-first",
+            "h-auto w-full rounded-[6px] bg-bg-subtle max-md:order-first md:h-[120px] md:w-[180px]",
             "transition-transform duration-200 ease-out-quiet",
             "group-hover:-rotate-[1.5deg] group-hover:scale-[1.02]",
             "motion-reduce:transition-none motion-reduce:group-hover:rotate-0 motion-reduce:group-hover:scale-100",
