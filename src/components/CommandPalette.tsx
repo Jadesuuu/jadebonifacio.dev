@@ -3,7 +3,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { Command } from "cmdk";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, type RefObject } from "react";
+import { useCallback, type RefObject } from "react";
 import { links, mailto } from "@/content/links";
 import { projects } from "@/content/projects";
 import { applyTheme } from "@/lib/apply-theme";
@@ -14,6 +14,9 @@ type CommandPaletteProps = {
   onOpenChange: (open: boolean) => void;
   /** The ⌘K button in the nav. Focus returns here on close when it is visible. */
   triggerRef: RefObject<HTMLButtonElement | null>;
+  /** Whatever was focused before opening (the Nav records it), for focus return
+   *  when the trigger is hidden (mobile / keyboard shortcut from the body). */
+  lastFocusedRef: RefObject<HTMLElement | null>;
 };
 
 /**
@@ -27,24 +30,13 @@ type CommandPaletteProps = {
  * dialog mounted at data-state="closed"; an instant close unmounts
  * synchronously and cannot stick. No Framer Motion here for the same reason.
  */
-export function CommandPalette({ open, onOpenChange, triggerRef }: CommandPaletteProps) {
+export function CommandPalette({
+  open,
+  onOpenChange,
+  triggerRef,
+  lastFocusedRef,
+}: CommandPaletteProps) {
   const router = useRouter();
-  const lastFocused = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (!(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== "k") return;
-      e.preventDefault();
-      if (open) {
-        onOpenChange(false);
-        return;
-      }
-      lastFocused.current = document.activeElement as HTMLElement | null;
-      onOpenChange(true);
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open, onOpenChange]);
 
   const run = useCallback(
     (action: () => void) => () => {
@@ -70,7 +62,8 @@ export function CommandPalette({ open, onOpenChange, triggerRef }: CommandPalett
           onCloseAutoFocus={(e) => {
             e.preventDefault();
             const trigger = triggerRef.current;
-            const target = trigger && trigger.offsetParent !== null ? trigger : lastFocused.current;
+            const target =
+              trigger && trigger.offsetParent !== null ? trigger : lastFocusedRef.current;
             target?.focus();
           }}
         >

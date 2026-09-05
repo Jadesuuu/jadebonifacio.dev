@@ -21,7 +21,10 @@ export function Figure({ caption, label, ratio = "16/10", breakout = false }: Fi
         style={{ aspectRatio: ratio }}
       >
         {label ? (
-          <span className="px-6 text-center text-meta-mono text-fg-faint">{label}</span>
+          // --fg-muted, not --fg-faint: the box background is --bg-subtle, where
+          // faint would fall under AA. Muted clears it and the label is a
+          // placeholder note anyway.
+          <span className="px-6 text-center text-meta-mono text-fg-muted">{label}</span>
         ) : null}
       </div>
       <figcaption className="mt-2 text-meta-mono text-fg-faint">{caption}</figcaption>
