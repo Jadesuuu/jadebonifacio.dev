@@ -9,7 +9,7 @@
   --bg-subtle: #18181a;
   --fg: #eceae4;
   --fg-muted: #9a9890;
-  --fg-faint: #5e5d58;
+  --fg-faint: #7d7c78;
   --border: #232325;
   --accent: #c9a961;
   /* Text on the 404 accent field. Same in both themes by design. */
@@ -22,7 +22,7 @@
   --bg-subtle: #eae7df;
   --fg: #1a1917;
   --fg-muted: #66645e;
-  --fg-faint: #9a978f;
+  --fg-faint: #706e68;
   --border: #ddd9cf;
   --accent: #9c7c3a;
   color-scheme: light;
@@ -127,10 +127,9 @@
   }
 }
 
-/* The command palette runs its own Framer Motion enter/exit. The theme
-   transition rule above would override that with a colour-only !important
-   transition and strip the exit, leaving the dialog stuck mounted. Exempt the
-   palette subtree so its own motion always completes. */
+/* The command palette runs its own open animation. The theme-transition rule
+   above would layer a colour-only !important transition onto it; exempt the
+   palette subtree so its own motion is never interfered with. */
 @media (prefers-reduced-motion: no-preference) {
   html.theme-transition .palette,
   html.theme-transition .palette *,
@@ -561,4 +560,13 @@
   ::view-transition-new(*) {
     animation: none !important;
   }
+}
+
+/* Enlarge a small inline link's tap target to >=24px (WCAG 2.5.8) without
+   changing layout: the padding grows the hit area, the negative margin pulls
+   neighbours back to where they were. For standalone mono links on mobile. */
+@utility tap-target {
+  display: inline-block;
+  padding-block: 4px;
+  margin-block: -4px;
 }

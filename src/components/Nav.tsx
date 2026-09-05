@@ -1,23 +1,36 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { CommandPalette } from "@/components/CommandPalette";
 import { Container } from "@/components/Container";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { navLinks, site } from "@/lib/site";
 import type { Theme } from "@/lib/theme";
+
+// The palette pulls in cmdk and Radix Dialog. Load it only on first open so it
+// stays out of the initial bundle on every page. It never renders on the
+// server, so ssr:false is correct here.
+const CommandPalette = dynamic(
+  () => import("@/components/CommandPalette").then((m) => m.CommandPalette),
+  { ssr: false },
+);
 
 /**
  * Sticky nav. Name left (mono, --fg), links right (mono, --fg-muted, hover
  * --fg), theme toggle, then the ⌘K palette hint (desktop only) at far right.
  * No border until the page has scrolled, then a hairline. The border is
  * always laid out (transparent at top) so toggling it never shifts content.
+ *
+ * The Cmd/Ctrl+K shortcut and the trigger live here (lightweight); they mount
+ * the lazy palette on first use.
  */
 export function Nav({ theme }: { theme: Theme }) {
   const [scrolled, setScrolled] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const [paletteMounted, setPaletteMounted] = useState(false);
   const paletteTrigger = useRef<HTMLButtonElement>(null);
+  const lastFocused = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     let frame = 0;
@@ -35,6 +48,26 @@ export function Nav({ theme }: { theme: Theme }) {
       if (frame !== 0) window.cancelAnimationFrame(frame);
     };
   }, []);
+
+  function openPalette() {
+    lastFocused.current = document.activeElement as HTMLElement | null;
+    setPaletteMounted(true);
+    setPaletteOpen(true);
+  }
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (!(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== "k") return;
+      e.preventDefault();
+      if (paletteOpen) {
+        setPaletteOpen(false);
+        return;
+      }
+      openPalette();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [paletteOpen]);
 
   return (
     <header
@@ -85,19 +118,26 @@ export function Nav({ theme }: { theme: Theme }) {
               aria-keyshortcuts="Meta+K Control+K"
               aria-haspopup="dialog"
               aria-expanded={paletteOpen}
-              onClick={() => setPaletteOpen(true)}
+              onClick={openPalette}
               className={[
                 "hidden items-center rounded-[4px] px-1 text-meta-mono text-fg-faint md:inline-flex",
                 "transition-colors duration-150 ease-out-quiet hover:text-fg motion-reduce:transition-none",
               ].join(" ")}
             >
-              ⌘K
+              <span aria-hidden="true">⌘K</span>
             </button>
           </div>
         </div>
       </Container>
 
-      <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} triggerRef={paletteTrigger} />
+      {paletteMounted ? (
+        <CommandPalette
+          open={paletteOpen}
+          onOpenChange={setPaletteOpen}
+          triggerRef={paletteTrigger}
+          lastFocusedRef={lastFocused}
+        />
+      ) : null}
     </header>
   );
 }

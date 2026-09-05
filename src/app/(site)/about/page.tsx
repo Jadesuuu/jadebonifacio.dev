@@ -82,7 +82,7 @@ export default function AboutPage() {
         <SectionLabel>contact</SectionLabel>
         <ul className="flex flex-wrap items-center gap-x-2 text-meta-mono text-fg-muted">
           <li>
-            <a href={mailto} className="link-quiet">
+            <a href={mailto} className="link-quiet tap-target">
               {links.email}
             </a>
           </li>
@@ -90,7 +90,7 @@ export default function AboutPage() {
             ·
           </li>
           <li>
-            <a href={links.github} className="link-quiet" rel="me noopener">
+            <a href={links.github} className="link-quiet tap-target" rel="me noopener">
               github
             </a>
           </li>
@@ -98,7 +98,7 @@ export default function AboutPage() {
             ·
           </li>
           <li>
-            <a href={links.linkedin} className="link-quiet" rel="me noopener">
+            <a href={links.linkedin} className="link-quiet tap-target" rel="me noopener">
               linkedin
             </a>
           </li>
@@ -106,7 +106,7 @@ export default function AboutPage() {
             ·
           </li>
           <li>
-            <a href={links.resume} className="link-quiet" target="_blank" rel="noopener">
+            <a href={links.resume} className="link-quiet tap-target" target="_blank" rel="noopener">
               resume (pdf)
             </a>
           </li>
