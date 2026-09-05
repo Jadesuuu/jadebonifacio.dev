@@ -10,15 +10,12 @@ export type Project = {
   status: string;
   /** False for work that cannot be shown (NDA). The row then has no image slot. */
   hasImage: boolean;
-  /** 360x240 screenshot (2x for a 180x120 slot). Required when hasImage is true. */
+  /** 720x480 thumbnail (center-cropped from the hero). Required when hasImage is true. */
   thumbnail?: string;
   /** Public source, when there is one. */
   repo?: string;
 };
 
-// TODO: /images/projects/*.png are transparent 360x240 placeholders so the
-// layout is right. Replace with real screenshots taken against seeded demo
-// data (DESIGN.md, Images).
 export const projects: Project[] = [
   {
     slug: "jf-and-the-world",
@@ -28,7 +25,7 @@ export const projects: Project[] = [
     stack: ["next.js 15", "supabase", "mapbox gl", "cloudinary"],
     status: "live in production",
     hasImage: true,
-    thumbnail: "/images/projects/jf-and-the-world.png",
+    thumbnail: "/images/work/jf-and-the-world/thumbnail.png",
     repo: links.repos.jfAndTheWorld,
   },
   {
@@ -39,7 +36,7 @@ export const projects: Project[] = [
     stack: ["nestjs", "mongodb", "redis", "socket.io"],
     status: "public repo · ci green",
     hasImage: true,
-    thumbnail: "/images/projects/scoutboard.png",
+    thumbnail: "/images/work/scoutboard/thumbnail.png",
     repo: links.repos.scoutboard,
   },
   {
