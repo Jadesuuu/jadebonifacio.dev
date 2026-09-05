@@ -38,8 +38,8 @@ export function Figure({ src, alt, caption, width, height, breakout = false }: F
           quality={82}
           sizes={
             breakout
-              ? "(min-width: 888px) 840px, calc(100vw - 48px)"
-              : "(min-width: 728px) 680px, calc(100vw - 48px)"
+              ? "(max-width: 900px) 100vw, 840px"
+              : "(max-width: 728px) 100vw, 680px"
           }
           className="object-cover"
         />

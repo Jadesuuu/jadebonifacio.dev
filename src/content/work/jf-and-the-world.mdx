@@ -59,24 +59,6 @@ So I built one app for both of us. You drop a pin somewhere you dream of visitin
 
 **Supabase, with no separate backend.** Postgres, auth, storage rules, and realtime in one place. Access control lives in row-level security: a membership table defines who's in a "space," and every policy checks it through a `SECURITY DEFINER` helper. Only the creator of a pin can mutate it; both members can read everything. No API layer to keep in sync with the database.
 
-```sql
--- Membership is the single source of truth for access. A SECURITY DEFINER
--- helper lets policies check it without recursive RLS on the table itself.
-create function is_member(space uuid) returns boolean
-  language sql security definer stable as $$
-  select exists (
-    select 1 from memberships
-    where space_id = space and user_id = auth.uid()
-  );
-$$;
-
-create policy "members read pins" on pins
-  for select using (is_member(space_id));
-
-create policy "creator mutates own pins" on pins
-  for update using (created_by = auth.uid());
-```
-
 **Mapbox GL** for the map, because the theming flexibility is what makes four visual themes possible.
 
 **Cloudinary** for photos, via signed direct uploads so image data never routes through my server, and secrets never reach the client.
