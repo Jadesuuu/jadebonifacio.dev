@@ -27,7 +27,7 @@ Dark is the default theme. Defined as CSS custom properties on `:root` (dark) an
 | `--bg-subtle` | `#18181A` | `#EAE7DF` | code blocks, image placeholders |
 | `--fg` | `#ECEAE4` | `#1A1917` | primary text |
 | `--fg-muted` | `#9A9890` | `#66645E` | secondary text, descriptions |
-| `--fg-faint` | `#5E5D58` | `#9A978F` | metadata, labels, mono text |
+| `--fg-faint` | `#7D7C78` | `#706E68` | metadata, labels, mono text. Meets AA (4.5:1) on `--bg` in both themes |
 | `--border` | `#232325` | `#DDD9CF` | hairline rules |
 | `--accent` | `#C9A961` | `#9C7C3A` | brass. Section labels, hover underlines, focus ring, callout border, toggle thumb, 404 |
 | `--fg-on-accent` | `#0E0E0F` | `#0E0E0F` | text on the 404 page only |

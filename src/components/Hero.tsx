@@ -13,7 +13,7 @@ export function Hero() {
 
       <ul className="mt-4 flex flex-wrap items-center gap-x-2 text-meta-mono text-fg-muted">
         <li>
-          <a href={links.github} className="link-quiet" rel="me noopener">
+          <a href={links.github} className="link-quiet tap-target" rel="me noopener">
             github
           </a>
         </li>
@@ -21,7 +21,7 @@ export function Hero() {
           ·
         </li>
         <li>
-          <a href={links.linkedin} className="link-quiet" rel="me noopener">
+          <a href={links.linkedin} className="link-quiet tap-target" rel="me noopener">
             linkedin
           </a>
         </li>
@@ -29,7 +29,7 @@ export function Hero() {
           ·
         </li>
         <li>
-          <a href={mailto} className="link-quiet">
+          <a href={mailto} className="link-quiet tap-target">
             email
           </a>
         </li>
