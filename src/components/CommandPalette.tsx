@@ -51,6 +51,19 @@ export function CommandPalette({
     run(() => window.open(href, "_blank", "noopener,noreferrer"));
   const setTheme = (next: Theme) => run(() => applyTheme(next));
 
+  // Home sections. On the home page, scroll to the section; from any other page,
+  // navigate home to the anchor (which triggers the home loading skeleton).
+  const goSection = (id: string) =>
+    run(() => {
+      const el = document.getElementById(id);
+      if (el) {
+        const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+      } else {
+        router.push(`/#${id}`);
+      }
+    });
+
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
@@ -79,6 +92,44 @@ export function CommandPalette({
                 </Command.Item>
                 <Command.Item value="about" onSelect={go("/about")}>
                   About
+                </Command.Item>
+              </Command.Group>
+
+              <Command.Group heading="jump to">
+                <Command.Item
+                  value="selected work section"
+                  keywords={["projects", "portfolio", "shipped"]}
+                  onSelect={goSection("work")}
+                >
+                  Selected work
+                </Command.Item>
+                <Command.Item
+                  value="timeline story"
+                  keywords={["story", "journey", "history", "background"]}
+                  onSelect={goSection("story")}
+                >
+                  Timeline
+                </Command.Item>
+                <Command.Item
+                  value="toolbox"
+                  keywords={["skills", "stack", "tools", "tech"]}
+                  onSelect={goSection("toolbox")}
+                >
+                  Toolbox
+                </Command.Item>
+                <Command.Item
+                  value="after hours"
+                  keywords={["gaming", "hobbies", "valorant", "off keyboard", "life"]}
+                  onSelect={goSection("off-keyboard")}
+                >
+                  After hours
+                </Command.Item>
+                <Command.Item
+                  value="contact section"
+                  keywords={["say hello", "hire", "message", "email", "get in touch"]}
+                  onSelect={goSection("contact")}
+                >
+                  Contact
                 </Command.Item>
               </Command.Group>
 
