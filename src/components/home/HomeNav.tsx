@@ -73,8 +73,8 @@ export function HomeNav({ theme }: { theme: Theme }) {
         scrolled ? "border-border" : "border-transparent",
       ].join(" ")}
     >
-      <div className="mx-auto flex max-w-[1080px] items-center gap-6 px-6 py-4 md:px-8">
-        <a href="#top" className="whitespace-nowrap font-mono text-sm text-fg">
+      <div className="mx-auto flex max-w-[1080px] items-center gap-3 px-5 py-4 md:gap-6 md:px-8">
+        <a href="#top" className="shrink-0 whitespace-nowrap font-mono text-sm text-fg">
           {site.name}
           <span className="text-accent v2-blink" aria-hidden="true">
             _
@@ -83,9 +83,9 @@ export function HomeNav({ theme }: { theme: Theme }) {
         <div className="flex-1" />
         <nav
           aria-label="Primary"
-          className="flex items-center gap-5 font-mono text-[13px] tracking-[0.02em]"
+          className="flex shrink-0 items-center gap-4 font-mono text-[13px] tracking-[0.02em] md:gap-5"
         >
-          <a href="#work" className="v2-navlink">
+          <a href="#work" className="v2-navlink max-[359px]:hidden">
             work
           </a>
           <a href="#about" className="v2-navlink max-[840px]:hidden">
