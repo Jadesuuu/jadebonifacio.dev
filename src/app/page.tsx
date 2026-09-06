@@ -438,6 +438,8 @@ export default async function HomePage() {
               title: "First day of work — the very next day",
               body: "Straight to Advanced World Solutions as an R&D engineer.",
               ph: "first-day / office photo",
+              img: "/images/home/first-day.jpg",
+              alt: "First day at Advanced World Solutions in Makati, receiving a certificate of completion",
             },
             {
               side: "start",
@@ -558,10 +560,19 @@ export default async function HomePage() {
               accent: true,
               img: "/images/home/valorant-radiant.png",
               alt: "Valorant rank card — peak Radiant",
+              // Wide 16:9 shot in a 4:5 tile — bias the crop right so the gun centers.
+              pos: "65% center",
             },
             { label: "wildcard", ph: "wildcard — coffee, coast, or court", accent: false },
           ].map(
-            (tile: { label: string; ph: string; accent: boolean; img?: string; alt?: string }) => (
+            (tile: {
+              label: string;
+              ph: string;
+              accent: boolean;
+              img?: string;
+              alt?: string;
+              pos?: string;
+            }) => (
             <div key={tile.label} className="relative min-w-0" style={{ aspectRatio: "4 / 5" }}>
               {tile.img ? (
                 <Image
@@ -570,6 +581,7 @@ export default async function HomePage() {
                   fill
                   sizes="(max-width:840px) 50vw, 260px"
                   className="rounded-[14px] object-cover"
+                  style={{ objectPosition: tile.pos ?? "center" }}
                 />
               ) : (
                 <Placeholder label={tile.ph} className="absolute inset-0" />
