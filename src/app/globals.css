@@ -593,7 +593,7 @@
 .v2-pulse { animation: pulse-dot 2s ease-in-out infinite; }
 
 /* Skills marquee: a track duplicated once and translated -50%, seamless loop. */
-.v2-marquee-track { animation: marquee 30s linear infinite; }
+.v2-marquee-track { animation: marquee 55s linear infinite; }
 .v2-marquee:hover .v2-marquee-track { animation-play-state: paused; }
 
 /* Nav links: muted, brighten on hover (no underline). */
