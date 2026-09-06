@@ -76,7 +76,9 @@ export default async function HomePage() {
       <ScrollReveal />
       <HomeNav theme={theme} />
 
-      {/* Hero */}
+      {/* Hero. The wrapper clips the glow's horizontal spill (it still bleeds
+          past the 1080px shell on wide screens, just never past the viewport). */}
+      <div className="overflow-x-clip">
       <header className="v2-fade-up relative mx-auto grid max-w-[1080px] grid-cols-[1.15fr_0.85fr] items-center gap-16 px-6 pt-24 pb-[72px] md:px-8 max-[840px]:grid-cols-1 max-[840px]:gap-10">
         <div
           aria-hidden="true"
@@ -144,6 +146,7 @@ export default async function HomePage() {
           </p>
         </div>
       </header>
+      </div>
 
       {/* Skills marquee */}
       <div
@@ -170,9 +173,9 @@ export default async function HomePage() {
           {/* JF & The World */}
           <Link
             href="/work/jf-and-the-world"
-            className="v2-card grid grid-cols-[1.1fr_1fr] overflow-hidden rounded-[14px] border border-border bg-bg-subtle max-[840px]:grid-cols-1"
+            className="v2-card grid grid-cols-[1.1fr_1fr] overflow-hidden rounded-[14px] border border-border bg-bg-subtle max-[840px]:grid-cols-[minmax(0,1fr)]"
           >
-            <div className="relative min-h-[240px] max-[840px]:order-first max-[840px]:aspect-[16/10]">
+            <div className="relative min-h-[240px] max-[840px]:order-first max-[840px]:aspect-[16/10] max-[840px]:min-h-0">
               <Image
                 src="/images/work/jf-and-the-world/thumbnail.png"
                 alt="JF & The World — the shared travel map"
@@ -200,7 +203,7 @@ export default async function HomePage() {
           {/* ScoutBoard */}
           <Link
             href="/work/scoutboard"
-            className="v2-card grid grid-cols-[1fr_1.1fr] overflow-hidden rounded-[14px] border border-border bg-bg-subtle max-[840px]:grid-cols-1"
+            className="v2-card grid grid-cols-[1fr_1.1fr] overflow-hidden rounded-[14px] border border-border bg-bg-subtle max-[840px]:grid-cols-[minmax(0,1fr)]"
           >
             <div className="flex flex-col justify-center gap-3 p-9">
               <p className="m-0 font-mono text-xs tracking-[0.04em] text-accent">three weeks of evenings</p>
@@ -214,7 +217,7 @@ export default async function HomePage() {
                 read the case study →
               </span>
             </div>
-            <div className="relative min-h-[240px] max-[840px]:order-first max-[840px]:aspect-[16/10]">
+            <div className="relative min-h-[240px] max-[840px]:order-first max-[840px]:aspect-[16/10] max-[840px]:min-h-0">
               <Image
                 src="/images/work/scoutboard/thumbnail.png"
                 alt="ScoutBoard — the realtime marketplace board"
@@ -228,10 +231,10 @@ export default async function HomePage() {
           {/* Enterprise (NDA) */}
           <Link
             href="/work/enterprise-platform-work"
-            className="v2-card grid grid-cols-[1.1fr_1fr] overflow-hidden rounded-[14px] border border-border bg-bg-subtle max-[840px]:grid-cols-1"
+            className="v2-card grid grid-cols-[1.1fr_1fr] overflow-hidden rounded-[14px] border border-border bg-bg-subtle max-[840px]:grid-cols-[minmax(0,1fr)]"
           >
             <div
-              className="flex min-h-[240px] items-center justify-center max-[840px]:order-first max-[840px]:aspect-[16/10]"
+              className="flex min-h-[240px] items-center justify-center max-[840px]:order-first max-[840px]:aspect-[16/10] max-[840px]:min-h-0"
               style={{
                 background:
                   "repeating-linear-gradient(-45deg,var(--bg-subtle),var(--bg-subtle) 8px,var(--bg) 8px,var(--bg) 16px)",
