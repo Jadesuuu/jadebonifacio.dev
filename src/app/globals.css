@@ -702,3 +702,30 @@
   text-align: center;
   padding: 12px;
 }
+
+/* Scroll-reveal (Home v2). Section children fade + slide up as they enter the
+   viewport. The `data-rv` hook is added by ScrollReveal only when motion is
+   allowed, so reduced-motion and no-JS render everything visible. Staggered
+   groups get a per-child transition-delay set inline. */
+[data-rv] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 650ms var(--ease-out-quiet),
+    transform 650ms var(--ease-out-quiet);
+}
+[data-rv][data-in] {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* Work cards keep their own hover lift, so they only fade in (no slide). */
+.v2-card[data-rv] {
+  transform: none;
+  transition:
+    opacity 650ms var(--ease-out-quiet),
+    transform 200ms var(--ease-out-quiet),
+    border-color 200ms var(--ease-out-quiet);
+}
+.v2-card[data-rv][data-in]:hover {
+  transform: translateY(-3px);
+}
