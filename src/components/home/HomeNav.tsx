@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { links } from "@/content/links";
+import { site } from "@/lib/site";
 import type { Theme } from "@/lib/theme";
 
 /**
@@ -40,8 +41,8 @@ export function HomeNav({ theme }: { theme: Theme }) {
       ].join(" ")}
     >
       <div className="mx-auto flex max-w-[1080px] items-center gap-6 px-6 py-4 md:px-8">
-        <a href="#top" className="font-mono text-sm text-fg">
-          jb
+        <a href="#top" className="whitespace-nowrap font-mono text-sm text-fg">
+          {site.name}
           <span className="text-accent v2-blink" aria-hidden="true">
             _
           </span>
