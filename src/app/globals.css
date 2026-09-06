@@ -570,3 +570,135 @@
   padding-block: 4px;
   margin-block: -4px;
 }
+
+/* ===========================================================================
+   Home v2 (Portfolio Home v2). A long single-page landing with a display
+   serif, animated accents, a timeline reveal and a cursor glow. Uses the same
+   tokens; keeps the AA-safe --fg-faint. All motion is disabled by the global
+   reduced-motion rule above, and JS-driven effects check it too.
+   =========================================================================== */
+
+@keyframes blink { 0%, 45% { opacity: 1; } 50%, 95% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes marquee { to { transform: translateX(-50%); } }
+@keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+/* Display serif (Instrument Serif via next/font). */
+@utility font-display {
+  font-family: var(--font-serif), Georgia, "Times New Roman", serif;
+}
+
+.v2-fade-up { animation: fade-up 400ms var(--ease-out-quiet) both; }
+.v2-blink { animation: blink 1.2s step-end infinite; }
+.v2-pulse { animation: pulse-dot 2s ease-in-out infinite; }
+
+/* Skills marquee: a track duplicated once and translated -50%, seamless loop. */
+.v2-marquee-track { animation: marquee 30s linear infinite; }
+.v2-marquee:hover .v2-marquee-track { animation-play-state: paused; }
+
+/* Nav links: muted, brighten on hover (no underline). */
+.v2-navlink {
+  color: var(--fg-muted);
+  transition: color 150ms var(--ease-out-quiet);
+}
+.v2-navlink:hover { color: var(--fg); }
+
+/* Inline "read the case study →": hairline underline that turns accent. */
+.v2-underline {
+  border-bottom: 1px solid var(--border);
+  transition: border-color 150ms var(--ease-out-quiet);
+}
+.group:hover .v2-underline { border-bottom-color: var(--accent); }
+
+/* Work card: lifts and its border warms on hover. */
+.v2-card {
+  transition:
+    transform 200ms var(--ease-out-quiet),
+    border-color 200ms var(--ease-out-quiet);
+}
+.v2-card:hover { transform: translateY(-3px); border-color: var(--fg-faint); }
+
+/* Buttons. */
+.v2-btn-a { transition: transform 150ms var(--ease-out-quiet), opacity 150ms; }
+.v2-btn-a:hover { transform: translateY(-1px); opacity: 0.9; }
+.v2-btn-b { transition: border-color 150ms var(--ease-out-quiet); }
+.v2-btn-b:hover { border-color: var(--accent); }
+
+/* Pill tag. */
+.v2-chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 13px;
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+
+/* Form fields. */
+.v2-field {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: var(--fg);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 150ms var(--ease-out-quiet);
+}
+.v2-field:focus { border-color: var(--accent); }
+.v2-field::placeholder { color: var(--fg-faint); }
+
+/* Timeline card reveal. The hidden state is only applied by JS when motion is
+   allowed, so with reduced motion (or no JS) cards render fully visible. */
+.v2-reveal {
+  opacity: 0;
+  transform: translateY(30px) scale(0.97);
+  transition:
+    opacity 600ms var(--ease-out-quiet),
+    transform 600ms var(--ease-out-quiet);
+}
+.v2-reveal.is-in { opacity: 1; transform: none; }
+
+/* Cursor glow that follows the pointer inside the story section. */
+.v2-glow {
+  position: fixed;
+  top: -380px;
+  left: -380px;
+  width: 760px;
+  height: 760px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 60%);
+  opacity: 0;
+  filter: blur(90px);
+  pointer-events: none;
+  transform: translate3d(-9999px, 0, 0);
+  transition: opacity 1100ms var(--ease-out-quiet);
+}
+
+/* Image placeholder box (real screenshots dropped in later). */
+.v2-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--bg-subtle),
+    var(--bg-subtle) 8px,
+    var(--bg) 8px,
+    var(--bg) 16px
+  );
+  color: var(--fg-faint);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 12px;
+  text-align: center;
+  padding: 12px;
+}
