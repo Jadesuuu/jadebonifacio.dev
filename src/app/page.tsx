@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { cookies } from "next/headers";
+import { ContactForm } from "@/components/home/ContactForm";
 import { CopyEmailButton } from "@/components/home/CopyEmailButton";
 import { HomeNav } from "@/components/home/HomeNav";
 import { LocalClock } from "@/components/home/LocalClock";
-import { MailtoForm } from "@/components/home/MailtoForm";
 import { Placeholder } from "@/components/home/Placeholder";
 import { StoryEffects } from "@/components/home/StoryEffects";
 import { Typewriter } from "@/components/home/Typewriter";
@@ -602,7 +602,7 @@ export default async function HomePage() {
               </a>
             </div>
           </div>
-          <MailtoForm />
+          <ContactForm />
         </div>
       </section>
 
