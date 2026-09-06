@@ -6,6 +6,7 @@ import { CopyEmailButton } from "@/components/home/CopyEmailButton";
 import { HomeNav } from "@/components/home/HomeNav";
 import { LocalClock } from "@/components/home/LocalClock";
 import { Placeholder } from "@/components/home/Placeholder";
+import { ScrollReveal } from "@/components/home/ScrollReveal";
 import { StoryEffects } from "@/components/home/StoryEffects";
 import { Typewriter } from "@/components/home/Typewriter";
 import { links } from "@/content/links";
@@ -72,6 +73,7 @@ export default async function HomePage() {
   return (
     <div id="top" className="min-h-dvh bg-bg text-fg">
       <StoryEffects />
+      <ScrollReveal />
       <HomeNav theme={theme} />
 
       {/* Hero */}
@@ -164,7 +166,7 @@ export default async function HomePage() {
         <h2 className={`${serifHeading} m-0 mb-10`} style={{ fontSize: "clamp(34px,4.5vw,50px)" }}>
           Things I&apos;ve shipped<span className="text-accent">.</span>
         </h2>
-        <div className="flex flex-col gap-8">
+        <div data-stagger className="flex flex-col gap-8">
           {/* JF & The World */}
           <Link
             href="/work/jf-and-the-world"
@@ -258,7 +260,7 @@ export default async function HomePage() {
       {/* The day job, in numbers */}
       <section className="mx-auto max-w-[1080px] px-6 pt-32 md:px-8">
         <p className={`${sectionLabel} mb-3`}>the day job, in numbers</p>
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(190px,1fr))] gap-6">
+        <div data-stagger className="grid grid-cols-[repeat(auto-fit,minmax(190px,1fr))] gap-6">
           {[
             ["206", "pull requests merged"],
             ["317", "screen modules with my code"],
@@ -266,7 +268,11 @@ export default async function HomePage() {
             ["top 3", "defect resolver on the 9-engineer uat team"],
           ].map(([n, label]) => (
             <div key={label} className="border-t border-border pt-4">
-              <p className="font-display m-0 leading-none" style={{ fontSize: "clamp(40px,5vw,56px)" }}>
+              <p
+                className="font-display m-0 leading-none"
+                style={{ fontSize: "clamp(40px,5vw,56px)" }}
+                data-count={/^\d/.test(n) ? n : undefined}
+              >
                 {n}
               </p>
               <p className="mt-2.5 m-0 font-mono text-xs text-fg-muted">{label}</p>
@@ -318,7 +324,7 @@ export default async function HomePage() {
             confidently makes things worse.
           </p>
         </div>
-        <div className="mt-8 flex flex-wrap gap-3">
+        <div data-stagger className="mt-8 flex flex-wrap gap-3">
           <span className="v2-chip">currently reading: designing data-intensive applications</span>
           <span className="v2-chip">building at night, shipping by day</span>
           <span className="v2-chip">utc+8 · overlaps us mornings</span>
@@ -331,7 +337,10 @@ export default async function HomePage() {
         <h2 className={`${serifHeading} m-0 mb-10`} style={{ fontSize: "clamp(34px,4.5vw,50px)" }}>
           Always shipping, always learning<span className="text-accent">.</span>
         </h2>
-        <div className="grid grid-cols-[0.9fr_1.1fr] items-center gap-12 max-[840px]:grid-cols-1">
+        <div
+          data-stagger
+          className="grid grid-cols-[0.9fr_1.1fr] items-center gap-12 max-[840px]:grid-cols-1"
+        >
           <div
             className="rounded-2xl border border-border bg-bg-subtle p-2.5"
             style={{ aspectRatio: "1 / 1" }}
@@ -494,7 +503,7 @@ export default async function HomePage() {
         <h2 className={`${serifHeading} m-0 mb-8`} style={{ fontSize: "clamp(34px,4.5vw,50px)" }}>
           What I reach for<span className="text-accent">.</span>
         </h2>
-        <div className="max-w-[820px]">
+        <div data-stagger className="max-w-[820px]">
           {TOOLBOX.map(([label, body]) => (
             <div
               key={label}
@@ -535,7 +544,7 @@ export default async function HomePage() {
           that gets me through legacy PL/SQL is how I peaked Radiant.
         </p>
         <p className="m-0 mb-2.5 font-mono text-xs tracking-[0.04em] text-fg-faint">in-game</p>
-        <div className="mb-5 flex flex-wrap gap-2.5">
+        <div data-stagger className="mb-5 flex flex-wrap gap-2.5">
           {IN_GAME.map((tag) => (
             <span key={tag} className="v2-chip !px-3.5 !py-1.5 !text-[13px]">
               {tag === "valorant — peak radiant" ? (
@@ -549,14 +558,14 @@ export default async function HomePage() {
           ))}
         </div>
         <p className="m-0 mb-2.5 font-mono text-xs tracking-[0.04em] text-fg-faint">irl</p>
-        <div className="mb-6 flex flex-wrap gap-2.5">
+        <div data-stagger className="mb-6 flex flex-wrap gap-2.5">
           {IRL.map((tag) => (
             <span key={tag} className="v2-chip !px-3.5 !py-1.5 !text-[13px]">
               {tag}
             </span>
           ))}
         </div>
-        <div className="grid grid-cols-4 gap-4 max-[840px]:grid-cols-2">
+        <div data-stagger className="grid grid-cols-4 gap-4 max-[840px]:grid-cols-2">
           {[
             { label: "me", ph: "a photo of you — candid beats formal", accent: false },
             { label: "the battlestation", ph: "your pc battlestation", accent: false },
