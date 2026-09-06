@@ -160,6 +160,9 @@
   html {
     background-color: var(--bg);
     color: var(--fg);
+    /* Decorative glows sit partly off-viewport; clip so mobile can't swipe
+       sideways into the spill. clip (not hidden) keeps sticky/scroll intact. */
+    overflow-x: clip;
     font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
@@ -170,6 +173,7 @@
 
   body {
     min-height: 100dvh;
+    overflow-x: clip;
     background-color: var(--bg);
     color: var(--fg);
     font-size: 17px;
@@ -634,7 +638,8 @@
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 13px;
   color: var(--fg-muted);
-  white-space: nowrap;
+  /* Wrap rather than run off-screen on narrow viewports. */
+  max-width: 100%;
 }
 
 /* Form fields. */
