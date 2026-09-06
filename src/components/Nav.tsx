@@ -81,6 +81,9 @@ export function Nav({ theme }: { theme: Theme }) {
         <div className="flex h-14 items-center justify-between gap-3 md:gap-4">
           <Link href="/" className="text-meta-mono link-quiet whitespace-nowrap text-fg">
             {site.name}
+            <span className="v2-blink text-accent" aria-hidden="true">
+              _
+            </span>
           </Link>
 
           <div className="flex items-center gap-3 md:gap-6">

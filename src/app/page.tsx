@@ -11,10 +11,16 @@ import { Typewriter } from "@/components/home/Typewriter";
 import { links } from "@/content/links";
 import { parseTheme, THEME_COOKIE } from "@/lib/theme";
 
-// Skills scrolled in the marquee; rendered twice for a seamless -50% loop.
+// Everything in the toolbox, scrolled in the marquee; rendered twice for a
+// seamless -50% loop. Kept broad so the strip doesn't read as repetitive.
 const MARQUEE = [
-  "typescript", "react", "next.js", "nestjs", "node", "postgres", "mongodb",
-  "redis", "socket.io", "supabase", "mapbox gl", "aws", "docker",
+  "typescript", "react", "next.js", "nestjs", "node", "python",
+  "tailwind", "shadcn/ui", "material ui",
+  "postgres", "supabase", "mongodb", "redis", "oracle",
+  "tanstack query", "zustand",
+  "aws", "vercel", "docker", "github actions",
+  "websockets", "socket.io", "mapbox gl",
+  "openai", "claude code", "jest",
 ];
 
 const TOOLBOX = [
