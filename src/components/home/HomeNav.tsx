@@ -1,19 +1,32 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import { useEffect, useRef, useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { links } from "@/content/links";
 import { site } from "@/lib/site";
 import type { Theme } from "@/lib/theme";
 
+// Same as the shared Nav: the palette pulls in cmdk + Radix Dialog, so load it
+// only on first open to keep it out of the initial bundle. Client-only.
+const CommandPalette = dynamic(
+  () => import("@/components/CommandPalette").then((m) => m.CommandPalette),
+  { ssr: false },
+);
+
 /**
  * The home page's own nav (wider 1080px shell than the rest of the site). Logo
  * with a blinking accent underscore on the left, in-page anchors and resume on
- * the right, then the theme toggle. Border is transparent until the page has
+ * the right, then the theme toggle and the ⌘K command palette (desktop hint) —
+ * matching the rest of the site. Border is transparent until the page has
  * scrolled past 8px, then a hairline — laid out always so it never shifts.
  */
 export function HomeNav({ theme }: { theme: Theme }) {
   const [scrolled, setScrolled] = useState(false);
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const [paletteMounted, setPaletteMounted] = useState(false);
+  const paletteTrigger = useRef<HTMLButtonElement>(null);
+  const lastFocused = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     let frame = 0;
@@ -31,6 +44,26 @@ export function HomeNav({ theme }: { theme: Theme }) {
       if (frame !== 0) window.cancelAnimationFrame(frame);
     };
   }, []);
+
+  function openPalette() {
+    lastFocused.current = document.activeElement as HTMLElement | null;
+    setPaletteMounted(true);
+    setPaletteOpen(true);
+  }
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (!(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== "k") return;
+      e.preventDefault();
+      if (paletteOpen) {
+        setPaletteOpen(false);
+        return;
+      }
+      openPalette();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [paletteOpen]);
 
   return (
     <header
@@ -71,7 +104,29 @@ export function HomeNav({ theme }: { theme: Theme }) {
           </a>
         </nav>
         <ThemeToggle initialTheme={theme} />
+
+        <button
+          ref={paletteTrigger}
+          type="button"
+          aria-label="Open command palette"
+          aria-keyshortcuts="Meta+K Control+K"
+          aria-haspopup="dialog"
+          aria-expanded={paletteOpen}
+          onClick={openPalette}
+          className="hidden items-center rounded-[4px] px-1 font-mono text-[13px] text-fg-faint transition-colors duration-150 ease-out-quiet hover:text-fg motion-reduce:transition-none md:inline-flex"
+        >
+          <span aria-hidden="true">⌘K</span>
+        </button>
       </div>
+
+      {paletteMounted ? (
+        <CommandPalette
+          open={paletteOpen}
+          onOpenChange={setPaletteOpen}
+          triggerRef={paletteTrigger}
+          lastFocusedRef={lastFocused}
+        />
+      ) : null}
     </header>
   );
 }
