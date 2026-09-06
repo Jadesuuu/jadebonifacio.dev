@@ -412,6 +412,8 @@ export default async function HomePage() {
               title: "Moved up the mountain for CS",
               body: "B.S. Computer Science at Saint Louis University.",
               ph: "baguio / slu photo",
+              img: "/images/home/baguio-slu.jpg",
+              alt: "Baguio, where I moved for Computer Science at Saint Louis University",
             },
             {
               side: "end",
@@ -427,6 +429,8 @@ export default async function HomePage() {
               title: "Graduated cum laude",
               body: "B.S. Computer Science — with TOPCIT, JLPT N4, and PhilNITS FE picked up the same year.",
               ph: "graduation photo",
+              img: "/images/home/graduation.jpg",
+              alt: "Graduating cum laude, B.S. Computer Science, July 2024",
             },
             {
               side: "end",
@@ -442,14 +446,24 @@ export default async function HomePage() {
               body: "HTTP Monitor, then ScoutBoard, then JF & The World — live with its two intended users.",
               ph: "late-night setup photo",
             },
-          ].map((item) => (
+          ].map((item: { side: string; meta: string; title: string; body: string; ph: string; img?: string; alt?: string }) => (
             <div
               key={item.title}
               data-tl-card
               className={`${tlCard} ${item.side === "end" ? "self-end" : "self-start"}`}
             >
               <div className="relative min-w-0" style={{ aspectRatio: "3 / 4" }}>
-                <Placeholder label={item.ph} className="absolute inset-0" />
+                {item.img ? (
+                  <Image
+                    src={item.img}
+                    alt={item.alt ?? item.title}
+                    fill
+                    sizes="(max-width:840px) 90vw, 180px"
+                    className="rounded-[10px] object-cover"
+                  />
+                ) : (
+                  <Placeholder label={item.ph} className="absolute inset-0" />
+                )}
               </div>
               <div className="min-w-0">
                 <p className="m-0 font-mono text-[13px] tracking-[0.02em] text-accent">{item.meta}</p>
@@ -538,11 +552,28 @@ export default async function HomePage() {
           {[
             { label: "me", ph: "a photo of you — candid beats formal", accent: false },
             { label: "the battlestation", ph: "your pc battlestation", accent: false },
-            { label: "peak radiant", ph: "valorant rank card screenshot", accent: true },
+            {
+              label: "peak radiant",
+              ph: "valorant rank card screenshot",
+              accent: true,
+              img: "/images/home/valorant-radiant.png",
+              alt: "Valorant rank card — peak Radiant",
+            },
             { label: "wildcard", ph: "wildcard — coffee, coast, or court", accent: false },
-          ].map((tile) => (
+          ].map(
+            (tile: { label: string; ph: string; accent: boolean; img?: string; alt?: string }) => (
             <div key={tile.label} className="relative min-w-0" style={{ aspectRatio: "4 / 5" }}>
-              <Placeholder label={tile.ph} className="absolute inset-0" />
+              {tile.img ? (
+                <Image
+                  src={tile.img}
+                  alt={tile.alt ?? tile.label}
+                  fill
+                  sizes="(max-width:840px) 50vw, 260px"
+                  className="rounded-[14px] object-cover"
+                />
+              ) : (
+                <Placeholder label={tile.ph} className="absolute inset-0" />
+              )}
               <span
                 className={[
                   "pointer-events-none absolute top-3 left-3 z-[2] rounded-full border px-3 py-[5px] font-mono text-xs",
