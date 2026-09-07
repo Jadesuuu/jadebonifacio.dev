@@ -5,6 +5,7 @@ import { ContactForm } from "@/components/home/ContactForm";
 import { CopyEmailButton } from "@/components/home/CopyEmailButton";
 import { HomeNav } from "@/components/home/HomeNav";
 import { LocalClock } from "@/components/home/LocalClock";
+import { ParticleCloud } from "@/components/home/ParticleCloud";
 import { Placeholder } from "@/components/home/Placeholder";
 import { ScrollReveal } from "@/components/home/ScrollReveal";
 import { StoryEffects } from "@/components/home/StoryEffects";
@@ -302,6 +303,7 @@ export default async function HomePage() {
         <h2 className={`${serifHeading} m-0 mb-8`} style={{ fontSize: "clamp(34px,4.5vw,50px)" }}>
           How I work<span className="text-accent">.</span>
         </h2>
+        <div className="grid grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] items-center gap-14 max-[840px]:grid-cols-1 max-[840px]:gap-10">
         <div className="flex max-w-[680px] flex-col gap-4 text-[17px] leading-relaxed">
           <p className="m-0">
             I&apos;m Jade Mark Angelo Bonifacio — from San Fernando, B.S. Computer Science at Saint
@@ -326,6 +328,8 @@ export default async function HomePage() {
             it for my team — and a good part of that job is knowing where it saves hours and where it
             confidently makes things worse.
           </p>
+        </div>
+        <ParticleCloud />
         </div>
         <div data-stagger className="mt-8 flex flex-wrap gap-3">
           <span className="v2-chip">currently reading: designing data-intensive applications</span>
