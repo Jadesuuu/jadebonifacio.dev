@@ -56,7 +56,10 @@ export function StoryEffects() {
         tx = e.clientX;
         ty = e.clientY;
         const r = section.getBoundingClientRect();
-        glow.style.opacity = e.clientY >= r.top && e.clientY <= r.bottom ? "0.18" : "0";
+        const on = e.clientY >= r.top && e.clientY <= r.bottom;
+        // Light mode multiplies the glow into the page, so it needs more opacity to read.
+        const light = document.documentElement.getAttribute("data-theme") === "light";
+        glow.style.opacity = on ? (light ? "0.34" : "0.18") : "0";
       };
       onLeave = () => {
         glow.style.opacity = "0";
