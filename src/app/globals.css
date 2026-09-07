@@ -685,6 +685,9 @@
   transform: translate3d(-9999px, 0, 0);
   transition: opacity 1100ms var(--ease-out-quiet);
 }
+[data-theme="light"] .v2-glow {
+  mix-blend-mode: multiply;
+}
 
 /* Image placeholder box (real screenshots dropped in later). */
 .v2-placeholder {
