@@ -7,6 +7,9 @@ import { useEffect, useRef } from "react";
  * projection that slowly yaws and morphs between four personal shapes (a
  * trefoil knot, a shuttlecock, a globe, a coffee mug), each with a mono
  * caption. Dots near the pointer are pulled toward it with a soft falloff.
+ * Faint hairlines join neighbouring dots; they lengthen and brighten while a
+ * morph is in flight, so the shape reads as a constellation mid-flight and
+ * settles back to loose points at rest.
  *
  * Colours come from the theme tokens (about a quarter of the dots are brass)
  * and are re-read whenever <html data-theme> changes. Rendering pauses while
@@ -133,6 +136,8 @@ export function ParticleCloud() {
     const shapes = buildShapes(rnd);
     const sizes: number[] = [];
     const brass: boolean[] = [];
+    // Projected x, y and depth for each dot, kept for the line pass.
+    const pts = new Float32Array(N * 3);
     for (let i = 0; i < N; i++) {
       sizes.push(0.8 + rnd() * 1.6);
       brass.push(rnd() < 0.26);
@@ -246,11 +251,41 @@ export function ParticleCloud() {
         }
 
         const depth = Math.max(0, Math.min(1, (1.2 - z2) / 2.4));
+        pts[i * 3] = px;
+        pts[i * 3 + 1] = py;
+        pts[i * 3 + 2] = depth;
         ctx.globalAlpha = 0.3 + depth * 0.65;
         ctx.fillStyle = brass[i] ? colA : colB;
         ctx.beginPath();
         ctx.arc(px, py, sizes[i] * f * (0.7 + depth * 0.7), 0, TAU);
         ctx.fill();
+      }
+
+      // Constellation lines. Each even dot checks the next five even dots
+      // (cheap, deterministic neighbours) and draws a hairline to any within
+      // reach. The reach, alpha and width all peak at the middle of a morph.
+      const boost = e > 0 ? Math.sin(Math.PI * Math.min(e, 1)) : 0;
+      const lmax = Math.min(w, h) * (0.06 + boost * 0.1);
+      const la = 0.05 + boost * 0.55;
+      ctx.lineWidth = 0.6 + boost * 0.5;
+      for (let i = 0; i < N; i += 2) {
+        const ax = pts[i * 3];
+        const ay = pts[i * 3 + 1];
+        const ad = pts[i * 3 + 2];
+        for (let k = 1; k <= 5; k++) {
+          const j = (i + k * 2) % N;
+          const bx = pts[j * 3];
+          const by = pts[j * 3 + 1];
+          const dd = Math.hypot(ax - bx, ay - by);
+          if (dd < lmax) {
+            ctx.strokeStyle = brass[i] && boost > 0.15 ? colA : colB;
+            ctx.globalAlpha = (1 - dd / lmax) * la * (0.35 + ad * 0.65);
+            ctx.beginPath();
+            ctx.moveTo(ax, ay);
+            ctx.lineTo(bx, by);
+            ctx.stroke();
+          }
+        }
       }
       ctx.globalAlpha = 1;
 
