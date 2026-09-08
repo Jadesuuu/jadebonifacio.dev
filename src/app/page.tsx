@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { cookies } from "next/headers";
+import { ConstellationBg } from "@/components/ConstellationBg";
 import { ContactForm } from "@/components/home/ContactForm";
 import { CopyEmailButton } from "@/components/home/CopyEmailButton";
 import { HomeNav } from "@/components/home/HomeNav";
@@ -64,7 +65,8 @@ export default async function HomePage() {
   const theme = parseTheme(cookieStore.get(THEME_COOKIE)?.value);
 
   return (
-    <div id="top" className="min-h-dvh bg-bg text-fg">
+    <div id="top" className="min-h-dvh text-fg">
+      <ConstellationBg revealAfterHero />
       <StoryEffects />
       <ScrollReveal />
       <HomeNav theme={theme} />

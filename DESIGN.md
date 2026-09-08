@@ -13,7 +13,7 @@ How this site looks and moves. The **Claude Design project is the source of trut
 ## Principles
 
 1. The work is the visual interest. The site stays out of the way.
-2. Quiet by default, then a few deliberate set pieces per page (home v2 has four: the hero glow, the about particle cloud, the story cursor glow, the toolbox spotlight). Nothing else moves on its own.
+2. Quiet by default, then a few deliberate set pieces per page (home v2 has five: the constellation background, the hero glow, the about particle cloud, the story cursor glow, the toolbox spotlight; case studies have the constellation only, fainter). Nothing else moves on its own.
 3. Feels expensive: perfect spacing, fast, no jank, works in both themes.
 4. Motion is short, ease-out, respects `prefers-reduced-motion`, and pauses while off-screen. Ambient effects (glow, particle cloud, spotlight) are the exception to "runs once" and must be cheap: one `requestAnimationFrame` loop each, gated by an `IntersectionObserver`.
 
@@ -24,6 +24,7 @@ How this site looks and moves. The **Claude Design project is the source of trut
 - Vertical rhythm in multiples of `8px`, with `4px` allowed inside chips and tiles.
 - Cards are allowed on the home page where the canvas has them: work cards, timeline cards, the contact block, toolbox tiles, the after-hours bento. Radii: `14px` tiles and bento, `16px` cards and the contact block, `999px` chips, `6px` inline images.
 - Breakpoint: one, at `840px`. Grids collapse to a single column below it (the bento goes to two).
+- The page background is painted by `html` alone. `body` and page wrappers stay transparent so the fixed constellation canvas (`z-index: -1`) shows through; only cards, tiles, chips, the nav and the contact block paint their own surface.
 
 ## Color
 
@@ -42,7 +43,7 @@ Dark is the default theme. Defined as CSS custom properties on `:root` (dark) an
 
 Rules:
 - Brass is rare at rest. Static brass is limited to: section labels, the full stop at the end of each serif heading, one highlighted word in a chip (`radiant`), the theme toggle thumb, the callout border, the "peak radiant" pill, and the 404 page.
-- Brass may move. The set pieces use it transiently: the hero and story glows, about a quarter of the particle-cloud dots and their hairlines, and the toolbox spotlight (borders warm toward brass, big tiles get a brass radial highlight). Hover states may go to brass (buttons, tiles, underlines). Warmed borders are mixed with `color-mix(in oklab, ...)`, never a second brass hex.
+- Brass may move. The set pieces use it transiently: the hero and story glows, about a fifth of the constellation dots, about a quarter of the particle-cloud dots and their hairlines, and the toolbox spotlight (borders warm toward brass, big tiles get a brass radial highlight). Hover states may go to brass (buttons, tiles, underlines). Warmed borders are mixed with `color-mix(in oklab, ...)`, never a second brass hex.
 - Never brighten the brass toward yellow. If it reads as "gold," it's too saturated.
 - Gradients only as soft radial light (glows, the spotlight highlight), never as fills or text. No shadows, no glassmorphism, no grain. The nav's scrolled state may use a translucent `--bg` mix.
 - Light theme: glows use `mix-blend-mode: multiply`.
@@ -77,6 +78,8 @@ Rules:
 ## Home v2 components
 
 Sections, in order. Each starts with a section label, then a serif heading.
+
+**Constellation background** — A fixed canvas behind the whole page: 55–120 dots sized to the viewport (about a fifth brass, the rest `--fg-faint`), each with a depth `z` in `0.15–0.85` that sets its size, alpha and parallax. Hidden over the hero; fades in between 30% and 75% of a viewport of scroll. See Motion. Under reduced motion the canvas is empty.
 
 **Nav** — Name (mono, `--fg`) left; links right (mono, `--fg-muted`, hover `--fg`). Theme toggle, then a mono `⌘K` palette hint (desktop only). Sticky, transparent until scrolled, then a translucent `--bg` with a hairline bottom border.
 
@@ -114,6 +117,8 @@ Sections, in order. Each starts with a section label, then a serif heading.
 
 ## Inner pages
 
+**Background** — Case-study pages render the constellation background at `ambient={0.55}`, always visible (no hero reveal). The about page has none.
+
 **Case study header** — Mono label in `--accent` (year · type · status), H1, one-sentence summary in `--fg-muted`, meta line of stack, links row.
 
 **Case study body** — MDX. Four to six images, each beside the paragraph that mentions it, captions mono `--fg-faint` `13px`. A hero screenshot under the header. Callouts (left `2px` `--accent` border, `--fg-muted` text, `16px` left padding, no background) for one-line lessons. Ends with a "next project →" row.
@@ -138,6 +143,7 @@ Easing `cubic-bezier(0.2, 0, 0, 1)` (`--ease-out-quiet`) unless noted. Everythin
 | Marquee | Skills strip scrolls `-50%`, linear, pauses on hover | `55s` loop |
 | Hero glow / story glow | Brass radial blur follows the pointer (story) or sits behind the portrait (hero); opacity fades `1100ms` | continuous while in view |
 | Particle cloud | Slow yaw; morphs every `3600ms` hold over `1500ms`; pointer pull; pauses off-screen | continuous while in view |
+| Constellation background | Dots sway `6px` (`sin(0.3t + phase)`) and scroll at `z ×` page speed, wrapping `70px` past the viewport. Scroll velocity (smoothed `0.12`) wakes the field: dots stretch into streaks up to `110px` along the scroll direction and hairlines join neighbours within `110px` at up to 32% alpha; wake rises at `0.09` and settles at `0.025` per frame. A pointer press sends a ring out to `220px` over `950ms` that pushes dots `4px` and brightens them. Home: alpha `× reveal`; case study: alpha `× 0.55` | continuous |
 | Toolbox spotlight | A brass point drifts on a Lissajous path (`sin(0.5t)`, `sin(0.81t + 1.7)`) across the block, or eases toward the pointer (`0.075` per frame) when it is within `30px` of the block. Each tile gets `--g` = smoothstep of `1 - d/175px`: border mixes to 75% brass, chip text to 85% `--fg`, tile lifts `3.5px × --g`, big tiles show a `170px` brass radial at the light's position (16% alpha) and their index turns brass. Pointer following is off on `hover: none` devices | continuous while in view |
 | Card hover | Work card lifts `3px`, border to `--fg-faint`; tile border to `--accent` | `200ms` / `150ms` |
 | Link hover | Underline colour change | `150ms` |
@@ -162,7 +168,7 @@ Never: scroll-jacking, parallax, animated skill bars, or two ambient effects ove
 - Contrast AA in both themes.
 - No layout shift: fonts preloaded via `next/font`, images sized, icons inline.
 - Dark is the default for every first visit regardless of `prefers-color-scheme`. Toggle persists to a cookie, applied server-side so there is no flash on load.
-- Ambient effects run one `requestAnimationFrame` loop each, only while on screen, and always clean up in their effect's return.
+- Ambient effects run one `requestAnimationFrame` loop each, only while on screen, and always clean up in their effect's return. The constellation is always on screen by nature; it skips drawing entirely while faded out.
 
 ## Content voice
 
