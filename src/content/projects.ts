@@ -36,7 +36,7 @@ export const projects: Project[] = [
     description:
       "A realtime marketplace for buying and selling small businesses, built in five evenings.",
     stack: ["nestjs", "mongodb", "redis", "socket.io"],
-    status: "live demo · ci green",
+    status: "live demo · public repo · ci green",
     hasImage: true,
     thumbnail: "/images/work/scoutboard/thumbnail.png",
     repo: links.repos.scoutboard,
