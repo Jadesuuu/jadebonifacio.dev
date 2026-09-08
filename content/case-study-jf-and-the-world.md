@@ -1,7 +1,7 @@
 # JF & The World
 
 **A private, two-person map of where we've been and where we want to go.**
-Live in production · Next.js 15 · Supabase · Mapbox GL · Cloudinary · TanStack Query · Vercel
+Live in production · Live demo · Next.js 15 · Supabase · Mapbox GL · Cloudinary · TanStack Query · Vercel
 
 ---
 
@@ -72,5 +72,6 @@ None of these are hard engineering. All of them are the difference between an ap
 
 ## Links
 
+- Live demo: https://jf-and-the-world-demo.vercel.app
 - Live app: private (two users, by design). Happy to walk through it on a call.
 - Source: [GitHub link]

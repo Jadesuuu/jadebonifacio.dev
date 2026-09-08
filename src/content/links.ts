@@ -11,6 +11,11 @@ export const links = {
     httpMonitor: "https://github.com/Jadesuuu/http-monitor",
     site: "https://github.com/Jadesuuu/jadebonifacio.dev",
   },
+  /** Hosted demos, when a project has one. */
+  demos: {
+    jfAndTheWorld: "https://jf-and-the-world-demo.vercel.app",
+    scoutboard: "https://scoutboard-scoutboard-frontend.vercel.app",
+  },
 } as const;
 
 export const mailto = `mailto:${links.email}`;

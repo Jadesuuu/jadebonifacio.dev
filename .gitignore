@@ -43,3 +43,6 @@ next-env.d.ts
 
 # design reference (imported from Claude Design, not source)
 /design-reference/
+
+# design spec (private, kept local; the canvas is the source of truth)
+/DESIGN.md

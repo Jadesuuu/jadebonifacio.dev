@@ -161,10 +161,7 @@ export default function HomePage() {
         </h2>
         <div data-stagger className="flex flex-col gap-8">
           {/* JF & The World */}
-          <Link
-            href="/work/jf-and-the-world"
-            className="v2-card grid grid-cols-[1.1fr_1fr] overflow-hidden rounded-[14px] border border-border bg-bg-subtle max-[840px]:grid-cols-[minmax(0,1fr)]"
-          >
+          <article className="v2-card group relative grid grid-cols-[1.1fr_1fr] overflow-hidden rounded-[14px] border border-border bg-bg-subtle max-[840px]:grid-cols-[minmax(0,1fr)]">
             <div className="relative min-h-[240px] max-[840px]:order-first max-[840px]:aspect-[16/10] max-[840px]:min-h-0">
               <Image
                 src="/images/work/jf-and-the-world/thumbnail.png"
@@ -183,29 +180,56 @@ export default function HomePage() {
               </p>
               <p className="m-0 font-mono text-xs text-fg-faint">
                 next.js 15 · supabase · mapbox gl · cloudinary
+                <span className="text-accent">
+                  {" · "}
+                  <a
+                    href={links.demos.jfAndTheWorld}
+                    target="_blank"
+                    rel="noopener"
+                    className="relative z-10 text-accent underline decoration-transparent decoration-1 underline-offset-[3px] transition-colors hover:decoration-accent"
+                  >
+                    live demo ↗
+                  </a>
+                </span>
               </p>
-              <span className="v2-underline mt-2 self-start font-mono text-[13px] text-fg">
+              <Link
+                href="/work/jf-and-the-world"
+                className="v2-underline mt-2 self-start font-mono text-[13px] text-fg after:absolute after:inset-0 after:z-[1] after:content-['']"
+              >
                 read the case study →
-              </span>
+              </Link>
             </div>
-          </Link>
+          </article>
 
           {/* ScoutBoard */}
-          <Link
-            href="/work/scoutboard"
-            className="v2-card grid grid-cols-[1fr_1.1fr] overflow-hidden rounded-[14px] border border-border bg-bg-subtle max-[840px]:grid-cols-[minmax(0,1fr)]"
-          >
+          <article className="v2-card group relative grid grid-cols-[1fr_1.1fr] overflow-hidden rounded-[14px] border border-border bg-bg-subtle max-[840px]:grid-cols-[minmax(0,1fr)]">
             <div className="flex flex-col justify-center gap-3 p-9">
-              <p className="m-0 font-mono text-xs tracking-[0.04em] text-accent">three weeks of evenings</p>
+              <p className="m-0 font-mono text-xs tracking-[0.04em] text-accent">five evenings</p>
               <h3 className="m-0 text-[26px] font-medium">ScoutBoard</h3>
               <p className="m-0 text-[15px] leading-relaxed text-fg-muted">
                 A realtime marketplace for buying and selling small businesses — live offers over
                 websockets, a market simulator keeping it moving.
               </p>
-              <p className="m-0 font-mono text-xs text-fg-faint">nestjs · mongodb · redis · socket.io</p>
-              <span className="v2-underline mt-2 self-start font-mono text-[13px] text-fg">
+              <p className="m-0 font-mono text-xs text-fg-faint">
+                nestjs · mongodb · redis · socket.io
+                <span className="text-accent">
+                  {" · "}
+                  <a
+                    href={links.demos.scoutboard}
+                    target="_blank"
+                    rel="noopener"
+                    className="relative z-10 text-accent underline decoration-transparent decoration-1 underline-offset-[3px] transition-colors hover:decoration-accent"
+                  >
+                    live demo ↗
+                  </a>
+                </span>
+              </p>
+              <Link
+                href="/work/scoutboard"
+                className="v2-underline mt-2 self-start font-mono text-[13px] text-fg after:absolute after:inset-0 after:z-[1] after:content-['']"
+              >
                 read the case study →
-              </span>
+              </Link>
             </div>
             <div className="relative min-h-[240px] max-[840px]:order-first max-[840px]:aspect-[16/10] max-[840px]:min-h-0">
               <Image
@@ -216,7 +240,7 @@ export default function HomePage() {
                 className="object-cover"
               />
             </div>
-          </Link>
+          </article>
 
           {/* Enterprise (NDA) */}
           <Link

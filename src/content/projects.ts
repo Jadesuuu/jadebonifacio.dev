@@ -14,6 +14,8 @@ export type Project = {
   thumbnail?: string;
   /** Public source, when there is one. */
   repo?: string;
+  /** Hosted demo, when there is one. */
+  demo?: string;
 };
 
 export const projects: Project[] = [
@@ -23,21 +25,23 @@ export const projects: Project[] = [
     description:
       "A private, two-person map of where we've been and where we want to go. Live in production.",
     stack: ["next.js 15", "supabase", "mapbox gl", "cloudinary"],
-    status: "live in production",
+    status: "live in production · live demo",
     hasImage: true,
     thumbnail: "/images/work/jf-and-the-world/thumbnail.png",
     repo: links.repos.jfAndTheWorld,
+    demo: links.demos.jfAndTheWorld,
   },
   {
     slug: "scoutboard",
     title: "ScoutBoard",
     description:
-      "A realtime marketplace for buying and selling small businesses, built in three weeks of evenings.",
+      "A realtime marketplace for buying and selling small businesses, built in five evenings.",
     stack: ["nestjs", "mongodb", "redis", "socket.io"],
-    status: "public repo · ci green",
+    status: "live demo · public repo · ci green",
     hasImage: true,
     thumbnail: "/images/work/scoutboard/thumbnail.png",
     repo: links.repos.scoutboard,
+    demo: links.demos.scoutboard,
   },
   {
     slug: "enterprise-platform-work",
