@@ -87,7 +87,7 @@ Sections, in order. Each starts with a section label, then a serif heading.
 
 **Skills marquee** — One mono strip of the toolbox, duplicated for a seamless `-50%` loop, `55s` linear. Pauses on hover.
 
-**Selected work** — `v2-card`s: `--bg-subtle`, hairline border, `16px` radius, text left and screenshot right. Hover lifts `3px` and warms the border to `--fg-faint`. The NDA project has no image slot.
+**Selected work** — `v2-card`s: `--bg-subtle`, hairline border, `16px` radius, text left and screenshot right. Hover lifts `3px` and warms the border to `--fg-faint`. The NDA project has no image slot. The stack line ends with an `--accent` chip when the project is running somewhere: `· live ↗` on JF & The World (text only, the app is private) and `· live demo ↗` on ScoutBoard, which is an outbound link to the hosted demo. Because of that nested link the card is an `<article>` rather than one big anchor; the "read the case study →" link is stretched over the card with a pseudo-element, and the demo link sits above it.
 
 **The day job, in numbers** — A row of stat tiles. Numbers count up from 0 once when 60% visible (`1300ms`, ease-out cubic).
 
