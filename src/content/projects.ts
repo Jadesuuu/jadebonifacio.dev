@@ -44,7 +44,7 @@ export const projects: Project[] = [
     title: "Enterprise platform work",
     description:
       "Two years shipping into a large, mature codebase I didn't write, for a Japanese client, on a bilingual team. Client under NDA.",
-    stack: ["react", "typescript", "node", "oracle", "aws"],
+    stack: ["react", "typescript", "node", "oracle", "dynamodb", "aws"],
     status: "full-time · client under nda",
     hasImage: false,
   },
