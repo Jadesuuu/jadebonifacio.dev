@@ -9,6 +9,7 @@ import { ParticleCloud } from "@/components/home/ParticleCloud";
 import { Placeholder } from "@/components/home/Placeholder";
 import { ScrollReveal } from "@/components/home/ScrollReveal";
 import { StoryEffects } from "@/components/home/StoryEffects";
+import { Toolbox } from "@/components/home/Toolbox";
 import { Typewriter } from "@/components/home/Typewriter";
 import { links } from "@/content/links";
 import { parseTheme, THEME_COOKIE } from "@/lib/theme";
@@ -23,15 +24,6 @@ const MARQUEE = [
   "aws", "vercel", "docker", "github actions",
   "websockets", "socket.io", "mapbox gl",
   "openai", "claude code", "jest",
-];
-
-const TOOLBOX = [
-  ["front-end", "react · next.js (app router · rsc) · typescript · tailwind css · shadcn/ui · material ui"],
-  ["back-end", "node.js · nestjs (di · guards · gateways) · python"],
-  ["data", "postgresql / supabase (rls) · mongodb · redis · oracle pl/sql · dynamodb · tanstack query · zustand"],
-  ["cloud & ai", "aws (ec2 · s3 · sns · sqs) · vercel · docker · github actions · websockets · socket.io · openai api · claude code · jest"],
-  ["languages", "filipino · english · japanese (jlpt n4)"],
-  ["papers", "aws ccp '26 · philnits fe · topcit · cs50x · nvidia dl workshop"],
 ];
 
 const IN_GAME = [
@@ -510,17 +502,7 @@ export default async function HomePage() {
         <h2 className={`${serifHeading} m-0 mb-8`} style={{ fontSize: "clamp(34px,4.5vw,50px)" }}>
           What I reach for<span className="text-accent">.</span>
         </h2>
-        <div data-stagger className="max-w-[820px]">
-          {TOOLBOX.map(([label, body]) => (
-            <div
-              key={label}
-              className="grid grid-cols-[150px_1fr] items-baseline gap-x-6 gap-y-3 border-t border-border py-[26px] max-[840px]:grid-cols-1"
-            >
-              <span className="font-mono text-xs tracking-[0.04em] text-accent">{label}</span>
-              <p className="m-0 font-mono text-[13.5px] leading-[1.9] text-fg-muted">{body}</p>
-            </div>
-          ))}
-        </div>
+        <Toolbox />
       </section>
 
       {/* Off keyboard */}

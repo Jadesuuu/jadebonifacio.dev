@@ -7,7 +7,8 @@ import { useEffect } from "react";
  *
  *  1. Reveal — each <section>'s direct children fade + slide up as they enter
  *     the viewport (the `[data-rv]` styles in globals.css). Containers marked
- *     data-stagger reveal their own children in sequence (70ms steps, capped).
+ *     data-stagger reveal their own children in sequence (70ms steps, capped);
+ *     a data-tools wrapper is looked through so its rows reveal separately.
  *     Timeline cards are left to StoryEffects; the cursor-glow is skipped.
  *  2. Count-up — elements with data-count tick from 0 to the target once, on a
  *     650/1300ms easeOutCubic, when 60% visible.
@@ -27,20 +28,25 @@ export function ScrollReveal() {
       tagged.push(el);
     };
 
-    for (const section of Array.from(document.querySelectorAll("section"))) {
-      for (const child of Array.from(section.children)) {
-        const el = child as HTMLElement;
-        if (el.hasAttribute("data-glow")) continue;
-        // Timeline card rows animate via StoryEffects, not here.
-        if (el.querySelector(":scope > [data-tl-card]")) continue;
-        if (el.hasAttribute("data-stagger")) {
-          Array.from(el.children).forEach((item, i) =>
-            tag(item as HTMLElement, Math.min(i * 70, 350)),
-          );
-        } else {
-          tag(el, 0);
-        }
+    const visit = (el: HTMLElement) => {
+      if (el.hasAttribute("data-glow")) return;
+      // Timeline card rows animate via StoryEffects, not here.
+      if (el.querySelector(":scope > [data-tl-card]")) return;
+      // The toolbox wrapper is transparent: its rows reveal one by one.
+      if (el.hasAttribute("data-tools")) {
+        Array.from(el.children).forEach((child) => visit(child as HTMLElement));
+        return;
       }
+      if (el.hasAttribute("data-stagger")) {
+        Array.from(el.children).forEach((item, i) =>
+          tag(item as HTMLElement, Math.min(i * 70, 350)),
+        );
+      } else {
+        tag(el, 0);
+      }
+    };
+    for (const section of Array.from(document.querySelectorAll("section"))) {
+      Array.from(section.children).forEach((child) => visit(child as HTMLElement));
     }
 
     const revealIo = new IntersectionObserver(
