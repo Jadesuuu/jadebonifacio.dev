@@ -3,7 +3,8 @@ import { resolveWorkLink, type WorkFrontmatter } from "@/lib/work";
 
 /**
  * Case-study header (DESIGN.md): mono label in --accent (year · kind · status),
- * H1, one-sentence summary in --fg-muted, meta line of stack, links row. The
+ * H1, one-sentence summary in --fg-muted, meta line of stack, optional scale
+ * line, links row. The
  * H1 carries a shared view-transition-name so the project-row title morphs into
  * it on navigation.
  */
@@ -21,6 +22,8 @@ export function CaseStudyHeader({ slug, meta }: { slug: string; meta: WorkFrontm
       <p className="mt-4 text-fg-muted">{meta.summary}</p>
 
       <p className="mt-4 text-meta-mono text-fg-faint">{meta.stack.join(" · ")}</p>
+
+      {meta.scale ? <p className="mt-2 text-meta-mono text-fg-muted">{meta.scale}</p> : null}
 
       {meta.links && meta.links.length > 0 ? (
         <ul className="mt-2 flex flex-wrap items-center gap-x-2 text-meta-mono text-fg-muted">
