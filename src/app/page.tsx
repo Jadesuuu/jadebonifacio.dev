@@ -563,9 +563,7 @@ export default async function HomePage() {
               ph: "valorant rank card screenshot",
               accent: true,
               img: "/images/home/valorant-radiant.png",
-              alt: "Valorant rank card — peak Radiant",
-              // Wide 16:9 shot in a 4:5 tile — bias the crop right so the gun centers.
-              pos: "65% center",
+              alt: "Valorant Radiant buddy hanging from a Champions Vandal",
             },
             { label: "wildcard", ph: "wildcard — coffee, coast, or court", accent: false },
           ].map(
@@ -575,7 +573,6 @@ export default async function HomePage() {
               accent: boolean;
               img?: string;
               alt?: string;
-              pos?: string;
             }) => (
             <div key={tile.label} className="relative min-w-0" style={{ aspectRatio: "4 / 5" }}>
               {tile.img ? (
@@ -585,7 +582,6 @@ export default async function HomePage() {
                   fill
                   sizes="(max-width:840px) 50vw, 260px"
                   className="rounded-[14px] object-cover"
-                  style={{ objectPosition: tile.pos ?? "center" }}
                 />
               ) : (
                 <Placeholder label={tile.ph} className="absolute inset-0" />
