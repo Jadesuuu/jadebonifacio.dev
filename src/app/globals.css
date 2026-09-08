@@ -737,3 +737,38 @@
 .v2-card[data-rv][data-in]:hover {
   transform: translateY(-3px);
 }
+
+/* Toolbox tiles + roaming spotlight (Home v2). ToolboxSpotlight writes a
+   proximity value --g (0..1) on every [data-tile]; borders warm toward brass,
+   chip text brightens, and the big tiles get a radial highlight anchored at
+   --lx/--ly. Without JS (or under reduced motion) --g stays 0 and the tiles
+   are plain hairline boxes. */
+[data-tools] [data-tile] {
+  --g: 0;
+  border-color: color-mix(in oklab, var(--accent) calc(var(--g) * 75%), var(--border));
+}
+[data-tools] span[data-tile] {
+  color: color-mix(in oklab, var(--fg) calc(var(--g) * 85%), var(--fg-muted));
+}
+[data-tile][data-big] { overflow: hidden; }
+[data-tile][data-big]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    170px circle at var(--lx, 50%) var(--ly, 50%),
+    color-mix(in srgb, var(--accent) 16%, transparent),
+    transparent 70%
+  );
+  opacity: var(--g);
+  pointer-events: none;
+}
+[data-tile][data-big] > .v2-tile-index {
+  color: color-mix(in oklab, var(--accent) calc(var(--g) * 100%), var(--fg-faint));
+}
+[data-tools] [data-tile]:hover { border-color: var(--accent); }
+/* The spotlight owns transform on tiles, so the scroll-reveal only fades. */
+[data-tile][data-rv] {
+  transform: none;
+  transition: opacity 650ms var(--ease-out-quiet);
+}
