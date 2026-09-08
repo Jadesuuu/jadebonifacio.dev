@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { Resend } from "resend";
 import { z } from "zod";
+import { consumeContactLimit } from "@/lib/rate-limit";
 
 export type ContactValues = { name: string; email: string; message: string };
 
@@ -31,13 +32,9 @@ const schema = z.object({
 // certainly bots.
 const MIN_ELAPSED_MS = 3000;
 
-// Best-effort per-IP rate limit. NOTE: this Map lives in a single warm
-// serverless instance, so it resets on cold starts and is not shared across
-// instances — it deters casual abuse, not a determined attacker. The upgrade
-// path is a durable store like Upstash (Redis) keyed the same way.
-const RATE_WINDOW_MS = 60 * 60 * 1000;
-const RATE_MAX = 3;
-const hitsByIp = new Map<string, number[]>();
+// Per-IP rate limit (3/hour). Backed by Upstash Redis in production so it is
+// shared across serverless instances and survives cold starts; see
+// src/lib/rate-limit.ts for backend selection and the dev-only fallback.
 
 function clientIp(forwardedFor: string | null): string {
   return forwardedFor?.split(",")[0]?.trim() || "unknown";
@@ -74,15 +71,12 @@ export async function submitContact(
   }
 
   const ip = clientIp((await headers()).get("x-forwarded-for"));
-  const now = Date.now();
-  const recent = (hitsByIp.get(ip) ?? []).filter((ts) => now - ts < RATE_WINDOW_MS);
-  if (recent.length >= RATE_MAX) {
+  // Counts every genuine (non-bot, valid) submission, whether or not the send
+  // then succeeds, so a broken email backend can't be hammered.
+  const { allowed } = await consumeContactLimit(ip);
+  if (!allowed) {
     return { ok: false, error: "Too many messages from here. Please try again later.", values };
   }
-  // Count every genuine (non-bot, valid) submission, whether or not the send
-  // then succeeds, so a broken email backend can't be hammered.
-  recent.push(now);
-  hitsByIp.set(ip, recent);
 
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.CONTACT_TO_EMAIL;
