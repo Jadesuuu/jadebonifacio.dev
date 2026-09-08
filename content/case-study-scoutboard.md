@@ -1,7 +1,7 @@
 # ScoutBoard
 
 **A realtime marketplace for buying and selling small businesses, built in five evenings.**
-Public repo · CI green · NestJS · MongoDB · Redis · Socket.IO · Next.js App Router · TanStack Query · OpenAI
+Live demo · CI green · NestJS · MongoDB · Redis · Socket.IO · Next.js App Router · TanStack Query · OpenAI
 
 ---
 
@@ -49,7 +49,6 @@ The interview didn't go anywhere. The project did. Every pattern in it is one I 
 
 ## What I'd change
 
-- **It's not deployed.** I cut deployment for time. That's the first thing I'd fix — a backend project nobody can hit is only half a demo.
 - **Denormalized counter plus reconciliation cron** is the pragmatic answer. The correct one is a transactional outbox or a proper event pipeline, which is more infrastructure than the project justified.
 - **Two Socket.IO gateways only work on one instance.** Scaling horizontally needs the Redis pub/sub adapter so events fan out across servers.
 - **Tests stop at the backend.** The frontend has none, and the backend suite is fully mocked, so nothing exercises a real MongoDB or Redis. Enough for CI to mean something, not enough to refactor fearlessly.
@@ -57,5 +56,6 @@ The interview didn't go anywhere. The project did. Every pattern in it is one I 
 
 ## Links
 
+- Live demo: https://scoutboard-scoutboard-frontend.vercel.app
 - Source: [GitHub link]
 - Companion project: HTTP Monitor — a NestJS cron-based endpoint monitor with the same Redis/Socket.IO/OpenAI patterns, built as a rebuild of the same company's take-home. [GitHub link]
