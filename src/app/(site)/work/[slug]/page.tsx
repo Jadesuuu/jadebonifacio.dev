@@ -4,6 +4,7 @@ import { compileMDX } from "next-mdx-remote/rsc";
 import rehypeShiki from "@shikijs/rehype";
 import { Container } from "@/components/Container";
 import { NextRow } from "@/components/NextRow";
+import { ConstellationBg } from "@/components/ConstellationBg";
 import { CaseStudyHeader } from "@/components/mdx/CaseStudyHeader";
 import { mdxComponents } from "@/components/mdx/mdx-components";
 import { getProject } from "@/content/projects";
@@ -67,14 +68,17 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
   const next = nextSlug ? getProject(nextSlug) : undefined;
 
   return (
-    <Container as="article" className="pt-16 md:pt-24">
-      <CaseStudyHeader slug={slug} meta={frontmatter} />
-      <div className="prose mt-12 md:mt-16">{content}</div>
-      {next ? (
-        <div className="mt-16 md:mt-24">
-          <NextRow label="next project" title={next.title} href={`/work/${next.slug}`} />
-        </div>
-      ) : null}
-    </Container>
+    <>
+      <ConstellationBg ambient={0.55} />
+      <Container as="article" className="pt-16 md:pt-24">
+        <CaseStudyHeader slug={slug} meta={frontmatter} />
+        <div className="prose mt-12 md:mt-16">{content}</div>
+        {next ? (
+          <div className="mt-16 md:mt-24">
+            <NextRow label="next project" title={next.title} href={`/work/${next.slug}`} />
+          </div>
+        ) : null}
+      </Container>
+    </>
   );
 }
