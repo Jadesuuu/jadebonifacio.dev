@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { links } from "@/content/links";
 import { site } from "@/lib/site";
-import type { Theme } from "@/lib/theme";
 
 // Same as the shared Nav: the palette pulls in cmdk + Radix Dialog, so load it
 // only on first open to keep it out of the initial bundle. Client-only.
@@ -21,7 +20,7 @@ const CommandPalette = dynamic(
  * matching the rest of the site. Border is transparent until the page has
  * scrolled past 8px, then a hairline — laid out always so it never shifts.
  */
-export function HomeNav({ theme }: { theme: Theme }) {
+export function HomeNav() {
   const [scrolled, setScrolled] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [paletteMounted, setPaletteMounted] = useState(false);
@@ -103,7 +102,7 @@ export function HomeNav({ theme }: { theme: Theme }) {
             resume
           </a>
         </nav>
-        <ThemeToggle initialTheme={theme} />
+        <ThemeToggle />
 
         <button
           ref={paletteTrigger}
