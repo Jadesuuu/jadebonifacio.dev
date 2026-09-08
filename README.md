@@ -33,10 +33,9 @@ src/content/       site data and case-study content
   links.ts         every external URL, defined once
   work/*.mdx       one case study per project
 src/lib/           theme cookie, site config, Shiki themes, token helpers
-DESIGN.md          written record of the Claude Design canvas: tokens, type, motion, rules
 ```
 
-The [Claude Design project](https://claude.ai/design/p/8b21612c-5b28-4d38-b22a-c8b2400c974b) is the source of truth for how the site looks and moves. `DESIGN.md` writes it down (colour, type, spacing, motion, when the brass accent may appear) and is updated in the same PR as any port from the canvas. The code follows `DESIGN.md`.
+The [Claude Design project](https://claude.ai/design/p/8b21612c-5b28-4d38-b22a-c8b2400c974b) is the source of truth for how the site looks and moves. A private, git-ignored `DESIGN.md` writes it down (colour, type, spacing, motion, when the brass accent may appear) and is kept in step with any port from the canvas. The code follows it.
 
 ## Content
 
