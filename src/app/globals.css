@@ -174,7 +174,9 @@
   body {
     min-height: 100dvh;
     overflow-x: clip;
-    background-color: var(--bg);
+    /* No background here: html paints --bg (it propagates to the viewport),
+       which lets the fixed ConstellationBg canvas at z-index -1 show through.
+       A body background would paint over it. */
     color: var(--fg);
     font-size: 17px;
     line-height: 1.65;
