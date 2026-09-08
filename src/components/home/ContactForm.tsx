@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useId, useState } from "react";
-import { submitContact } from "@/app/actions/contact";
+import { submitContact, type ContactResult } from "@/app/actions/contact";
 
 /**
  * Contact form (v2 design), server-action edition. Submits to `submitContact`,
@@ -10,13 +10,24 @@ import { submitContact } from "@/app/actions/contact";
  *
  * Progressive enhancement: the <form action> points at the server action, so it
  * works without JS. With JS, useActionState adds pending/success/error states
- * without a navigation. A hidden `t` (render time) and `company` honeypot feed
- * the action's bot checks; on failure the typed values are echoed back as
- * defaultValues (React 19 resets an uncontrolled form after an action).
+ * without a navigation. A `dwell` (how long the form was open), a hidden `t`
+ * (render time) and a `company` honeypot feed the action's bot checks; on
+ * failure the typed values are echoed back as defaultValues (React 19 resets
+ * an uncontrolled form after an action).
  */
 export function ContactForm() {
-  const [state, formAction, pending] = useActionState(submitContact, null);
   const [renderedAt] = useState(() => Date.now());
+  const [state, formAction, pending] = useActionState(
+    // Both timestamps are read from the visitor's clock, so the difference
+    // holds even if that clock is wrong — which a render time compared against
+    // the server's clock does not. The hidden `t` below stays as the fallback
+    // for a submit with JS disabled, where this wrapper never runs.
+    (prev: ContactResult | null, formData: FormData) => {
+      formData.set("dwell", String(Date.now() - renderedAt));
+      return submitContact(prev, formData);
+    },
+    null,
+  );
   const nameId = useId();
   const emailId = useId();
   const messageId = useId();
