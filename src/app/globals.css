@@ -630,6 +630,35 @@
 .v2-btn-b { transition: border-color 150ms var(--ease-out-quiet); }
 .v2-btn-b:hover { border-color: var(--accent); }
 
+/* Case-study header pills: one filled brass primary, ghost for the rest. */
+.v2-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition:
+    transform 150ms var(--ease-out-quiet),
+    background-color 150ms var(--ease-out-quiet),
+    border-color 150ms var(--ease-out-quiet),
+    color 150ms var(--ease-out-quiet);
+}
+.v2-pill:hover { transform: translateY(-1px); }
+.v2-pill-primary {
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: var(--fg-on-accent);
+}
+.v2-pill-ghost {
+  border: 1px solid var(--border);
+  color: var(--fg-muted);
+}
+.v2-pill-ghost:hover { border-color: var(--accent); color: var(--fg); }
+
 /* Pill tag. */
 .v2-chip {
   display: inline-flex;

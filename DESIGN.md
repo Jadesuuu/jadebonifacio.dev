@@ -39,10 +39,10 @@ Dark is the default theme. Defined as CSS custom properties on `:root` (dark) an
 | `--fg-faint` | `#7D7C78` | `#706E68` | metadata, row labels, tile notes. Meets AA (4.5:1) on `--bg` in both themes |
 | `--border` | `#232325` | `#DDD9CF` | hairline rules, card and chip borders |
 | `--accent` | `#C9A961` | `#9C7C3A` | brass. Section labels, heading full stops, hover borders, focus ring, callout border, toggle thumb, the four set pieces, 404 |
-| `--fg-on-accent` | `#0E0E0F` | `#0E0E0F` | text on brass: the 404 page, the "peak radiant" pill |
+| `--fg-on-accent` | `#0E0E0F` | `#0E0E0F` | text on brass: the 404 page, the "peak radiant" pill, the case-study primary pill |
 
 Rules:
-- Brass is rare at rest. Static brass is limited to: section labels, the full stop at the end of each serif heading, one highlighted word in a chip (`radiant`), the theme toggle thumb, the callout border, the "peak radiant" pill, and the 404 page.
+- Brass is rare at rest. Static brass is limited to: section labels, the full stop at the end of each serif heading, one highlighted word in a chip (`radiant`), the theme toggle thumb, the callout border, the "peak radiant" pill, the primary pill in a case-study header, and the 404 page.
 - Brass may move. The set pieces use it transiently: the hero and story glows, about a fifth of the constellation dots, about a quarter of the particle-cloud dots and their hairlines, and the toolbox spotlight (borders warm toward brass, big tiles get a brass radial highlight). Hover states may go to brass (buttons, tiles, underlines). Warmed borders are mixed with `color-mix(in oklab, ...)`, never a second brass hex.
 - Never brighten the brass toward yellow. If it reads as "gold," it's too saturated.
 - Gradients only as soft radial light (glows, the spotlight highlight), never as fills or text. No shadows, no glassmorphism, no grain. The nav's scrolled state may use a translucent `--bg` mix.
@@ -119,7 +119,7 @@ Sections, in order. Each starts with a section label, then a serif heading.
 
 **Background** — Case-study pages render the constellation background at `ambient={0.55}`, always visible (no hero reveal). The about page has none.
 
-**Case study header** — Mono label in `--accent` (year · type · status), H1, one-sentence summary in `--fg-muted`, meta line of stack, links row.
+**Case study header** — Mono label in `--accent` (year · type · status), H1, one-sentence summary in `--fg-muted`, meta line of stack, optional scale line, then a button row `20px` below (`10px` gap, wraps). Links are `999px` mono pills, `9px 18px` padding, `13px`, `0.02em`, label followed by ` ↗`: the first link is filled `--accent` with `--fg-on-accent` text (the canvas uses `--bg`, the same value in dark), the rest are ghost pills (`--border` border, `--fg-muted` text; hover border `--accent`, text `--fg`). All pills lift `1px` on hover. A link without a destination (e.g. "live app: private, two users by design") renders as `12px` mono `--fg-faint` text beside the pills. Labels come from the case study frontmatter, so "source" stays "source" where the canvas says "github".
 
 **Case study body** — MDX. Four to six images, each beside the paragraph that mentions it, captions mono `--fg-faint` `13px`. A hero screenshot under the header. Callouts (left `2px` `--accent` border, `--fg-muted` text, `16px` left padding, no background) for one-line lessons. Ends with a "next project →" row.
 
