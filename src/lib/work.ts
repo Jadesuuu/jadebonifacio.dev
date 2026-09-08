@@ -20,6 +20,8 @@ export type WorkFrontmatter = {
   status: string;
   summary: string;
   stack: string[];
+  /** One line of scale or scope shown under the stack (e.g. PR count, users). */
+  scale?: string;
   links?: WorkLink[];
   /** Slug of the case study the "next project" row points to. */
   next?: string;
