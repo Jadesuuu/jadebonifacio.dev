@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { ConstellationBg } from "@/components/ConstellationBg";
 import { ContactForm } from "@/components/home/ContactForm";
 import { CopyEmailButton } from "@/components/home/CopyEmailButton";
@@ -13,7 +12,6 @@ import { StoryEffects } from "@/components/home/StoryEffects";
 import { Toolbox } from "@/components/home/Toolbox";
 import { Typewriter } from "@/components/home/Typewriter";
 import { links } from "@/content/links";
-import { parseTheme, THEME_COOKIE } from "@/lib/theme";
 
 // Everything in the toolbox, scrolled in the marquee; rendered twice for a
 // seamless -50% loop. Kept broad so the strip doesn't read as repetitive.
@@ -60,16 +58,13 @@ const tlCard =
  * toolbox, off-keyboard life, and a contact block. Uses the root layout only
  * (its own nav + footer at 1080px); /about and /work keep the narrower shell.
  */
-export default async function HomePage() {
-  const cookieStore = await cookies();
-  const theme = parseTheme(cookieStore.get(THEME_COOKIE)?.value);
-
+export default function HomePage() {
   return (
     <div id="top" className="min-h-dvh text-fg">
       <ConstellationBg revealAfterHero />
       <StoryEffects />
       <ScrollReveal />
-      <HomeNav theme={theme} />
+      <HomeNav />
 
       {/* Hero. The wrapper clips the glow's horizontal spill (it still bleeds
           past the 1080px shell on wide screens, just never past the viewport). */}

@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import { Container } from "@/components/Container";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { navLinks, site } from "@/lib/site";
-import type { Theme } from "@/lib/theme";
 
 // The palette pulls in cmdk and Radix Dialog. Load it only on first open so it
 // stays out of the initial bundle on every page. It never renders on the
@@ -25,7 +24,7 @@ const CommandPalette = dynamic(
  * The Cmd/Ctrl+K shortcut and the trigger live here (lightweight); they mount
  * the lazy palette on first use.
  */
-export function Nav({ theme }: { theme: Theme }) {
+export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [paletteMounted, setPaletteMounted] = useState(false);
@@ -112,7 +111,7 @@ export function Nav({ theme }: { theme: Theme }) {
               </ul>
             </nav>
 
-            <ThemeToggle initialTheme={theme} />
+            <ThemeToggle />
 
             <button
               ref={paletteTrigger}
