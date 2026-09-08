@@ -4,6 +4,8 @@ import { ogContentType, ogSize, renderOgImage } from "@/lib/og";
 export const size = ogSize;
 export const contentType = ogContentType;
 export const alt = "Case study · Jade Bonifacio";
+// Slugs are known at build (page.tsx generateStaticParams); render the images then.
+export const dynamic = "force-static";
 
 /**
  * One image per case study, titled with the project name. Attaches to

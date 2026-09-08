@@ -167,7 +167,7 @@ Never: scroll-jacking, parallax, animated skill bars, or two ambient effects ove
 - All interactive elements keyboard reachable; command palette fully operable without a mouse.
 - Contrast AA in both themes.
 - No layout shift: fonts preloaded via `next/font`, images sized, icons inline.
-- Dark is the default for every first visit regardless of `prefers-color-scheme`. Toggle persists to a cookie, applied server-side so there is no flash on load.
+- Dark is the default for every first visit regardless of `prefers-color-scheme`. Toggle persists to a cookie. Pages are fully static, so a tiny blocking inline script in <head> applies the cookie before first paint; no flash, no per-request server render.
 - Ambient effects run one `requestAnimationFrame` loop each, only while on screen, and always clean up in their effect's return. The constellation is always on screen by nature; it skips drawing entirely while faded out.
 
 ## Content voice
