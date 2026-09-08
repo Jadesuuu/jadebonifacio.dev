@@ -1,6 +1,6 @@
 # ScoutBoard
 
-**A realtime marketplace for buying and selling small businesses, built in three weeks of evenings.**
+**A realtime marketplace for buying and selling small businesses, built in five evenings.**
 Public repo · CI green · NestJS · MongoDB · Redis · Socket.IO · Next.js App Router · TanStack Query · OpenAI
 
 ---
@@ -9,7 +9,7 @@ Public repo · CI green · NestJS · MongoDB · Redis · Socket.IO · Next.js Ap
 
 ScoutBoard is a marketplace where small businesses are listed for sale and buyers make offers on them, with the offers landing in realtime. It's the most complete backend I've built: caching with real invalidation rules, a message-driven realtime layer, an AI endpoint that returns structured data, and tests that run in CI.
 
-The reason it exists is specific. I was preparing for a second-round interview at a startup in exactly this domain, and their feedback from my first round, months earlier, was that I needed deeper familiarity with their stack: NestJS, MongoDB, Redis, Socket.IO, TanStack, OpenAI. Reading docs wasn't going to close that gap, so I gave myself five evenings to build something real on that stack and to make every architectural decision one I could defend out loud.
+The reason it exists is specific. After a first-round interview at a startup in exactly this domain, the feedback was that I needed deeper familiarity with their stack: NestJS, MongoDB, Redis, Socket.IO, TanStack, OpenAI. Months later, with a second round coming up, reading docs wasn't going to close that gap. So I gave myself five evenings to build something real on that stack and to make every architectural decision one I could defend out loud.
 
 The interview didn't go anywhere. The project did. Every pattern in it is one I can now explain from experience rather than from a tutorial.
 
@@ -19,7 +19,7 @@ The interview didn't go anywhere. The project did. Every pattern in it is one I 
 - A sortable, filterable listings table with live offer counts
 - Listing detail pages where new offers appear in realtime, no refresh — open two windows, post an offer in one, watch it land in the other
 - An AI listing analyst: one endpoint that returns a structured verdict on a listing — fair-value range, reasoning, a suggested offer — as JSON, cached per listing
-- A market simulator that generates random offers on a schedule, so the realtime layer has something to show
+- A market simulator that posts a realistic offer (60–110% of asking) on a schedule, so the realtime layer has something to show. It is gated behind an env flag and goes through the real offers service, so validation, counters, invalidation, and broadcasts all fire and the demo cannot drift from production behavior
 
 ## Architecture
 
@@ -27,9 +27,9 @@ The interview didn't go anywhere. The project did. Every pattern in it is one I 
 
 **NestJS backend** with Listings and Offers as separate modules. Offers reference Listings by ObjectId. Every DTO goes through a global `ValidationPipe` with `forbidNonWhitelisted`, so unexpected fields are rejected rather than silently dropped. Cross-module wiring — Offers needing to bump a counter on Listings — was my first real encounter with NestJS's module boundaries and exports.
 
-**MongoDB** for listings and offers. The offer count on each listing is denormalized and maintained with `$inc` on every write, so the listings table doesn't need a join or a count query per row. Denormalized counters drift, so a reconciliation cron recomputes them from the source of truth.
+**MongoDB** for listings and offers. The offer count on each listing is denormalized and maintained with `$inc` on every write, so the listings table doesn't need a join or a count query per row. Denormalized counters drift, so a reconciliation cron compares each stored count against the source of truth and repairs only the ones that moved. At real scale that per-listing loop becomes a single `$group` aggregation; at this size the loop is fine and I know where the upgrade lives.
 
-**Redis** in two roles: a cache-aside layer over listing reads, invalidated on every write path (create listing, create offer), and an atomic counter for per-listing view counts and per-key rate limiting on the offers endpoint.
+**Redis** in two roles: a cache-aside layer over listing reads (60s TTL) and per-listing AI analyses (1h TTL), both invalidated on every write path that changes their inputs, and an atomic counter for per-listing view counts and per-key rate limiting on the offers endpoint. The TTLs are the safety net if an invalidation path is ever missed.
 
 **Socket.IO**, two gateways: one for listings, one for offers. On the frontend, events are pushed directly into TanStack Query's cache with `setQueryData`, so the realtime update and the fetched data share one source of truth and the UI doesn't need a second state layer.
 
@@ -37,7 +37,7 @@ The interview didn't go anywhere. The project did. Every pattern in it is one I 
 
 **OpenAI integration** behind a provider-agnostic wrapper: base URL, model, and key come from environment variables, so swapping to another provider is a config change. The analyst prompt asks for strict JSON and the response is validated before it's cached.
 
-**Jest** on the Offers service with mocked dependencies, and **GitHub Actions** running tests, lint, and coverage on every push.
+**Jest**, 34 tests across the services, gateways, and controllers, on a fully mocked dependency graph (Mongoose models via `getModelToken`, Redis behind a provider token, gateways as stubs), so the suite runs in milliseconds with no infrastructure. The failure-path tests assert the *absence* of side effects: a rate-limited offer creates nothing, increments nothing, broadcasts nothing. **GitHub Actions** runs lint, tests, and a production build on every push.
 
 ## Hard parts
 
@@ -52,7 +52,7 @@ The interview didn't go anywhere. The project did. Every pattern in it is one I 
 - **It's not deployed.** I cut deployment for time. That's the first thing I'd fix — a backend project nobody can hit is only half a demo.
 - **Denormalized counter plus reconciliation cron** is the pragmatic answer. The correct one is a transactional outbox or a proper event pipeline, which is more infrastructure than the project justified.
 - **Two Socket.IO gateways only work on one instance.** Scaling horizontally needs the Redis pub/sub adapter so events fan out across servers.
-- **Tests cover the service layer, not the gateways or the frontend.** Enough for CI to mean something, not enough to refactor fearlessly.
+- **Tests stop at the backend.** The frontend has none, and the backend suite is fully mocked, so nothing exercises a real MongoDB or Redis. Enough for CI to mean something, not enough to refactor fearlessly.
 - **No create-listing form.** Listings are seeded. A deliberate scope cut, but it means the app is read-heavy in a way a real marketplace wouldn't be.
 
 ## Links
