@@ -15,7 +15,7 @@ export type WorkLink = {
 
 export type WorkFrontmatter = {
   title: string;
-  year: number;
+  year: number | string;
   kind: string;
   status: string;
   summary: string;

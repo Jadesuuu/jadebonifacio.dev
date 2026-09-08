@@ -7,10 +7,10 @@ The personal site and portfolio of Jade Bonifacio, a full-stack developer in the
 - [Next.js 15](https://nextjs.org) (App Router, TypeScript)
 - [Tailwind CSS v4](https://tailwindcss.com), with the colour tokens defined once in `src/app/globals.css`
 - [next-mdx-remote](https://github.com/hashicorp/next-mdx-remote) for MDX case studies
-- [Framer Motion](https://www.framer.com/motion/) for the homepage entrance animation
 - [cmdk](https://cmdk.paco.me) for the Cmd/Ctrl+K command palette
 - [Shiki](https://shiki.style) for build-time code highlighting
-- Geist Sans and Geist Mono via `next/font`; no component library
+- [simple-icons](https://simpleicons.org) for the toolbox brand marks, inlined as SVG
+- Geist Sans, Geist Mono and Instrument Serif via `next/font`; no component library
 
 ## Run locally
 
@@ -41,4 +41,4 @@ The [Claude Design project](https://claude.ai/design/p/8b21612c-5b28-4d38-b22a-c
 
 Case studies live in `src/content/work/` as MDX files with YAML frontmatter. The frontmatter carries the title, year, kind, status, summary, stack, header links, and the next-project slug; the body is prose plus a few components (`Callout`, `Figure`) and fenced code blocks that Shiki highlights at build time. Header links reference `src/content/links.ts` by name rather than hardcoding URLs. Adding a case study means dropping a new `.mdx` file in that folder and adding the matching entry to `projects.ts`.
 
-The theme is dark by default. The toggle writes a cookie that the root layout reads on the server, so the correct theme is applied on the first byte and there is no flash on load.
+The theme is dark by default. The toggle writes a cookie, and a small inline script in `<head>` applies it before first paint, so every page stays fully static and there is no flash on load.

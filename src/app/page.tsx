@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { ConstellationBg } from "@/components/ConstellationBg";
 import { ContactForm } from "@/components/home/ContactForm";
 import { CopyEmailButton } from "@/components/home/CopyEmailButton";
@@ -11,19 +10,10 @@ import { ScrollReveal } from "@/components/home/ScrollReveal";
 import { StoryEffects } from "@/components/home/StoryEffects";
 import { Toolbox } from "@/components/home/Toolbox";
 import { Typewriter } from "@/components/home/Typewriter";
+import { WorkCard } from "@/components/home/WorkCard";
+import { Footer } from "@/components/Footer";
 import { links } from "@/content/links";
-
-// Everything in the toolbox, scrolled in the marquee; rendered twice for a
-// seamless -50% loop. Kept broad so the strip doesn't read as repetitive.
-const MARQUEE = [
-  "typescript", "react", "next.js", "nestjs", "node", "python",
-  "tailwind", "shadcn/ui", "material ui",
-  "postgres", "supabase", "mongodb", "redis", "oracle", "dynamodb",
-  "tanstack query", "zustand",
-  "aws", "vercel", "docker", "github actions",
-  "websockets", "socket.io", "mapbox gl",
-  "openai", "claude code", "jest",
-];
+import { projects } from "@/content/projects";
 
 const IN_GAME = [
   "valorant — peak radiant", "league of legends", "arc raiders", "path of exile",
@@ -78,8 +68,8 @@ export default function HomePage() {
         <div className="flex min-w-0 flex-col gap-5">
           <p className={`${serifHeading} m-0 text-2xl text-accent`}>Hello, world — I&apos;m</p>
           <h1
-            className="m-0 font-medium"
-            style={{ fontSize: "clamp(48px,7vw,80px)", lineHeight: 1.02, letterSpacing: "-0.02em" }}
+            className={`${serifHeading} m-0`}
+            style={{ fontSize: "clamp(46px,6.5vw,72px)", lineHeight: 1.05, letterSpacing: "-0.01em" }}
           >
             Jade Bonifacio<span className="text-accent">.</span>
           </h1>
@@ -138,20 +128,6 @@ export default function HomePage() {
       </header>
       </div>
 
-      {/* Skills marquee */}
-      <div
-        className="v2-marquee overflow-hidden border-y border-border py-3.5"
-        aria-hidden="true"
-      >
-        <div className="v2-marquee-track inline-flex gap-9 whitespace-nowrap font-mono text-[13px] tracking-[0.04em] text-fg-faint">
-          {[...MARQUEE, ...MARQUEE].map((word, i) => (
-            <span key={i} className="inline-flex items-center gap-9">
-              <span>{word}</span>
-              <span className="text-accent">·</span>
-            </span>
-          ))}
-        </div>
-      </div>
 
       {/* Selected work */}
       <section id="work" className="mx-auto max-w-[1080px] scroll-mt-16 px-6 pt-32 md:px-8">
@@ -160,117 +136,9 @@ export default function HomePage() {
           Things I&apos;ve shipped<span className="text-accent">.</span>
         </h2>
         <div data-stagger className="flex flex-col gap-8">
-          {/* JF & The World */}
-          <article className="v2-card group relative grid grid-cols-[1.1fr_1fr] overflow-hidden rounded-[14px] border border-border bg-bg-subtle max-[840px]:grid-cols-[minmax(0,1fr)]">
-            <div className="relative min-h-[240px] max-[840px]:order-first max-[840px]:aspect-[16/10] max-[840px]:min-h-0">
-              <Image
-                src="/images/work/jf-and-the-world/thumbnail.png"
-                alt="JF & The World — the shared travel map"
-                fill
-                sizes="(max-width:840px) 100vw, 540px"
-                className="object-cover"
-              />
-            </div>
-            <div className="flex flex-col justify-center gap-3 p-9">
-              <p className="m-0 font-mono text-xs tracking-[0.04em] text-accent">live in production</p>
-              <h3 className="m-0 text-[26px] font-medium">JF &amp; The World</h3>
-              <p className="m-0 text-[15px] leading-relaxed text-fg-muted">
-                A private, two-person map of where we&apos;ve been and where we want to go. Pins move
-                from dream to memory.
-              </p>
-              <p className="m-0 font-mono text-xs text-fg-faint">
-                next.js 15 · supabase · mapbox gl · cloudinary
-                <span className="text-accent">
-                  {" · "}
-                  <a
-                    href={links.demos.jfAndTheWorld}
-                    target="_blank"
-                    rel="noopener"
-                    className="relative z-10 text-accent underline decoration-transparent decoration-1 underline-offset-[3px] transition-colors hover:decoration-accent"
-                  >
-                    live demo ↗
-                  </a>
-                </span>
-              </p>
-              <Link
-                href="/work/jf-and-the-world"
-                className="v2-underline mt-2 self-start font-mono text-[13px] text-fg after:absolute after:inset-0 after:z-[1] after:content-['']"
-              >
-                read the case study →
-              </Link>
-            </div>
-          </article>
-
-          {/* ScoutBoard */}
-          <article className="v2-card group relative grid grid-cols-[1fr_1.1fr] overflow-hidden rounded-[14px] border border-border bg-bg-subtle max-[840px]:grid-cols-[minmax(0,1fr)]">
-            <div className="flex flex-col justify-center gap-3 p-9">
-              <p className="m-0 font-mono text-xs tracking-[0.04em] text-accent">five evenings</p>
-              <h3 className="m-0 text-[26px] font-medium">ScoutBoard</h3>
-              <p className="m-0 text-[15px] leading-relaxed text-fg-muted">
-                A realtime marketplace for buying and selling small businesses — live offers over
-                websockets, a market simulator keeping it moving.
-              </p>
-              <p className="m-0 font-mono text-xs text-fg-faint">
-                nestjs · mongodb · redis · socket.io
-                <span className="text-accent">
-                  {" · "}
-                  <a
-                    href={links.demos.scoutboard}
-                    target="_blank"
-                    rel="noopener"
-                    className="relative z-10 text-accent underline decoration-transparent decoration-1 underline-offset-[3px] transition-colors hover:decoration-accent"
-                  >
-                    live demo ↗
-                  </a>
-                </span>
-              </p>
-              <Link
-                href="/work/scoutboard"
-                className="v2-underline mt-2 self-start font-mono text-[13px] text-fg after:absolute after:inset-0 after:z-[1] after:content-['']"
-              >
-                read the case study →
-              </Link>
-            </div>
-            <div className="relative min-h-[240px] max-[840px]:order-first max-[840px]:aspect-[16/10] max-[840px]:min-h-0">
-              <Image
-                src="/images/work/scoutboard/thumbnail.png"
-                alt="ScoutBoard — the realtime marketplace board"
-                fill
-                sizes="(max-width:840px) 100vw, 540px"
-                className="object-cover"
-              />
-            </div>
-          </article>
-
-          {/* Enterprise (NDA) */}
-          <Link
-            href="/work/enterprise-platform-work"
-            className="v2-card grid grid-cols-[1.1fr_1fr] overflow-hidden rounded-[14px] border border-border bg-bg-subtle max-[840px]:grid-cols-[minmax(0,1fr)]"
-          >
-            <div
-              className="flex min-h-[240px] items-center justify-center max-[840px]:order-first max-[840px]:aspect-[16/10] max-[840px]:min-h-0"
-              style={{
-                background:
-                  "repeating-linear-gradient(-45deg,var(--bg-subtle),var(--bg-subtle) 8px,var(--bg) 8px,var(--bg) 16px)",
-              }}
-            >
-              <span className="rounded-md border border-border bg-bg px-3.5 py-2 font-mono text-[13px] text-fg-muted">
-                no screenshots — nda
-              </span>
-            </div>
-            <div className="flex flex-col justify-center gap-3 p-9">
-              <p className="m-0 font-mono text-xs tracking-[0.04em] text-accent">the day job · 2 years</p>
-              <h3 className="m-0 text-[26px] font-medium">Enterprise platform work</h3>
-              <p className="m-0 text-[15px] leading-relaxed text-fg-muted">
-                Shipping into a large, mature codebase I didn&apos;t write, for a Japanese client, on
-                a bilingual team. Client under NDA.
-              </p>
-              <p className="m-0 font-mono text-xs text-fg-faint">react · typescript · node · oracle · dynamodb · aws</p>
-              <span className="v2-underline mt-2 self-start font-mono text-[13px] text-fg">
-                the shape of the work →
-              </span>
-            </div>
-          </Link>
+          {projects.map((project, i) => (
+            <WorkCard key={project.slug} project={project} imageFirst={i % 2 === 0} />
+          ))}
         </div>
       </section>
 
@@ -347,7 +215,7 @@ export default function HomePage() {
         <div data-stagger className="mt-8 flex flex-wrap gap-3">
           <span className="v2-chip">currently reading: designing data-intensive applications</span>
           <span className="v2-chip">building at night, shipping by day</span>
-          <span className="v2-chip">utc+8 · overlaps us mornings</span>
+          <span className="v2-chip">gmt+8 · overlaps us mornings</span>
         </div>
       </section>
 
@@ -396,7 +264,7 @@ export default function HomePage() {
               {
                 title: "Builds at night",
                 body:
-                  "Three side projects in two years — an uptime monitor, a realtime marketplace, and a travel app my girlfriend and I use every day.",
+                  "Four side projects in two years — an uptime monitor, a realtime marketplace, a travel app my girlfriend and I use every day, and this site.",
                 icon: <path d="M20 13A8 8 0 1 1 11 4a6.5 6.5 0 0 0 9 9Z" />,
               },
               {
@@ -452,35 +320,20 @@ export default function HomePage() {
             },
             {
               side: "end",
-              meta: "2023–24 · college",
-              title: "Interned, then went freelance",
+              meta: "jul 1–2, 2024 · baguio → makati",
+              title: "Graduated cum laude — at work the next day",
               body:
-                "QA at NOAH Business Applications, then freelance — a web Kardex for SLU Sacred Heart Hospital, client sites, an LGU spot-map — while building Recogn for my thesis.",
-              ph: "college-era photo",
-            },
-            {
-              side: "start",
-              meta: "jul 1, 2024 · baguio",
-              title: "Graduated cum laude",
-              body: "B.S. Computer Science — with TOPCIT, JLPT N4, and PhilNITS FE picked up the same year.",
+                "B.S. Computer Science — with TOPCIT, JLPT N4, and PhilNITS FE the same year. The next morning: Advanced World Solutions in Makati, as an R&D engineer.",
               ph: "graduation photo",
               img: "/images/home/graduation.jpg",
               alt: "Graduating cum laude, B.S. Computer Science, July 2024",
             },
             {
-              side: "end",
-              meta: "jul 2, 2024 · makati",
-              title: "First day of work — the very next day",
-              body: "Straight to Advanced World Solutions as an R&D engineer.",
-              ph: "first-day / office photo",
-              img: "/images/home/first-day.jpg",
-              alt: "First day at Advanced World Solutions in Makati, receiving a certificate of completion",
-            },
-            {
               side: "start",
-              meta: "2025–26 · nights",
-              title: "Shipped side projects",
-              body: "HTTP Monitor, then ScoutBoard, then JF & The World — live with its two intended users.",
+              meta: "2025–26 · after work",
+              title: "Shipped side projects, after hours",
+              body:
+                "Still at Advanced World Solutions by day. Evenings and weekends went to HTTP Monitor, then ScoutBoard, then JF & The World — live with its two intended users.",
               ph: "late-night setup photo",
             },
           ].map((item: { side: string; meta: string; title: string; body: string; ph: string; img?: string; alt?: string }) => (
@@ -530,7 +383,7 @@ export default function HomePage() {
       <section id="off-keyboard" className="mx-auto max-w-[1080px] px-6 pt-32 md:px-8">
         <p className={`${sectionLabel} mb-3`}>after hours</p>
         <h2 className={`${serifHeading} m-0 mb-4`} style={{ fontSize: "clamp(34px,4.5vw,50px)" }}>
-          AFK, probably in-game<span className="text-accent">.</span>
+          Away from the keyboard<span className="text-accent">.</span>
         </h2>
         <p className="m-0 mb-7 flex max-w-[56ch] flex-wrap items-center gap-3 text-base leading-relaxed text-fg-muted">
           <svg
@@ -545,16 +398,25 @@ export default function HomePage() {
             aria-hidden="true"
             className="shrink-0"
           >
-            <path d="M6 11h4M8 9v4" />
-            <circle cx="15.5" cy="10.5" r="0.5" fill="var(--accent)" />
-            <circle cx="17.5" cy="12.5" r="0.5" fill="var(--accent)" />
-            <path d="M17.3 5H6.7a4.7 4.7 0 0 0-4.6 5.5l.9 5a2.8 2.8 0 0 0 4.9 1.3L9.6 15h4.8l1.7 1.8a2.8 2.8 0 0 0 4.9-1.3l.9-5A4.7 4.7 0 0 0 17.3 5Z" />
+            <path d="M10 2v2" />
+            <path d="M14 2v2" />
+            <path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1" />
+            <path d="M6 2v2" />
           </svg>
-          When I&apos;m not shipping, I&apos;m queuing — PC and a Switch OLED both. The same patience
-          that gets me through legacy PL/SQL is how I peaked Radiant.
+          Most of it happens off-screen: the gym, a badminton court, a long walk, somewhere to
+          snorkel, and a food trip to end the day. When I do queue up, the same patience that gets
+          me through legacy PL/SQL is how I peaked Radiant.
         </p>
-        <p className="m-0 mb-2.5 font-mono text-xs tracking-[0.04em] text-fg-faint">in-game</p>
+        <p className="m-0 mb-2.5 font-mono text-xs tracking-[0.04em] text-fg-faint">irl</p>
         <div data-stagger className="mb-5 flex flex-wrap gap-2.5">
+          {IRL.map((tag) => (
+            <span key={tag} className="v2-chip !px-3.5 !py-1.5 !text-[13px]">
+              {tag}
+            </span>
+          ))}
+        </div>
+        <p className="m-0 mb-2.5 font-mono text-xs tracking-[0.04em] text-fg-faint">in-game</p>
+        <div data-stagger className="mb-6 flex flex-wrap gap-2.5">
           {IN_GAME.map((tag) => (
             <span key={tag} className="v2-chip !px-3.5 !py-1.5 !text-[13px]">
               {tag === "valorant — peak radiant" ? (
@@ -567,18 +429,11 @@ export default function HomePage() {
             </span>
           ))}
         </div>
-        <p className="m-0 mb-2.5 font-mono text-xs tracking-[0.04em] text-fg-faint">irl</p>
-        <div data-stagger className="mb-6 flex flex-wrap gap-2.5">
-          {IRL.map((tag) => (
-            <span key={tag} className="v2-chip !px-3.5 !py-1.5 !text-[13px]">
-              {tag}
-            </span>
-          ))}
-        </div>
         <div data-stagger className="grid grid-cols-4 gap-4 max-[840px]:grid-cols-2">
           {[
             { label: "me", ph: "a photo of you — candid beats formal", accent: false },
-            { label: "the battlestation", ph: "your pc battlestation", accent: false },
+            { label: "the court", ph: "badminton — mid-rally beats posed", accent: false },
+            { label: "the coast", ph: "snorkeling, or a long walk by the water", accent: false },
             {
               label: "peak radiant",
               ph: "valorant rank card screenshot",
@@ -586,7 +441,6 @@ export default function HomePage() {
               img: "/images/home/valorant-radiant.png",
               alt: "Valorant Radiant buddy hanging from a Champions Vandal",
             },
-            { label: "wildcard", ph: "wildcard — coffee, coast, or court", accent: false },
           ].map(
             (tile: {
               label: string;
@@ -670,15 +524,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border">
-        <div className="mx-auto flex max-w-[1080px] flex-wrap items-center justify-between gap-4 px-6 py-6 font-mono text-[13px] text-fg-faint md:px-8">
-          <span>© 2026 jade bonifacio · hand-built, no template</span>
-          <span>
-            manila · <LocalClock />
-          </span>
-        </div>
-      </footer>
+      <Footer wide />
     </div>
   );
 }

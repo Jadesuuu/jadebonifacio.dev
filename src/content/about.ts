@@ -9,7 +9,7 @@ export const howIWorkParagraphs = [
   "I read before I write. In a mature codebase the most useful thing I can do is trace how something actually works before I touch it, and I've carried that habit into my own projects.",
   "I make small changes I can defend. Big refactors in a system with years of accumulated behavior break things you find out about a month later. I'd rather ship the smallest fix and explain exactly why it's safe.",
   "I write down what broke. Every project here has a section on what went wrong and how I fixed it, because that's the part I actually learned from and the part I'd want to know about someone else's work.",
-  "I use Claude Code every day, at work and at home. I've built internal tooling around it for my team, and a good part of that job is knowing where it saves hours and where it confidently makes things worse.",
+  "I use Claude Code every day, at work and at home, and I built my team's tooling on it: the bug-fix pipeline, staging log fetchers, a metrics dashboard. The useful skill turned out not to be prompting. It's knowing where it saves hours and where it confidently makes things worse.",
 ];
 
 export type SmallerThing = {

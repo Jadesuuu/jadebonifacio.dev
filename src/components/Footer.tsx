@@ -1,19 +1,35 @@
 import { Container } from "@/components/Container";
-import { links, mailto } from "@/content/links";
+import { LocalClock } from "@/components/home/LocalClock";
 
-/** Hairline top border. Email left, resume right, both mono. Stacks on mobile. */
-export function Footer() {
+// Baked in at build time; the site is fully static.
+const year = new Date().getFullYear();
+
+/**
+ * Footer (DESIGN.md): hairline top border, mono --fg-faint. Left the © line,
+ * right the Manila clock. The same on every page; `wide` uses the home page's
+ * 1080px shell instead of the 680px column.
+ */
+export function Footer({ wide = false }: { wide?: boolean }) {
+  const row = (
+    <div className="flex flex-wrap items-center justify-between gap-4 py-6 font-mono text-[13px] tracking-[0.02em] text-fg-faint">
+      <span>© {year} jade bonifacio · hand-built, no template</span>
+      <span>
+        manila · <LocalClock />
+      </span>
+    </div>
+  );
+
+  if (wide) {
+    return (
+      <footer className="border-t border-border">
+        <div className="mx-auto max-w-[1080px] px-6 md:px-8">{row}</div>
+      </footer>
+    );
+  }
   return (
     <footer className="mt-16 md:mt-24">
       <Container>
-        <div className="flex flex-col gap-3 border-t border-border pt-6 pb-12 md:flex-row md:items-center md:justify-between">
-          <a href={mailto} className="text-meta-mono link-quiet tap-target">
-            {links.email}
-          </a>
-          <a href={links.resume} target="_blank" rel="noopener" className="text-meta-mono link-quiet tap-target">
-            resume.pdf
-          </a>
-        </div>
+        <div className="border-t border-border pb-6">{row}</div>
       </Container>
     </footer>
   );

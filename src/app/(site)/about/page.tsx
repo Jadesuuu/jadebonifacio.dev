@@ -27,7 +27,7 @@ const next = getProject("jf-and-the-world");
 export default function AboutPage() {
   return (
     <Container className="pt-16 md:pt-24">
-      <h1>{title}</h1>
+      <h1 className="v2-h1">{title}</h1>
 
       <section className="mt-12 md:mt-16">
         <SectionLabel>who</SectionLabel>

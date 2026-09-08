@@ -1,6 +1,6 @@
 import { links } from "@/content/links";
 
-/** Site-wide copy. Quoted from DESIGN.md; keep in sync. URLs live in content/links.ts. */
+/** Site-wide copy. URLs live in content/links.ts. */
 export const site = {
   name: "jade bonifacio",
   title: "Jade Bonifacio",
@@ -11,20 +11,10 @@ export const site = {
   domain: "jadebonifacio.dev",
 } as const;
 
-export const hero = {
-  headline:
-    "Full-stack developer. I ship production apps from zero, and fix the ones other people wrote.",
-  context: "Philippines · open to remote startup roles",
-  tools:
-    "typescript · react · next.js · nestjs · node · postgres · mongodb · redis · aws",
-} as const;
-
+/** Inner-page nav (DESIGN.md, Nav). The home page has its own nav with the same links. */
 export const navLinks = [
   { href: "/#work", label: "work", external: false },
   { href: "/about", label: "about", external: false },
+  { href: "/#contact", label: "contact", external: false },
   { href: links.resume, label: "resume", external: true },
 ] as const;
-
-/** "How I work" paragraph, quoted from DESIGN.md. */
-export const howIWork =
-  "The day job taught me how to be careful: read before writing, make small defensible changes. Side projects taught me how to ship. What I want now is somewhere I can do both: a smaller team, more ownership, features rather than maintenance.";
