@@ -1,7 +1,7 @@
 # Enterprise platform work — Advanced World Solutions
 
 **Two years shipping into a large, mature codebase I didn't write, for a Japanese client, on a bilingual team.**
-Full-time · React · TypeScript · Node · Oracle · AWS · client under NDA
+Full-time · React · TypeScript · Node · Oracle · DynamoDB · AWS · client under NDA
 
 ---
 
@@ -17,7 +17,7 @@ The client and the specifics are under NDA. What I can describe is the shape of 
 
 **Cross-stack defect work on a real estate management platform.** Bugs that land on my desk don't come labeled frontend or backend. A recent one: file uploads rejecting valid images. The validation logic was checking MIME types, and JPEGs arrive as several variants depending on the source. Tracing that from the user's report through the React upload flow to the validation rule, fixing it without loosening the check for everything else, and writing it up for a team that reads the ticket in a second language — that's a typical week.
 
-**A QR-based parking system with realtime slot monitoring.** Built on AWS SNS and SQS for event fan-out and processing. My first production use of a message queue, and where I learned the difference between a queue and pub/sub by needing both.
+**A QR-based parking system with realtime slot monitoring.** Built on DynamoDB, with AWS SNS and SQS for event fan-out and processing. My first production use of a message queue, and where I learned the difference between a queue and pub/sub by needing both.
 
 **Team tooling on Claude Code.** I use Claude Code daily and have built internal tooling and custom skills around it for the team. Part of the job now is figuring out where AI-assisted development actually saves time in a large legacy codebase and where it confidently makes things worse.
 

@@ -18,7 +18,7 @@ import { parseTheme, THEME_COOKIE } from "@/lib/theme";
 const MARQUEE = [
   "typescript", "react", "next.js", "nestjs", "node", "python",
   "tailwind", "shadcn/ui", "material ui",
-  "postgres", "supabase", "mongodb", "redis", "oracle",
+  "postgres", "supabase", "mongodb", "redis", "oracle", "dynamodb",
   "tanstack query", "zustand",
   "aws", "vercel", "docker", "github actions",
   "websockets", "socket.io", "mapbox gl",
@@ -28,7 +28,7 @@ const MARQUEE = [
 const TOOLBOX = [
   ["front-end", "react · next.js (app router · rsc) · typescript · tailwind css · shadcn/ui · material ui"],
   ["back-end", "node.js · nestjs (di · guards · gateways) · python"],
-  ["data", "postgresql / supabase (rls) · mongodb · redis · oracle pl/sql · tanstack query · zustand"],
+  ["data", "postgresql / supabase (rls) · mongodb · redis · oracle pl/sql · dynamodb · tanstack query · zustand"],
   ["cloud & ai", "aws (ec2 · s3 · sns · sqs) · vercel · docker · github actions · websockets · socket.io · openai api · claude code · jest"],
   ["languages", "filipino · english · japanese (jlpt n4)"],
   ["papers", "aws ccp '26 · philnits fe · topcit · cs50x · nvidia dl workshop"],
@@ -252,7 +252,7 @@ export default async function HomePage() {
                 Shipping into a large, mature codebase I didn&apos;t write, for a Japanese client, on
                 a bilingual team. Client under NDA.
               </p>
-              <p className="m-0 font-mono text-xs text-fg-faint">react · typescript · node · oracle · aws</p>
+              <p className="m-0 font-mono text-xs text-fg-faint">react · typescript · node · oracle · dynamodb · aws</p>
               <span className="v2-underline mt-2 self-start font-mono text-[13px] text-fg">
                 the shape of the work →
               </span>
