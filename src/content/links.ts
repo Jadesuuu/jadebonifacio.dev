@@ -13,6 +13,7 @@ export const links = {
   },
   /** Hosted demos, when a project has one. */
   demos: {
+    jfAndTheWorld: "https://jf-and-the-world-demo.vercel.app",
     scoutboard: "https://scoutboard-scoutboard-frontend.vercel.app",
   },
 } as const;

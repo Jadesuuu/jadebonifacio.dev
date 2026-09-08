@@ -25,10 +25,11 @@ export const projects: Project[] = [
     description:
       "A private, two-person map of where we've been and where we want to go. Live in production.",
     stack: ["next.js 15", "supabase", "mapbox gl", "cloudinary"],
-    status: "live in production",
+    status: "live in production · live demo",
     hasImage: true,
     thumbnail: "/images/work/jf-and-the-world/thumbnail.png",
     repo: links.repos.jfAndTheWorld,
+    demo: links.demos.jfAndTheWorld,
   },
   {
     slug: "scoutboard",

@@ -180,7 +180,17 @@ export default function HomePage() {
               </p>
               <p className="m-0 font-mono text-xs text-fg-faint">
                 next.js 15 · supabase · mapbox gl · cloudinary
-                <span className="text-accent"> · live ↗</span>
+                <span className="text-accent">
+                  {" · "}
+                  <a
+                    href={links.demos.jfAndTheWorld}
+                    target="_blank"
+                    rel="noopener"
+                    className="relative z-10 text-accent underline decoration-transparent decoration-1 underline-offset-[3px] transition-colors hover:decoration-accent"
+                  >
+                    live demo ↗
+                  </a>
+                </span>
               </p>
               <Link
                 href="/work/jf-and-the-world"
