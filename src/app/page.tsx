@@ -196,7 +196,7 @@ export default function HomePage() {
             className="v2-card grid grid-cols-[1fr_1.1fr] overflow-hidden rounded-[14px] border border-border bg-bg-subtle max-[840px]:grid-cols-[minmax(0,1fr)]"
           >
             <div className="flex flex-col justify-center gap-3 p-9">
-              <p className="m-0 font-mono text-xs tracking-[0.04em] text-accent">three weeks of evenings</p>
+              <p className="m-0 font-mono text-xs tracking-[0.04em] text-accent">five evenings</p>
               <h3 className="m-0 text-[26px] font-medium">ScoutBoard</h3>
               <p className="m-0 text-[15px] leading-relaxed text-fg-muted">
                 A realtime marketplace for buying and selling small businesses — live offers over

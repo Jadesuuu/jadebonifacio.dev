@@ -32,7 +32,7 @@ export const projects: Project[] = [
     slug: "scoutboard",
     title: "ScoutBoard",
     description:
-      "A realtime marketplace for buying and selling small businesses, built in three weeks of evenings.",
+      "A realtime marketplace for buying and selling small businesses, built in five evenings.",
     stack: ["nestjs", "mongodb", "redis", "socket.io"],
     status: "public repo · ci green",
     hasImage: true,
