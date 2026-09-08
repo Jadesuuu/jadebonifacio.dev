@@ -1,7 +1,7 @@
 # ScoutBoard
 
 **A realtime marketplace for buying and selling small businesses, built in five evenings.**
-Live demo · CI green · NestJS · MongoDB · Redis · Socket.IO · Next.js App Router · TanStack Query · OpenAI
+Live demo · Public repo · CI green · NestJS · MongoDB · Redis · Socket.IO · Next.js App Router · TanStack Query · OpenAI
 
 ---
 
