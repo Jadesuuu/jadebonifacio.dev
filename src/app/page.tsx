@@ -93,8 +93,8 @@ export default async function HomePage() {
             <Typewriter />
           </p>
           <p className="m-0 max-w-[46ch] text-base leading-relaxed text-fg-muted">
-            Full-stack developer in the TypeScript ecosystem. San Fernando, Philippines · remote,
-            GMT+8 · open to global startup roles.
+            Full-stack developer in the TypeScript ecosystem. Makati, Metro Manila, Philippines ·
+            remote, GMT+8 · open to global startup roles.
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-3.5">
             <a
