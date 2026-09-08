@@ -14,6 +14,8 @@ export type Project = {
   thumbnail?: string;
   /** Public source, when there is one. */
   repo?: string;
+  /** Hosted demo, when there is one. */
+  demo?: string;
 };
 
 export const projects: Project[] = [
@@ -34,10 +36,11 @@ export const projects: Project[] = [
     description:
       "A realtime marketplace for buying and selling small businesses, built in five evenings.",
     stack: ["nestjs", "mongodb", "redis", "socket.io"],
-    status: "public repo · ci green",
+    status: "live demo · ci green",
     hasImage: true,
     thumbnail: "/images/work/scoutboard/thumbnail.png",
     repo: links.repos.scoutboard,
+    demo: links.demos.scoutboard,
   },
   {
     slug: "enterprise-platform-work",

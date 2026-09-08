@@ -2,7 +2,7 @@
 title: ScoutBoard
 year: 2026
 kind: side project
-status: public repo · ci green
+status: live demo · ci green
 summary: A realtime marketplace for buying and selling small businesses, built in five evenings.
 stack:
   - NestJS
@@ -13,6 +13,8 @@ stack:
   - TanStack Query
   - OpenAI
 links:
+  - label: live demo
+    to: demos.scoutboard
   - label: source
     to: repos.scoutboard
   - label: companion
@@ -96,7 +98,6 @@ Lesson: invalidate the cache entries you can key precisely; put a short expiry o
 
 ## What I'd change
 
-- **It's not deployed.** I cut deployment for time. That's the first thing I'd fix — a backend project nobody can hit is only half a demo.
 - **Denormalized counter plus reconciliation cron** is the pragmatic answer. The correct one is a transactional outbox or a proper event pipeline, which is more infrastructure than the project justified.
 - **Two Socket.IO gateways only work on one instance.** Scaling horizontally needs the Redis pub/sub adapter so events fan out across servers.
 - **Tests stop at the backend.** The frontend has none, and the backend suite is fully mocked, so nothing exercises a real MongoDB or Redis. Enough for CI to mean something, not enough to refactor fearlessly.
