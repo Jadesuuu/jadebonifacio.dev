@@ -46,3 +46,6 @@ next-env.d.ts
 
 # design spec (private, kept local; the canvas is the source of truth)
 /DESIGN.md
+
+# raw screenshot captures (optimised copies live in public/images/work)
+/content/screenshots

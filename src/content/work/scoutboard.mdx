@@ -25,10 +25,10 @@ next: enterprise-platform-work
 <Figure
   src="/images/work/scoutboard/hero.png"
   width="1680"
-  height="885"
+  height="721"
   breakout
-  alt="The ScoutBoard marketplace: a grid of business listing cards, each with a name, industry, price and offer count, under the heading 'Own a business you'll love running.'"
-  caption="the marketplace, each card a small business for sale"
+  alt="The ScoutBoard landing page: a dark green hero reading 'Buy a real business with real numbers.', a pill counting 349 live offers on the book, a most-watched card for Ledger Lane Bookkeeping asking $190,000, and a strip below it counting businesses listed, median asking, live offers and median multiple."
+  caption="the landing page, with the offer book's live count in the corner"
 />
 
 ## Why I built it
@@ -50,9 +50,9 @@ The interview didn't go anywhere. The project did. Every pattern in it is one I 
 <Figure
   src="/images/work/scoutboard/ai-analyst.png"
   width="1680"
-  height="888"
+  height="866"
   breakout
-  alt="A ScoutBoard listing for Tito's Grill and Resto at $3,000,000, its offers list on the left and an AI analysis panel on the right marking it overpriced, with a $1.8M–$2.2M fair-value range, reasoning, and a suggested opening offer."
+  alt="A ScoutBoard listing asking $350,000, its stat tiles and offer history on the left, and on the right an AI analysis panel marking it overpriced: a $250k–$300k fair-value range, a bar putting the asking price above that range, four lines of reasoning, and a suggested opening offer of $275,000."
   caption="the ai analyst's verdict, with a fair-value range and a suggested offer"
 />
 
@@ -80,6 +80,15 @@ socket.on("offer:created", (offer: Offer) => {
 
 **Next.js App Router frontend** with TanStack Query and TanStack Table, shadcn/ui components.
 
+<Figure
+  src="/images/work/scoutboard/listings.png"
+  width="1680"
+  height="700"
+  breakout
+  alt="The ScoutBoard marketplace under the heading 'Businesses for sale': category filter chips, a sort dropdown and a cards/rows toggle above a grid of listing cards, each with a photograph, industry and city, yearly revenue, asking multiple, asking price and a live offer count."
+  caption="the marketplace, each card a small business for sale"
+/>
+
 **OpenAI integration** behind a provider-agnostic wrapper: base URL, model, and key come from environment variables, so swapping to another provider is a config change. The analyst prompt asks for strict JSON and the response is validated before it's cached.
 
 **Jest**, 34 tests across the services, gateways, and controllers, on a fully mocked dependency graph (Mongoose models via `getModelToken`, Redis behind a provider token, gateways as stubs), so the suite runs in milliseconds with no infrastructure. The failure-path tests assert the *absence* of side effects: a rate-limited offer creates nothing, increments nothing, broadcasts nothing. **GitHub Actions** runs lint, tests, and a production build on every push.
@@ -101,4 +110,4 @@ Lesson: invalidate the cache entries you can key precisely; put a short expiry o
 - **Denormalized counter plus reconciliation cron** is the pragmatic answer. The correct one is a transactional outbox or a proper event pipeline, which is more infrastructure than the project justified.
 - **Two Socket.IO gateways only work on one instance.** Scaling horizontally needs the Redis pub/sub adapter so events fan out across servers.
 - **Tests stop at the backend.** The frontend has none, and the backend suite is fully mocked, so nothing exercises a real MongoDB or Redis. Enough for CI to mean something, not enough to refactor fearlessly.
-- **No create-listing form.** Listings are seeded. A deliberate scope cut, but it means the app is read-heavy in a way a real marketplace wouldn't be.
+- **No accounts.** Anyone can publish a listing or post an offer, so there is no seller side: no "my listings", no accepting or declining an offer, no way to tell two buyers apart beyond the name they typed.
