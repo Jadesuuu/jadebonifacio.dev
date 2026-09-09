@@ -12,7 +12,9 @@ import path from "node:path";
 import sharp from "sharp";
 
 const PICTURES = "C:/Users/Jade/Pictures/Screenshots";
-const SB = "content/screenshots/Scoutboard";
+// ScoutBoard redesigned its UI, so its captures were retaken from the live
+// deploy (2026-09-09) at a 1440px viewport, 2x, clipped to section boundaries.
+const SB = "content/screenshots/Scoutboard/2026-09-09";
 const OUT = "public/images/work";
 
 // --bg (dark, the default theme) for the themes-grid gap.
@@ -27,10 +29,19 @@ const SOURCES = {
     lived: `${PICTURES}/Screenshot 2026-09-05 233427.png`, // Lived tab, memories with photos
   },
   scoutboard: {
-    hero: `${SB}/Screenshot 2026-09-05 225015.png`, // consumed; kept in public/
-    "ai-analyst": `${PICTURES}/Screenshot 2026-09-06 000435.png`, // listing + AI analysis
+    hero: `${SB}/hero.png`, // landing hero + the live-offer stats strip
+    listings: `${SB}/listings.png`, // the marketplace grid, one card per business
+    "ai-analyst": `${SB}/ai-analyst.png`, // listing + AI analysis
+    thumb: `${SB}/thumb.png`, // 3:2 crop of the hero, home thumbnail only
   },
 };
+
+// Which view the home thumbnail is cropped from. `thumb` is a purpose-framed
+// 3:2 capture; anything else falls back to the hero.
+const THUMB_FROM = { scoutboard: "thumb" };
+
+// Views that exist only to feed the thumbnail, never written as a figure.
+const THUMB_ONLY = new Set(["thumb"]);
 
 // Dream, Night, Galaxy, Paper — reading order for the 2x2 grid.
 const THEMES = [
@@ -92,6 +103,7 @@ for (const [slug, views] of Object.entries(SOURCES)) {
   await mkdir(dir, { recursive: true });
   manifest[slug] = {};
   for (const [view, src] of Object.entries(views)) {
+    if (THUMB_ONLY.has(view)) continue;
     if (!existsSync(src)) {
       console.log(`skip ${slug}/${view} (source gone, keeping existing image)`);
       continue;
@@ -99,9 +111,10 @@ for (const [slug, views] of Object.entries(SOURCES)) {
     const info = await optimizePng(src, path.join(dir, `${view}.png`));
     manifest[slug][view] = { src: `/images/work/${slug}/${view}.png`, ...info };
   }
-  // Homepage thumbnail from the hero capture, when the hero source is present.
-  if (existsSync(views.hero)) {
-    const thumb = await thumbnail(views.hero, path.join(dir, "thumbnail.png"));
+  // Homepage thumbnail, cropped from whichever view THUMB_FROM names.
+  const thumbSrc = views[THUMB_FROM[slug] ?? "hero"];
+  if (thumbSrc && existsSync(thumbSrc)) {
+    const thumb = await thumbnail(thumbSrc, path.join(dir, "thumbnail.png"));
     manifest[slug].thumbnail = { src: `/images/work/${slug}/thumbnail.png`, ...thumb };
   }
 }

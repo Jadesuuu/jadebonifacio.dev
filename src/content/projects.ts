@@ -52,7 +52,7 @@ export const projects: Project[] = [
     cta: "read the case study →",
     hasImage: true,
     thumbnail: "/images/work/scoutboard/thumbnail.png",
-    thumbnailAlt: "ScoutBoard — the realtime marketplace board",
+    thumbnailAlt: "ScoutBoard — 'Buy a real business with real numbers', over a live count of offers on the book",
     repo: links.repos.scoutboard,
     demo: links.demos.scoutboard,
   },
