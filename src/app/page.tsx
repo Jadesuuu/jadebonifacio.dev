@@ -3,9 +3,7 @@ import { ConstellationBg } from "@/components/ConstellationBg";
 import { ContactForm } from "@/components/home/ContactForm";
 import { CopyEmailButton } from "@/components/home/CopyEmailButton";
 import { HomeNav } from "@/components/home/HomeNav";
-import { LocalClock } from "@/components/home/LocalClock";
 import { ParticleCloud } from "@/components/home/ParticleCloud";
-import { Placeholder } from "@/components/home/Placeholder";
 import { ScrollReveal } from "@/components/home/ScrollReveal";
 import { StoryEffects } from "@/components/home/StoryEffects";
 import { Toolbox } from "@/components/home/Toolbox";
@@ -56,16 +54,11 @@ export default function HomePage() {
       <ScrollReveal />
       <HomeNav />
 
-      {/* Hero. The wrapper clips the glow's horizontal spill (it still bleeds
-          past the 1080px shell on wide screens, just never past the viewport). */}
-      <div className="overflow-x-clip">
-      <header className="v2-fade-up relative mx-auto grid max-w-[1080px] grid-cols-[1.15fr_0.85fr] items-center gap-16 px-6 pt-24 pb-[72px] md:px-8 max-[840px]:grid-cols-1 max-[840px]:gap-10">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -top-[220px] -right-[140px] size-[640px] rounded-full opacity-[0.07] blur-[80px]"
-          style={{ background: "radial-gradient(circle,var(--accent) 0%,transparent 60%)" }}
-        />
-        <div className="flex min-w-0 flex-col gap-5">
+      {/* Hero. Two columns sharing one baseline: the copy sits on a 72px
+          bottom pad, the photo is bottom-aligned and stretched to the same
+          row height, and a hairline runs under both. */}
+      <header className="v2-fade-up relative mx-auto grid max-w-[1080px] grid-cols-[1fr_1.05fr] items-end gap-11 px-6 pt-24 md:px-8 max-[840px]:grid-cols-1 max-[840px]:gap-10">
+        <div className="flex min-w-0 flex-col gap-5 pb-[72px]">
           <p className={`${serifHeading} m-0 text-2xl text-accent`}>Hello, world — I&apos;m</p>
           <h1
             className={`${serifHeading} m-0`}
@@ -114,20 +107,31 @@ export default function HomePage() {
             open to work · replies within a day
           </p>
         </div>
-        <div className="w-full max-w-[380px] justify-self-end max-[840px]:max-w-[340px] max-[840px]:justify-self-start">
-          <div
-            className="rounded-2xl border border-border bg-bg-subtle p-2.5"
-            style={{ aspectRatio: "4 / 5", transform: "rotate(-1.5deg)" }}
-          >
-            <Placeholder label="drop your photo here" />
-          </div>
-          <p className="mt-3.5 text-center font-mono text-xs text-fg-faint">
-            manila, philippines · <LocalClock /> local
-          </p>
+        {/* The photo is a cutout trimmed to its own silhouette, so it is sized
+            by width and never cropped — object-fit would clip a shoulder. It
+            bottom-aligns onto this hairline, which is drawn over it so the line
+            reads as ground the figure stands on rather than a frame edge. */}
+        <div className="flex w-full max-w-[620px] items-end justify-self-end self-stretch max-[840px]:max-w-full max-[840px]:justify-self-start">
+          {/* The camera's native file is only 962×768 after trimming, and the
+              optimizer will not upscale past it, so `sizes` deliberately
+              overstates the box: every device then pulls the full-resolution
+              variant instead of a downscaled 640w. Cut by scripts/key-hero.mjs. */}
+          <Image
+            src="/images/home/hero.png"
+            alt="Jade Bonifacio"
+            width={962}
+            height={768}
+            priority
+            quality={95}
+            sizes="(max-width:840px) 100vw, 960px"
+            className="pointer-events-none h-auto w-full"
+          />
         </div>
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-6 bottom-0 z-[2] h-px bg-border md:inset-x-8"
+        />
       </header>
-      </div>
-
 
       {/* Selected work */}
       <section id="work" className="mx-auto max-w-[1080px] scroll-mt-16 px-6 pt-32 md:px-8">
@@ -233,7 +237,15 @@ export default function HomePage() {
             className="rounded-2xl border border-border bg-bg-subtle p-2.5"
             style={{ aspectRatio: "1 / 1" }}
           >
-            <Placeholder label="drop a photo of you at work" />
+            <div className="relative size-full">
+              <Image
+                src="/images/home/at-work.png"
+                alt="Presenting to the team in a conference room at Advanced World Solutions"
+                fill
+                sizes="(max-width:840px) 90vw, 420px"
+                className="rounded-[10px] object-cover"
+              />
+            </div>
           </div>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-x-8 gap-y-9">
             {[
@@ -264,7 +276,7 @@ export default function HomePage() {
               {
                 title: "Builds at night",
                 body:
-                  "Four side projects in two years — an uptime monitor, a realtime marketplace, a travel app my girlfriend and I use every day, and this site.",
+                  "Side projects most years — an uptime monitor, a realtime marketplace, a QR parking lot, a property management system, and a travel app my girlfriend and I use every day.",
                 icon: <path d="M20 13A8 8 0 1 1 11 4a6.5 6.5 0 0 0 9 9Z" />,
               },
               {
@@ -314,7 +326,6 @@ export default function HomePage() {
               meta: "2020 · baguio",
               title: "Moved up the mountain for CS",
               body: "B.S. Computer Science at Saint Louis University.",
-              ph: "baguio / slu photo",
               img: "/images/home/baguio-slu.jpg",
               alt: "Baguio, where I moved for Computer Science at Saint Louis University",
             },
@@ -324,36 +335,32 @@ export default function HomePage() {
               title: "Graduated cum laude — at work the next day",
               body:
                 "B.S. Computer Science — with TOPCIT, JLPT N4, and PhilNITS FE the same year. The next morning: Advanced World Solutions in Makati, as an R&D engineer.",
-              ph: "graduation photo",
               img: "/images/home/graduation.jpg",
               alt: "Graduating cum laude, B.S. Computer Science, July 2024",
             },
             {
               side: "start",
               meta: "2025–26 · after work",
-              title: "Shipped side projects, after hours",
+              title: "Kept shipping after hours",
               body:
-                "Still at Advanced World Solutions by day. Evenings and weekends went to HTTP Monitor, then ScoutBoard, then JF & The World — live with its two intended users.",
-              ph: "late-night setup photo",
+                "Still at Advanced World Solutions by day. Three of the evening builds got write-ups here: HTTP Monitor, ScoutBoard, then JF & The World — live with its two intended users. The rest didn't — a QR parking lot, a property management system, a hospital Kardex, client sites.",
+              img: "/images/home/late-night.png",
+              alt: "A late-night session at the desk, mid-build on a side project",
             },
-          ].map((item: { side: string; meta: string; title: string; body: string; ph: string; img?: string; alt?: string }) => (
+          ].map((item) => (
             <div
               key={item.title}
               data-tl-card
               className={`${tlCard} ${item.side === "end" ? "self-end" : "self-start"}`}
             >
               <div className="relative min-w-0" style={{ aspectRatio: "3 / 4" }}>
-                {item.img ? (
-                  <Image
-                    src={item.img}
-                    alt={item.alt ?? item.title}
-                    fill
-                    sizes="(max-width:840px) 90vw, 180px"
-                    className="rounded-[10px] object-cover"
-                  />
-                ) : (
-                  <Placeholder label={item.ph} className="absolute inset-0" />
-                )}
+                <Image
+                  src={item.img}
+                  alt={item.alt}
+                  fill
+                  sizes="(max-width:840px) 90vw, 180px"
+                  className="rounded-[10px] object-cover"
+                />
               </div>
               <div className="min-w-0">
                 <p className="m-0 font-mono text-[13px] tracking-[0.02em] text-accent">{item.meta}</p>
@@ -429,54 +436,36 @@ export default function HomePage() {
             </span>
           ))}
         </div>
-        <div data-stagger className="grid grid-cols-4 gap-4 max-[840px]:grid-cols-2">
+        <div
+          data-stagger
+          className="grid max-w-[780px] grid-cols-2 gap-5 max-[840px]:max-w-[420px] max-[840px]:grid-cols-1"
+        >
           {[
-            { label: "me", ph: "a photo of you — candid beats formal", accent: false },
-            { label: "the court", ph: "badminton — mid-rally beats posed", accent: false },
-            { label: "the coast", ph: "snorkeling, or a long walk by the water", accent: false },
             {
-              label: "peak radiant",
-              ph: "valorant rank card screenshot",
-              accent: true,
-              img: "/images/home/valorant-radiant.png",
-              alt: "Valorant Radiant buddy hanging from a Champions Vandal",
+              label: "me",
+              img: "/images/home/me.png",
+              alt: "Me in a yukata at a Tanabata festival",
             },
-          ].map(
-            (tile: {
-              label: string;
-              ph: string;
-              accent: boolean;
-              img?: string;
-              alt?: string;
-            }) => (
+            {
+              label: "the court",
+              img: "/images/home/court.png",
+              alt: "Mid-rally on a badminton court",
+            },
+          ].map((tile) => (
             <div key={tile.label} className="relative min-w-0" style={{ aspectRatio: "4 / 5" }}>
-              {tile.img ? (
-                <Image
-                  src={tile.img}
-                  alt={tile.alt ?? tile.label}
-                  fill
-                  sizes="(max-width:840px) 50vw, 260px"
-                  className="rounded-[14px] object-cover"
-                />
-              ) : (
-                <Placeholder label={tile.ph} className="absolute inset-0" />
-              )}
-              <span
-                className={[
-                  "pointer-events-none absolute top-3 left-3 z-[2] rounded-full border px-3 py-[5px] font-mono text-xs",
-                  tile.accent
-                    ? "border-accent bg-accent text-fg-on-accent"
-                    : "border-border bg-bg text-fg",
-                ].join(" ")}
-              >
+              <Image
+                src={tile.img}
+                alt={tile.alt}
+                fill
+                sizes="(max-width:840px) 90vw, 380px"
+                className="rounded-[14px] object-cover"
+              />
+              <span className="pointer-events-none absolute top-3 left-3 z-[2] rounded-full border border-border bg-bg px-3 py-[5px] font-mono text-xs text-fg">
                 {tile.label}
               </span>
             </div>
           ))}
         </div>
-        <p className="mt-4 font-mono text-xs text-fg-faint">
-          real photos land here as they&apos;re shot — the tiles are placeholders for now.
-        </p>
       </section>
 
       {/* Contact */}
