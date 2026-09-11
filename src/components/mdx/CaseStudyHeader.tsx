@@ -1,7 +1,10 @@
+import Link from "next/link";
+
 import { resolveWorkLink, type WorkFrontmatter } from "@/lib/work";
 
 /**
- * Case-study header (DESIGN.md): mono label in --accent (year · kind), serif
+ * Case-study header (DESIGN.md): a "← back to work" mono link, then the
+ * mono label in --accent (year · kind), serif
  * H1, one-sentence summary in --fg-muted, lowercase mono stack line, optional
  * scale line, then the button row: the first link is a filled brass pill, the
  * rest are ghost pills, and any note renders as faint mono text beside them.
@@ -18,43 +21,55 @@ export function CaseStudyHeader({ slug, meta }: { slug: string; meta: WorkFrontm
   const primary = items.find((item) => item.href);
 
   return (
-    <header className="v2-fade-up">
-      <p className="text-meta-mono text-accent">{label}</p>
+    <>
+      <Link
+        href="/#work"
+        className="text-meta-mono inline-flex items-center gap-2 text-fg-muted transition-colors hover:text-accent"
+      >
+        <span aria-hidden className="text-[15px] leading-none">
+          ←
+        </span>
+        back to work
+      </Link>
 
-      <h1 className="v2-h1 mt-4" style={{ viewTransitionName: `work-title-${slug}` }}>
-        {meta.title}
-      </h1>
+      <header className="v2-fade-up mt-10">
+        <p className="text-meta-mono text-accent">{label}</p>
 
-      <p className="mt-4 text-fg-muted">{meta.summary}</p>
+        <h1 className="v2-h1 mt-4" style={{ viewTransitionName: `work-title-${slug}` }}>
+          {meta.title}
+        </h1>
 
-      <p className="mt-4 text-meta-mono text-fg-faint">
-        {meta.stack.map((s) => s.toLowerCase()).join(" · ")}
-      </p>
+        <p className="mt-4 text-fg-muted">{meta.summary}</p>
 
-      {meta.scale ? <p className="mt-2 text-meta-mono text-fg-muted">{meta.scale}</p> : null}
+        <p className="mt-4 text-meta-mono text-fg-faint">
+          {meta.stack.map((s) => s.toLowerCase()).join(" · ")}
+        </p>
 
-      {items.length > 0 ? (
-        <div className="mt-5 flex flex-wrap items-center gap-2.5">
-          {items.map((item) =>
-            item.href ? (
-              <a
-                key={item.label}
-                href={item.href}
-                className={item === primary ? "v2-pill v2-pill-primary" : "v2-pill v2-pill-ghost"}
-                rel="noopener"
-                target="_blank"
-              >
-                {item.label} ↗
-              </a>
-            ) : (
-              <span key={item.label} className="font-mono text-xs text-fg-faint">
-                {item.label}
-                {item.note ? ` — ${item.note}` : ""}
-              </span>
-            ),
-          )}
-        </div>
-      ) : null}
-    </header>
+        {meta.scale ? <p className="mt-2 text-meta-mono text-fg-muted">{meta.scale}</p> : null}
+
+        {items.length > 0 ? (
+          <div className="mt-5 flex flex-wrap items-center gap-2.5">
+            {items.map((item) =>
+              item.href ? (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className={item === primary ? "v2-pill v2-pill-primary" : "v2-pill v2-pill-ghost"}
+                  rel="noopener"
+                  target="_blank"
+                >
+                  {item.label} ↗
+                </a>
+              ) : (
+                <span key={item.label} className="font-mono text-xs text-fg-faint">
+                  {item.label}
+                  {item.note ? ` — ${item.note}` : ""}
+                </span>
+              ),
+            )}
+          </div>
+        ) : null}
+      </header>
+    </>
   );
 }
