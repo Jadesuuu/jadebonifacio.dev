@@ -97,8 +97,10 @@ export function ConstellationBg({
       const sy = window.scrollY;
       vel += (sy - lastY - vel) * 0.12;
       lastY = sy;
-      const target = Math.min(Math.abs(vel) / 12, 1);
-      wake += (target - wake) * (target > wake ? 0.09 : 0.025);
+      // Deadzone plus a wider ramp: reading-speed scrolling leaves the field
+      // calm, only a fast flick wakes it.
+      const target = Math.min(Math.max(Math.abs(vel) - 16, 0) / 44, 1);
+      wake += (target - wake) * (target > wake ? 0.05 : 0.03);
       const reveal = revealAfterHero ? Math.min(Math.max((sy - h * 0.3) / (h * 0.45), 0), 1) : 1;
       const fade = reveal * ambient;
 
