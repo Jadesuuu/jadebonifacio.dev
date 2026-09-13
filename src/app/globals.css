@@ -9,10 +9,15 @@
   --bg-subtle: #18181a;
   --fg: #eceae4;
   --fg-muted: #9a9890;
-  --fg-faint: #7d7c78;
+  /* Lifted from #7d7c78: the old value cleared AA on --bg (4.62) but was only
+     4.24 on --bg-subtle, where it actually renders the work-card stack line.
+     Now 5.15 / 4.73 — AA on both surfaces, which is what the table claims. */
+  --fg-faint: #85847f;
   --border: #232325;
   --accent: #c9a961;
-  /* Text on the 404 accent field. Same in both themes by design. */
+  /* Text on an --accent field: the hero button, the case-study primary pill,
+     the 404. Dark brass is light enough to take near-black (8.57). Light brass
+     is not, so the light theme flips this to the cream — see below. */
   --fg-on-accent: #0e0e0f;
   color-scheme: dark;
 }
@@ -22,9 +27,19 @@
   --bg-subtle: #eae7df;
   --fg: #1a1917;
   --fg-muted: #66645e;
-  --fg-faint: #706e68;
+  /* Was #706e68 — 4.55 on --bg but 4.13 on --bg-subtle. Now 5.20 / 4.71. */
+  --fg-faint: #676560;
   --border: #ddd9cf;
-  --accent: #9c7c3a;
+  /* Was #9c7c3a, which failed AA everywhere it was used: 3.50 on --bg and
+     3.17 on --bg-subtle, at 12-14px regular weight with no large-text
+     exemption — section labels, card eyebrows, timeline meta and the contact
+     form's own error text. Darkened along the same hue (never toward yellow,
+     per the colour rules) to 5.25 / 4.75. It also lifts the field focus
+     border from 2.78 to 4.17 against --border, clearing WCAG 2.2 SC 2.4.11. */
+  --accent: #7a612d;
+  /* The darkened brass can no longer carry near-black text (3.28). The cream
+     reads 5.25 on it, so on-accent text inverts with the theme. */
+  --fg-on-accent: #f4f2ec;
   color-scheme: light;
 }
 
@@ -46,8 +61,12 @@
   --color-accent: var(--accent);
   --color-fg-on-accent: var(--fg-on-accent);
 
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  /* Display is the same family as body — the weight and tracking do the work,
+     not a second typeface. Kept as its own token so a display face can be
+     swapped in later without touching every heading. */
+  --font-display: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
 
   --breakpoint-*: initial;
   --breakpoint-md: 48rem;
@@ -91,11 +110,11 @@
   --text-h3: 18px;
   --text-h3--line-height: 1.4;
   --text-h3--font-weight: 500;
-  --text-body: 17px;
-  --text-body--line-height: 1.65;
-  --text-small: 15px;
+  --text-body: 18px;
+  --text-body--line-height: 1.6;
+  --text-small: 16px;
   --text-small--line-height: 1.5;
-  --text-meta: 13px;
+  --text-meta: 14px;
   --text-meta--line-height: 1.5;
   --text-meta--letter-spacing: 0.02em;
   --text-code: 14px;
@@ -152,18 +171,18 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Base typography. Body 17/1.65, headings weight 500, two weights only.
+   Base typography. Body 18/1.6, headings 500 and 600 (display), two weights.
    --------------------------------------------------------------------------- */
 @layer base {
   /* Root stays at 16px so Tailwind rem spacing keeps the 8px rhythm.
-     The 17px body size is set on <body>. */
+     The 18px body size is set on <body>. */
   html {
     background-color: var(--bg);
     color: var(--fg);
     /* Decorative glows sit partly off-viewport; clip so mobile can't swipe
        sideways into the spill. clip (not hidden) keeps sticky/scroll intact. */
     overflow-x: clip;
-    font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -178,8 +197,8 @@
        which lets the fixed ConstellationBg canvas at z-index -1 show through.
        A body background would paint over it. */
     color: var(--fg);
-    font-size: 17px;
-    line-height: 1.65;
+    font-size: 18px;
+    line-height: 1.6;
   }
 
   h1,
@@ -217,7 +236,7 @@
   }
 
   small {
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1.5;
   }
 
@@ -225,7 +244,7 @@
   kbd,
   samp,
   pre {
-    font-family: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+    font-family: var(--font-plex-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
     font-size: 14px;
     line-height: 1.6;
     font-feature-settings: normal;
@@ -248,8 +267,10 @@
    Small reusable text roles that don't map to a single Tailwind utility.
    --------------------------------------------------------------------------- */
 @utility text-meta-mono {
-  font-family: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
-  font-size: 13px;
+  /* 14px since the site-wide step up; the inner-page header uses this and
+     sat at 13 against a 14px footer. */
+  font-family: var(--font-plex-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 14px;
   line-height: 1.5;
   letter-spacing: 0.02em;
   font-weight: 400;
@@ -380,9 +401,9 @@
   border-bottom: 1px solid var(--border);
   background: transparent;
   color: var(--fg);
-  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  font-size: 17px;
-  line-height: 1.65;
+  font-family: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
 }
 
 .palette [cmdk-input]::placeholder {
@@ -416,7 +437,7 @@
 
 .palette [cmdk-group-heading] {
   padding: 12px 12px 4px;
-  font-family: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-family: var(--font-plex-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
   font-size: 13px;
   line-height: 1.5;
   letter-spacing: 0.02em;
@@ -430,7 +451,7 @@
   gap: 12px;
   padding: 8px 12px;
   border-radius: 6px;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.5;
   color: var(--fg-muted);
   cursor: pointer;
@@ -443,7 +464,7 @@
 }
 
 .palette [cmdk-item] [data-hint] {
-  font-family: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-family: var(--font-plex-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
   font-size: 13px;
   letter-spacing: 0.02em;
   color: var(--fg-faint);
@@ -451,7 +472,7 @@
 
 .palette [cmdk-empty] {
   padding: 24px 12px;
-  font-size: 15px;
+  font-size: 16px;
   color: var(--fg-muted);
 }
 
@@ -460,30 +481,26 @@
    styled here. Column stays 680px; figures and code blocks break out to 840.
    --------------------------------------------------------------------------- */
 .prose {
-  font-size: 17px;
-  line-height: 1.65;
+  font-size: 18px;
+  line-height: 1.6;
 }
 
 .prose > * + * {
   margin-top: 16px;
 }
 
-/* Section headings: the v2 display serif with the brass full stop every serif
-   heading ends in. Headings in the MDX are written without a period. */
+/* Section headings: the display weight of the body face. The brass full stop
+   that used to close every heading is gone — applied to all of them by rule it
+   read as generated rather than authored. MDX headings are still written
+   without a period, so nothing in the content had to change. */
 .prose h2 {
   margin-top: 64px;
   scroll-margin-top: 80px;
-  font-family: var(--font-serif), Georgia, "Times New Roman", serif;
-  font-style: italic;
-  font-weight: 400;
+  font-family: var(--font-display);
+  font-weight: 600;
   font-size: 26px;
   line-height: 1.3;
-  letter-spacing: 0;
-}
-
-.prose h2::after {
-  content: ".";
-  color: var(--accent);
+  letter-spacing: -0.015em;
 }
 
 .prose h3 {
@@ -516,7 +533,7 @@
 
 /* Inline code: a small --bg-subtle chip. Shiki blocks are excluded. */
 .prose :not(pre) > code {
-  font-family: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-family: var(--font-plex-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
   font-size: 0.9em;
   background-color: var(--bg-subtle);
   border-radius: 4px;
@@ -552,7 +569,7 @@
 }
 
 .prose pre.shiki code {
-  font-family: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-family: var(--font-plex-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
   display: grid;
 }
 
@@ -569,15 +586,46 @@
 }
 
 /* ---------------------------------------------------------------------------
-   View Transitions (DESIGN.md, Motion). Crossfade the root; the project-row
-   title morphs into the case-study H1 via a shared view-transition-name.
-   Disabled under reduced motion.
+   View Transitions (DESIGN.md, Motion). Route changes are one authored move:
+   the header and the constellation field hold still (their own snapshots,
+   no animation), the outgoing page fades in 150ms on ease-in, the incoming
+   page rises 10px and fades in over 300ms on ease-out — exits leave promptly,
+   entrances arrive. A work title carries a shared view-transition-name from
+   the card or row into the case-study H1 and morphs between them.
+   Under reduced motion the rise and the morph go; a 150ms crossfade stays.
    --------------------------------------------------------------------------- */
+.site-header { view-transition-name: site-header; }
+.site-field { view-transition-name: site-field; }
+::view-transition-group(site-header),
+::view-transition-old(site-header),
+::view-transition-new(site-header),
+::view-transition-group(site-field),
+::view-transition-old(site-field),
+::view-transition-new(site-field) {
+  animation: none;
+}
+::view-transition-old(root) {
+  animation: vt-leave 150ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+::view-transition-new(root) {
+  animation: vt-arrive 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+::view-transition-group(*) {
+  animation-duration: 300ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes vt-leave {
+  to { opacity: 0; }
+}
+@keyframes vt-arrive {
+  from { opacity: 0; transform: translateY(10px); }
+}
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none !important;
+  ::view-transition-old(root) { animation: vt-leave 150ms linear both; }
+  ::view-transition-new(root) { animation: vt-fade-in 150ms linear both; }
+  ::view-transition-group(*) { animation-duration: 0.01ms; }
+  @keyframes vt-fade-in {
+    from { opacity: 0; }
   }
 }
 
@@ -591,9 +639,9 @@
 }
 
 /* ===========================================================================
-   Home v2 (Portfolio Home v2). A long single-page landing with a display
-   serif, animated accents, a timeline reveal and a cursor glow. Uses the same
-   tokens; keeps the AA-safe --fg-faint. All motion is disabled by the global
+   Home v2 and the inner pages: the halftone hero, the About set pieces
+   (particle cloud, timeline reveal, cursor glow, toolbox spotlight) and the
+   shared header/footer bands. Uses the same tokens; keeps the AA-safe --fg-faint. All motion is disabled by the global
    reduced-motion rule above, and JS-driven effects check it too.
    =========================================================================== */
 
@@ -601,31 +649,58 @@
 @keyframes fade-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 
-/* Display serif (Instrument Serif via next/font). */
+/* Display: the body face at 600 with the tracking pulled in. A grotesque set
+   large needs negative tracking to stop the counters opening up; the serif it
+   replaced needed none, which is why the old rule said 0 everywhere. */
 @utility font-display {
-  font-family: var(--font-serif), Georgia, "Times New Roman", serif;
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.025em;
 }
 
 .v2-fade-up { animation: fade-up 400ms var(--ease-out-quiet) both; }
 
-/* Inner-page H1 (case study, about): the v2 display serif, smaller than home. */
+/* Inner-page H1 (case study, about): the display face, smaller than home. */
 .v2-h1 {
-  font-family: var(--font-serif), Georgia, "Times New Roman", serif;
-  font-style: italic;
-  font-weight: 400;
+  font-family: var(--font-display);
+  font-weight: 600;
   font-size: clamp(36px, 5.5vw, 46px);
   line-height: 1.15;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.025em;
 }
 .v2-blink { animation: blink 1.2s step-end infinite; }
 .v2-pulse { animation: pulse-dot 2s ease-in-out infinite; }
 
 /* Nav links: muted, brighten on hover (no underline). */
+/* Nav links: colour on hover; the current route (aria-current="page") draws
+   a hairline accent underline that slides in from the left. */
 .v2-navlink {
+  position: relative;
   color: var(--fg-muted);
   transition: color 150ms var(--ease-out-quiet);
 }
 .v2-navlink:hover { color: var(--fg); }
+.v2-navlink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.v2-navlink[aria-current="page"] {
+  color: var(--fg);
+}
+.v2-navlink[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .v2-navlink::after { transition: none; }
+}
 
 /* Inline "read the case study →": hairline underline that turns accent. */
 .v2-underline {
@@ -655,7 +730,7 @@
   gap: 8px;
   border-radius: 999px;
   padding: 9px 18px;
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
   font-size: 13px;
   letter-spacing: 0.02em;
   text-decoration: none;
@@ -684,7 +759,7 @@
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 8px 16px;
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
   font-size: 13px;
   color: var(--fg-muted);
   /* Wrap rather than run off-screen on narrow viewports. */
@@ -700,24 +775,198 @@
   border-radius: 8px;
   padding: 12px 14px;
   color: var(--fg);
-  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  font-size: 15px;
+  font-family: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
   outline: none;
   transition: border-color 150ms var(--ease-out-quiet);
 }
 .v2-field:focus { border-color: var(--accent); }
 .v2-field::placeholder { color: var(--fg-faint); }
 
-/* Timeline card reveal. The hidden state is only applied by JS when motion is
-   allowed, so with reduced motion (or no JS) cards render fully visible. */
-.v2-reveal {
-  opacity: 0;
-  transform: translateY(30px) scale(0.97);
-  transition:
-    opacity 600ms var(--ease-out-quiet),
-    transform 600ms var(--ease-out-quiet);
+/* The story so far — pinned carousel (StoryChapters.tsx). One DOM, two
+   layouts. "stack": three plain rows in the 840 shell, photo beside text or
+   above it (SSR, phones, reduced motion, no JS). "stage": the rows become
+   cards on one horizontal track the full width of the page — the current
+   card centred, its neighbours peeking in dimmed at the edges — GSAP pins
+   the section and slides the track, and a trophy of dots is painted behind
+   (storyBackdrop.ts). */
+.v2-word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.06em; /* room for descenders inside the mask */
+  margin-bottom: -0.06em;
 }
-.v2-reveal.is-in { opacity: 1; transform: none; }
+.v2-story-section { position: relative; }
+.v2-story { position: relative; }
+.v2-story-backdrop { display: none; }
+.v2-story-progress { display: none; }
+
+/* Stack: a plain column inside the shell, like every other set piece. */
+.v2-story[data-mode="stack"] .v2-story-track {
+  display: grid;
+  gap: 40px;
+  max-width: var(--container-column-wide);
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+@media (min-width: 768px) {
+  .v2-story[data-mode="stack"] .v2-story-track { padding-inline: 32px; }
+}
+.v2-chapter {
+  display: grid;
+  grid-template-columns: minmax(0, 200px) minmax(0, 1fr);
+  gap: 28px;
+  align-items: center;
+}
+.v2-chapter-photo {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--bg-subtle);
+}
+/* One of the chapter photographs has transparent pixels; give it a solid backing. */
+.v2-chapter-photo img { background: var(--bg-subtle); }
+.v2-chapter-year {
+  margin: 0 0 6px;
+  font-size: min(clamp(48px, 7vw, 92px), 12svh);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--fg-faint);
+  opacity: 0.38;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 560px) {
+  /* One column. The photograph takes the whole column, as the after-hours
+     tiles do — a 320px cap left it leaning against the left edge. */
+  .v2-chapter { grid-template-columns: 1fr; }
+}
+
+/* Stage: the section's own chrome is trimmed (40px top, 24px under the
+   heading) so the stage is the pinned screen; the photo is 3:4 at 300px tall
+   (down to 220 on a short screen), the copy column ~400px, and the card is as
+   tall as the longer of the two — never clipping a long chapter. The canvas
+   is the whole stage, header to fold. */
+/* The pinned stage: the section is one screen plus the scroll distance tall
+   (--story-scroll, written by StoryChapters), and the stage inside it sticks
+   under the header (--story-top) for that distance — native, smooth, and not
+   a layout shift. Heading, cards and rule sit centred in it, over the trophy. */
+.v2-story-section:has(.v2-story[data-mode="stage"]) {
+  padding-top: 0;
+  height: calc(100svh - var(--story-top, 88px) + var(--story-scroll, 0px));
+}
+.v2-story-section:has(.v2-story[data-mode="stage"]) .v2-story-stage {
+  position: sticky;
+  top: var(--story-top, 88px);
+  box-sizing: border-box;
+  height: calc(100svh - var(--story-top, 88px));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  isolation: isolate; /* the backdrop sits at z -1 inside the stage, behind heading, cards and rule */
+  overflow-x: clip; /* the track runs past both edges of the page; clip, don't scroll */
+}
+.v2-story-section:has(.v2-story[data-mode="stage"]) h2 { margin-bottom: 24px; }
+.v2-story-section:has(.v2-story[data-mode="stage"]) .v2-story-backdrop {
+  display: block;
+  position: absolute;
+  inset: 0; /* the whole stage */
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+.v2-story[data-mode="stage"] {
+  --photo-h: clamp(220px, calc(100svh - 500px), 300px);
+  --photo-w: calc(var(--photo-h) * 0.75);
+  --card-w: min(calc(var(--photo-w) + 28px + 400px + 48px), calc(100vw - 80px));
+}
+.v2-story[data-mode="stage"] .v2-story-track {
+  position: relative;
+  display: flex;
+  column-gap: 32px;
+  width: max-content;
+  will-change: transform;
+}
+.v2-story[data-mode="stage"] .v2-chapter {
+  flex: 0 0 var(--card-w);
+  box-sizing: border-box;
+  min-height: calc(var(--photo-h) + 48px); /* grows for a long chapter; the copy is never clipped */
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 28px;
+  align-items: center;
+  padding: 24px;
+  background: var(--bg); /* a card: the one surface the dots stay behind */
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  will-change: transform, opacity;
+}
+.v2-story[data-mode="stage"] .v2-chapter-photo {
+  width: var(--photo-w);
+  height: var(--photo-h);
+  aspect-ratio: auto;
+  border-radius: 10px; /* an image inset inside a framed card */
+}
+/* Tighter type inside a card than on the old stage: the numeral is a mark,
+   not a wall; the body drops a point and runs the full column. */
+.v2-story[data-mode="stage"] .v2-chapter-year { font-size: 56px; opacity: 0.45; }
+.v2-story[data-mode="stage"] .v2-chapter h3 { font-size: clamp(22px, 2.1vw, 28px); }
+.v2-story[data-mode="stage"] .v2-chapter-body { font-size: 16px; line-height: 1.55; max-width: none; }
+.v2-story-section:has(.v2-story[data-mode="stage"]) .v2-story-progress {
+  display: block;
+  height: 1px;
+  margin-top: 28px;
+  background: var(--accent);
+  transform-origin: left;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .v2-story-progress { display: none !important; }
+}
+
+/* Home hero: one portrait, two renderings, one canvas. The canvas paints
+   both the photograph and the lattice (HeroPortrait.tsx): the gather, the
+   resolve, the pointer lens and the press rings all live there, so nothing
+   here animates except the fallbacks. The <img> underneath is what reduced
+   motion, a failed decode and search engines see. */
+.v2-hero-photo {
+  transition: opacity 200ms var(--ease-out-quiet);
+}
+.v2-hero[data-state="canvas"] .v2-hero-photo { opacity: 0; }
+.v2-hero[data-state="photo"] .v2-hero-photo { opacity: 1; }
+.v2-hero[data-state="photo"] .v2-hero-dots { opacity: 0; }
+
+/* Copy under and around the hero waits for the face to settle, then fades
+   up in 200ms. `data-settled` is written by HeroPortrait; with the canvas
+   off (reduced motion) it is written immediately. */
+.v2-hero-copy {
+  opacity: 0;
+  transform: translateY(10px);
+  /* Staged, not simultaneous: after a two-second gather a 200ms pop reads as
+     a cut. A beat after the face settles the name rises over 450ms on
+     ease-out-quint; the line and the ask follow a third of a second later.
+     Rare/first-time motion earns the longer duration; everything else on the
+     site stays under 300ms. */
+  transition:
+    opacity 450ms cubic-bezier(0.23, 1, 0.32, 1) 160ms,
+    transform 450ms cubic-bezier(0.23, 1, 0.32, 1) 160ms;
+}
+.v2-hero-copy--late {
+  transition-delay: 340ms, 340ms;
+}
+.v2-hero-copy[data-in],
+.v2-hero-stage:has(.v2-hero[data-settled]) .v2-hero-copy {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v2-hero-dots { display: none; }
+  .v2-hero .v2-hero-photo { opacity: 1 !important; transition: none; }
+  .v2-hero-copy { opacity: 1; transform: none; transition: none; }
+}
 
 /* Cursor glow that follows the pointer inside the story section. */
 .v2-glow {
@@ -754,7 +1003,7 @@
     var(--bg) 16px
   );
   color: var(--fg-faint);
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
   font-size: 12px;
   text-align: center;
   padding: 12px;
@@ -768,12 +1017,15 @@
   opacity: 0;
   transform: translateY(26px);
   transition:
-    opacity 650ms var(--ease-out-quiet),
-    transform 650ms var(--ease-out-quiet);
+    opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
 }
+[data-rv="left"] { transform: translateX(-36px); }
+[data-rv="right"] { transform: translateX(36px); }
+[data-rv="scale"] { transform: translateY(14px) scale(0.96); }
 [data-rv][data-in] {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
 }
 /* Work cards keep their own hover lift, so they only fade in (no slide). */
 .v2-card[data-rv] {
@@ -811,9 +1063,6 @@
   );
   opacity: var(--g);
   pointer-events: none;
-}
-[data-tile][data-big] > .v2-tile-index {
-  color: color-mix(in oklab, var(--accent) calc(var(--g) * 100%), var(--fg-faint));
 }
 [data-tools] [data-tile]:hover { border-color: var(--accent); }
 /* The spotlight owns transform on tiles, so the scroll-reveal only fades. */

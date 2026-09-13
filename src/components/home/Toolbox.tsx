@@ -93,7 +93,7 @@ const PAPERS: Tool[] = [
   { name: "nvidia dl workshop" },
 ];
 
-const rowLabel = "m-0 mb-3 font-mono text-xs tracking-[0.04em] text-fg-faint";
+const rowLabel = "m-0 mb-3 font-mono text-[13px] tracking-[0.04em] text-fg-faint";
 
 function ToolIcon({ icon, size }: { icon: Icon; size: number }) {
   const width = icon.width ? Math.round((icon.width / 26) * size) : size;
@@ -139,10 +139,9 @@ export function Toolbox() {
     <div data-tools className="max-w-[820px]">
       <div
         data-stagger
-        className="mb-9 grid gap-3"
-        style={{ gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))" }}
+        className="mb-9 grid grid-cols-3 gap-3 max-[720px]:grid-cols-2 max-[420px]:grid-cols-1"
       >
-        {CORE.map((tool, i) => (
+        {CORE.map((tool) => (
           <div
             key={tool.name}
             data-tile
@@ -150,13 +149,10 @@ export function Toolbox() {
             className="relative flex min-w-0 flex-col gap-3.5 rounded-[14px] border border-border bg-bg px-4 pb-4 pt-[18px]"
             style={brandStyle(tool)}
           >
-            <span className="v2-tile-index absolute right-3.5 top-3 font-mono text-[10px] tracking-[0.06em] text-fg-faint">
-              {String(i + 1).padStart(2, "0")}
-            </span>
             {tool.icon ? <ToolIcon icon={tool.icon} size={26} /> : null}
             <div className="flex min-w-0 flex-col gap-1">
-              <span className="font-mono text-[13.5px] text-fg">{tool.name}</span>
-              <span className="font-mono text-[11px] leading-[1.5] text-fg-faint">{tool.note}</span>
+              <span className="font-mono text-[14px] text-fg">{tool.name}</span>
+              <span className="font-mono text-[14px] leading-[1.5] text-fg-faint">{tool.note}</span>
             </div>
           </div>
         ))}

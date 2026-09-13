@@ -5,11 +5,15 @@ import { useEffect } from "react";
 /**
  * Home scroll animations (Portfolio Home v2):
  *
- *  1. Reveal — each <section>'s direct children fade + slide up as they enter
- *     the viewport (the `[data-rv]` styles in globals.css). Containers marked
- *     data-stagger reveal their own children in sequence (70ms steps, capped);
- *     a data-tools wrapper is looked through so its rows reveal separately.
- *     Timeline cards are left to StoryEffects; the cursor-glow is skipped.
+ *  1. Reveal — each <section>'s direct children fade + move into place as
+ *     they enter the viewport, once (the `[data-rv]` styles in globals.css).
+ *     The move is upward by default; an element (or its data-stagger parent)
+ *     can carry data-reveal="left" | "right" | "scale" so not every section
+ *     arrives the same way. Containers marked data-stagger reveal their own
+ *     children in sequence (70ms steps, capped); a data-tools wrapper is
+ *     looked through so its rows reveal separately. Timeline cards are left
+ *     to StoryEffects; the cursor-glow is skipped. Reveals do not re-hide on
+ *     the way back up — the reader has seen it; replaying it is noise.
  *  2. Count-up — elements with data-count tick from 0 to the target once, on a
  *     650/1300ms easeOutCubic, when 60% visible.
  *
@@ -22,27 +26,28 @@ export function ScrollReveal() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const tagged: HTMLElement[] = [];
-    const tag = (el: HTMLElement, delay: number) => {
-      el.setAttribute("data-rv", "");
+    const tag = (el: HTMLElement, delay: number, dir: string) => {
+      el.setAttribute("data-rv", dir);
       if (delay) el.style.transitionDelay = `${delay}ms`;
       tagged.push(el);
     };
 
     const visit = (el: HTMLElement) => {
       if (el.hasAttribute("data-glow")) return;
-      // Timeline card rows animate via StoryEffects, not here.
-      if (el.querySelector(":scope > [data-tl-card]")) return;
+      // The story's chapters (StoryChapters) choreograph themselves.
+      if (el.classList.contains("v2-story")) return;
       // The toolbox wrapper is transparent: its rows reveal one by one.
       if (el.hasAttribute("data-tools")) {
         Array.from(el.children).forEach((child) => visit(child as HTMLElement));
         return;
       }
+      const dir = el.dataset.reveal ?? "up";
       if (el.hasAttribute("data-stagger")) {
         Array.from(el.children).forEach((item, i) =>
-          tag(item as HTMLElement, Math.min(i * 70, 350)),
+          tag(item as HTMLElement, Math.min(i * 70, 350), (item as HTMLElement).dataset.reveal ?? dir),
         );
       } else {
-        tag(el, 0);
+        tag(el, 0, dir);
       }
     };
     for (const section of Array.from(document.querySelectorAll("section"))) {
@@ -52,7 +57,9 @@ export function ScrollReveal() {
     const revealIo = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          entry.target.toggleAttribute("data-in", entry.isIntersecting);
+          if (!entry.isIntersecting) continue;
+          entry.target.setAttribute("data-in", "");
+          revealIo.unobserve(entry.target);
         }
       },
       { threshold: 0.1, rootMargin: "0px 0px -50px 0px" },

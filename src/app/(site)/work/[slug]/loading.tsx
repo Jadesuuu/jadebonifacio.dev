@@ -22,10 +22,10 @@ export default function Loading() {
         {/* back to work */}
         <div className={`${bar("w-28", "h-3.5")} mb-10`} />
         <div className="space-y-4">
-          {/* eyebrow: 2026 · side project · live in production */}
-          <div className={bar("w-64", "h-3.5")} />
           {/* title */}
           <div className={bar("w-4/5", "h-9")} />
+          {/* year · kind line, under the title */}
+          <div className={bar("w-64", "h-3.5")} />
           {/* subtitle */}
           <div className={bar("w-3/5", "h-5")} />
           {/* stack line */}

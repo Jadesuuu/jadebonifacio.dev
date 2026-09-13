@@ -35,10 +35,10 @@ export function ContactForm() {
   if (state?.ok) {
     return (
       <div className="flex min-w-0 flex-col justify-center gap-3">
-        <p className="font-display text-[26px] italic">
-          Message sent<span className="text-accent">.</span>
+        <p className="font-display text-[26px]">
+          Message sent.
         </p>
-        <p className="m-0 text-[15px] leading-relaxed text-fg-muted" role="status">
+        <p className="m-0 text-[16px] leading-relaxed text-fg-muted" role="status">
           Thanks — it&apos;s on its way. I&apos;ll reply to your email soon.
         </p>
       </div>
@@ -73,7 +73,7 @@ export function ContactForm() {
             aria-describedby={fieldErrors?.name ? `${nameId}-error` : undefined}
           />
           {fieldErrors?.name ? (
-            <p id={`${nameId}-error`} className="font-mono text-xs text-accent">
+            <p id={`${nameId}-error`} className="font-mono text-[13px] text-accent">
               {fieldErrors.name}
             </p>
           ) : null}
@@ -93,7 +93,7 @@ export function ContactForm() {
             aria-describedby={fieldErrors?.email ? `${emailId}-error` : undefined}
           />
           {fieldErrors?.email ? (
-            <p id={`${emailId}-error`} className="font-mono text-xs text-accent">
+            <p id={`${emailId}-error`} className="font-mono text-[13px] text-accent">
               {fieldErrors.email}
             </p>
           ) : null}
@@ -116,14 +116,14 @@ export function ContactForm() {
           aria-describedby={fieldErrors?.message ? `${messageId}-error` : undefined}
         />
         {fieldErrors?.message ? (
-          <p id={`${messageId}-error`} className="font-mono text-xs text-accent">
+          <p id={`${messageId}-error`} className="font-mono text-[13px] text-accent">
             {fieldErrors.message}
           </p>
         ) : null}
       </div>
 
       {state && !state.ok && state.error && !fieldErrors ? (
-        <p role="alert" className="font-mono text-xs text-accent">
+        <p role="alert" className="font-mono text-[13px] text-accent">
           {state.error}
         </p>
       ) : null}
@@ -131,7 +131,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={pending}
-        className="v2-btn-a cursor-pointer self-start rounded-lg border-none bg-accent px-5 py-3.5 font-mono text-[13px] tracking-[0.02em] text-fg-on-accent disabled:cursor-default disabled:opacity-60"
+        className="v2-btn-a cursor-pointer self-start rounded-lg border-none bg-accent px-5 py-3.5 font-mono text-[14px] tracking-[0.02em] text-fg-on-accent disabled:cursor-default disabled:opacity-60"
       >
         {pending ? "sending…" : "send message →"}
       </button>

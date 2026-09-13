@@ -2,7 +2,13 @@
 // imported at runtime. Keys the white studio background out of the portrait and
 // writes public/images/home/hero.png, trimmed to the silhouette.
 //
-//   node scripts/key-hero.mjs
+//   node scripts/key-hero.mjs <source image>
+//
+// The source must be the portrait on a blown-out white backdrop, at the largest
+// resolution you have. Whatever the flood fill cannot reach from the frame edge
+// stays in the cutout: the first pass kept the office chair, which is invisible
+// on the dark theme and a black mass on the light one. Shoot against a wall
+// with nothing behind you, and check the rim/trim numbers this prints.
 //
 // Not a threshold. Thresholding this JPEG leaves a bright rim around the hair
 // once the cutout lands on the near-black page, which reads as a pasted-on
@@ -30,14 +36,19 @@
 //      out ~50% opaque, while at the shoulder F is ~60 and a fully-covered
 //      pixel correctly stays opaque instead of going translucent.
 //
-// Safe for this photo because nothing skin-toned touches the background - the
-// silhouette is hair, shoulders and chair the whole way round. A portrait with
+// Safe only while nothing skin-toned touches the background - the silhouette
+// has to be hair, shoulders and clothing the whole way round. A portrait with
 // a bare arm or a light shirt against the backdrop would need a real matte.
 import { statSync } from "node:fs";
 import sharp from "sharp";
 
-const SRC = "C:/Users/Jade/Downloads/Gemini_Generated_Image_ur9p93ur9p93ur9p.jpg";
+const SRC = process.argv[2];
 const OUT = "public/images/home/hero.png";
+
+if (!SRC) {
+  console.error("usage: node scripts/key-hero.mjs <source image>");
+  process.exit(1);
+}
 
 const L_BG = 253; // what the backdrop reads as
 const SEED_MIN = 225; // definite background: every channel at least this

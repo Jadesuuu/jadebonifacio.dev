@@ -14,9 +14,13 @@ import { useEffect, useRef } from "react";
  * A pointer press sends a ring outward that nudges dots and briefly brightens
  * them.
  *
- *   home:        <ConstellationBg revealAfterHero />   fades in once the hero
- *                                                      has scrolled by
- *   case study:  <ConstellationBg ambient={0.55} />    always on, fainter
+ * Mounted once in the (site) layout at ambient 0.55, behind every page; it
+ * fades in over the first second and persists across soft navigations.
+ *
+ * Any element carrying `data-field-boost` turns the field up while it is on
+ * screen (About's story): the wake threshold drops, the streaks run longer
+ * and brighter and the hairlines join sooner — the hyperspace read Jade
+ * wanted to be unmistakable there, eased in and out over ~a second.
  *
  * Render once per page. The canvas sits at z-index -1 behind everything, so
  * no ancestor between it and <html> may paint a background (html carries
@@ -34,11 +38,8 @@ const MARGIN = 70;
 const LINK = 110;
 
 export function ConstellationBg({
-  revealAfterHero = false,
   ambient = 1,
 }: {
-  /** Keep the field hidden over the hero and fade it in on scroll. */
-  revealAfterHero?: boolean;
   /** Overall alpha multiplier, 0–1. */
   ambient?: number;
 }) {
@@ -53,7 +54,10 @@ export function ConstellationBg({
     let w = 0, h = 0, dpr = 1;
     let dots: Dot[] = [];
     const fit = () => {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // Capped at 1.5x: a full-viewport canvas at 2x was ~25% of a core at rest
+      // on a 1440×900 retina and most of a slow laptop's budget; the dots are
+      // 1–2px grain and read the same at 1.5.
+      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       w = window.innerWidth;
       h = window.innerHeight;
       cv.width = w * dpr;
@@ -91,7 +95,29 @@ export function ConstellationBg({
     };
     window.addEventListener("pointerdown", onPress, { passive: true });
 
+    // Boost: 1 at rest, BOOST while a [data-field-boost] element is in view.
+    const BOOST = 2.4;
+    let boostTarget = 1, boost = 1;
+    const boosted = new Set<Element>();
+    const boostIo = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) boosted.add(e.target);
+        else boosted.delete(e.target);
+      }
+      boostTarget = boosted.size ? BOOST : 1;
+    }, { rootMargin: "-10% 0px -10% 0px" });
+    const watchBoosters = () => {
+      boostIo.disconnect();
+      boosted.clear();
+      document.querySelectorAll("[data-field-boost]").forEach((el) => boostIo.observe(el));
+    };
+    watchBoosters();
+    // Routes change under the persistent layout; re-scan when the DOM does.
+    const domWatch = new MutationObserver(watchBoosters);
+    domWatch.observe(document.body, { childList: true, subtree: false });
+
     let vel = 0, lastY = window.scrollY, wake = 0, raf = 0;
+    const tStart = performance.now();
     const loop = (t: number) => {
       raf = requestAnimationFrame(loop);
       const sy = window.scrollY;
@@ -99,10 +125,13 @@ export function ConstellationBg({
       lastY = sy;
       // Deadzone plus a wider ramp: reading-speed scrolling leaves the field
       // calm, only a fast flick wakes it.
-      const target = Math.min(Math.max(Math.abs(vel) - 16, 0) / 44, 1);
-      wake += (target - wake) * (target > wake ? 0.05 : 0.03);
-      const reveal = revealAfterHero ? Math.min(Math.max((sy - h * 0.3) / (h * 0.45), 0), 1) : 1;
-      const fade = reveal * ambient;
+      boost += (boostTarget - boost) * 0.06;
+      const target = Math.min(Math.max(Math.abs(vel) - 16 / boost, 0) / (44 / boost), 1);
+      wake += (target - wake) * (target > wake ? 0.05 + 0.04 * (boost - 1) : 0.03);
+      // Fade in over the first second (ease-out) so the field arrives rather
+      // than pops; after that it is simply on.
+      const reveal = 1 - Math.pow(1 - Math.min(1, (t - tStart) / 1000), 3);
+      const fade = Math.min(1, reveal * ambient * (1 + (boost - 1) * 0.55));
 
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
@@ -137,12 +166,12 @@ export function ConstellationBg({
       }
 
       // Dots, or streaks while the page is moving.
-      const streak = wake * 1.6;
+      const streak = wake * 1.6 * boost;
       for (const [x, y, d, boost] of P) {
         const a = Math.max(fade * (0.15 + d.z * 0.2) * (d.a ? 1.5 : 1) * (1 + wake * 0.8), boost);
         if (a <= 0.004) continue;
         ctx.globalAlpha = Math.min(a, 0.9);
-        const st = Math.max(-110, Math.min(110, vel * d.z * streak));
+        const st = Math.max(-110 * boost, Math.min(110 * boost, vel * d.z * streak));
         if (st > 3 || st < -3) {
           ctx.strokeStyle = d.a ? brass : ink;
           ctx.lineWidth = 0.8 + d.z;
@@ -163,7 +192,7 @@ export function ConstellationBg({
             const dd = Math.hypot(dx, dy);
             if (dd < LINK) {
               ctx.strokeStyle = P[i][2].a || P[j][2].a ? brass : ink;
-              ctx.globalAlpha = fade * wake * (1 - dd / LINK) * 0.32;
+              ctx.globalAlpha = Math.min(0.8, fade * wake * (1 - dd / LINK) * 0.32 * Math.min(1.8, boost));
               ctx.beginPath(); ctx.moveTo(P[i][0], P[i][1]); ctx.lineTo(P[j][0], P[j][1]); ctx.stroke();
             }
           }
@@ -178,14 +207,16 @@ export function ConstellationBg({
       window.removeEventListener("resize", onResize);
       window.removeEventListener("pointerdown", onPress);
       themeWatch.disconnect();
+      boostIo.disconnect();
+      domWatch.disconnect();
     };
-  }, [revealAfterHero, ambient]);
+  }, [ambient]);
 
   return (
     <canvas
       ref={ref}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 -z-10 h-full w-full"
+      className="site-field pointer-events-none fixed inset-0 -z-10 h-full w-full"
     />
   );
 }

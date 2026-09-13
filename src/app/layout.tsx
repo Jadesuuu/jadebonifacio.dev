@@ -1,31 +1,35 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { ViewTransitions } from "@/components/ViewTransitions";
 import { site } from "@/lib/site";
 import { DEFAULT_THEME, THEME_COOKIE } from "@/lib/theme";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// One family, three jobs. IBM Plex is a humanist grotesque drawn for engineers:
+// quiet, precise and warm, with tabular numerals that let the day-job figures
+// carry weight without shouting. It replaced Instrument Serif + Geist, a trio
+// the AI design tools converge on hard enough that the site read as generated
+// before a word of it was read. Plex also has a Japanese cut (IBM Plex Sans JP)
+// if the bilingual EN/JP work ever wants it — the choice has a reason.
+//
+// 600 is the display weight; 400/500 carry body and UI. That retires the old
+// "two weights only, never 600" rule, which existed to keep a 400-weight serif
+// from being faked bold and has no purchase on a grotesque.
+const plexSans = IBM_Plex_Sans({
+  variable: "--font-plex-sans",
   subsets: ["latin"],
-  display: "swap",
-  preload: true,
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-  preload: true,
-});
-
-// Display serif for the v2 home headings (Instrument Serif, regular + italic).
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-serif",
-  subsets: ["latin"],
-  weight: "400",
+  weight: ["400", "500", "600"],
   style: ["normal", "italic"],
   display: "swap",
+  preload: true,
+});
+
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -80,7 +84,7 @@ export default function RootLayout({
       // The pre-paint script above may have switched this to "light" before
       // hydration; that difference is intentional.
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable}`}
+      className={`${plexSans.variable} ${plexMono.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />

@@ -11,10 +11,14 @@ export const site = {
   domain: "jadebonifacio.dev",
 } as const;
 
-/** Inner-page nav (DESIGN.md, Nav). The home page has its own nav with the same links. */
+/**
+ * The nav, and the footer that mirrors it. Every destination is a real route
+ * now that the home page is hero + three works: work indexes the case
+ * studies, about carries everything biographical, contact carries the form.
+ */
 export const navLinks = [
-  { href: "/#work", label: "work", external: false },
+  { href: "/work", label: "work", external: false },
   { href: "/about", label: "about", external: false },
-  { href: "/#contact", label: "contact", external: false },
+  { href: "/contact", label: "contact", external: false },
   { href: links.resume, label: "resume", external: true },
 ] as const;
