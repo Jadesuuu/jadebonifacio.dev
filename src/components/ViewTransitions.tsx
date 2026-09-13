@@ -12,8 +12,9 @@ type HistoryMethod = "pushState" | "replaceState";
  * navigation in document.startViewTransition, holding the transition open until
  * the new route has committed (the pathname effect below), so the shared
  * view-transition-name elements — a project-row title and the case-study H1 —
- * morph, and the rest crossfades. Disabled under reduced motion and where the
- * API is unavailable (the navigation still happens, just without animation).
+ * morph, and the rest crossfades. The CSS in globals.css authors the move and
+ * reduces it to a short crossfade under prefers-reduced-motion; where the API
+ * is unavailable the navigation simply happens without animation.
  */
 export function ViewTransitions() {
   const pathname = usePathname();
@@ -23,7 +24,6 @@ export function ViewTransitions() {
     if (typeof document === "undefined" || typeof document.startViewTransition !== "function") {
       return;
     }
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     const resolvePending = () => {
       if (finish.current) {
@@ -39,10 +39,6 @@ export function ViewTransitions() {
       const wrapped = (...args: HistoryArgs) => {
         // Resolve any still-open transition before starting a new one.
         resolvePending();
-        if (media.matches) {
-          original(...args);
-          return;
-        }
         document.startViewTransition(
           () =>
             new Promise<void>((resolve) => {

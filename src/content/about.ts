@@ -40,3 +40,61 @@ export const smallerThings: SmallerThing[] = [
 
 export const lookingFor =
   "A remote full-stack role on a small team, in the TypeScript ecosystem, where I own features end to end and the codebase is still young enough that decisions matter. Startup pace, real users, people who write things down.";
+
+/* ---- Moved from the home page when it became hero + three works. ---- */
+
+/** The day job, in numbers. `count` marks figures that count up from 0. */
+export const dayJobStats: { value: string; label: string; count: boolean }[] = [
+  { value: "206", label: "pull requests merged", count: true },
+  { value: "317", label: "screen modules with my code", count: true },
+  { value: "169", label: "customer defects resolved & shipped", count: true },
+  { value: "top 3", label: "defect resolver on the 9-engineer uat team", count: false },
+];
+export const dayJobScope =
+  "two years · a ~420-screen japanese property platform · 60+ engineer bilingual en/jp team";
+export const dayJobQuote = "I write down what broke.";
+export const dayJobQuoteNote = "the habit every case study on this site follows";
+
+export type TimelineItem = {
+  meta: string;
+  title: string;
+  body: string;
+  img: string;
+  alt: string;
+};
+export const timeline: TimelineItem[] = [
+  {
+    meta: "2020 · baguio",
+    title: "Moved up the mountain for CS",
+    body: "B.S. Computer Science at Saint Louis University.",
+    img: "/images/home/baguio-slu.jpg",
+    alt: "Baguio, where I moved for Computer Science at Saint Louis University",
+  },
+  {
+    meta: "jul 1–2, 2024 · baguio → makati",
+    title: "Graduated cum laude — at work the next day",
+    body:
+      "B.S. Computer Science — with TOPCIT, JLPT N4, and PhilNITS FE the same year. The next morning: Advanced World Solutions in Makati, as an R&D engineer.",
+    img: "/images/home/graduation.jpg",
+    alt: "Graduating cum laude, B.S. Computer Science, July 2024",
+  },
+  {
+    meta: "2025–26 · after work",
+    title: "Kept shipping after hours",
+    body:
+      "Still at Advanced World Solutions by day. Three of the evening builds got write-ups here: HTTP Monitor, ScoutBoard, then JF & The World — live with its two intended users. The rest didn't — a QR parking lot, a property management system, a hospital Kardex, client sites.",
+    img: "/images/home/late-night.png",
+    alt: "A late-night session at the desk, mid-build on a side project",
+  },
+];
+
+export const irl = ["gym", "badminton", "long walks", "snorkeling", "food trips — all kinds", "coffee, always"];
+export const inGame = [
+  "valorant", "league of legends", "arc raiders", "path of exile",
+  "palworld", "helldivers 2", "every mainline pokémon", "switch oled",
+];
+export const afterHoursLead = "Some of this happens more than the rest. Here’s what I’d rather be doing.";
+export const afterHoursPhotos = [
+  { label: "me", img: "/images/home/me.png", alt: "Me in a yukata at a Tanabata festival" },
+  { label: "the court", img: "/images/home/court.png", alt: "Mid-rally on a badminton court" },
+];

@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
   // report it missing. Treat every user agent as "limited" so metadata is
   // always in <head>. Cheap here: all page metadata is static.
   htmlLimitedBots: /.*/,
+  // The hero cutout is served at quality 95 (its source is the resolution
+  // floor; see scripts/key-hero.mjs). Next 16 requires every non-default
+  // quality to be declared here.
+  images: { qualities: [75, 82, 95] },
 };
 
 export default nextConfig;

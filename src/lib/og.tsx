@@ -11,13 +11,13 @@ const fontsDir = path.join(process.cwd(), "src/assets/fonts");
 
 /**
  * Shared OG image (DESIGN.md, Images): dark --bg, a 2px --accent rule above
- * the page title in Geist Sans 500, and the domain in Geist Mono --fg-faint
+ * the page title in IBM Plex Sans 600, and the domain in IBM Plex Mono --fg-faint
  * bottom left. Fonts are the vendored TTFs; colours come from globals.css.
  */
 export async function renderOgImage({ title }: { title: string }) {
   const [sans, mono, c] = await Promise.all([
-    readFile(path.join(fontsDir, "Geist-Medium.ttf")),
-    readFile(path.join(fontsDir, "GeistMono-Regular.ttf")),
+    readFile(path.join(fontsDir, "IBMPlexSans-SemiBold.ttf")),
+    readFile(path.join(fontsDir, "IBMPlexMono-Regular.ttf")),
     getColorTokens("dark"),
   ]);
 
@@ -35,7 +35,7 @@ export async function renderOgImage({ title }: { title: string }) {
           padding: "72px 80px 64px",
           background: c.bg,
           color: c.fg,
-          fontFamily: "Geist",
+          fontFamily: "Plex Sans",
         }}
       >
         <div style={{ display: "flex", flexDirection: "column", gap: 28, marginTop: "auto" }}>
@@ -43,9 +43,9 @@ export async function renderOgImage({ title }: { title: string }) {
           <div
             style={{
               fontSize,
-              fontWeight: 500,
+              fontWeight: 600,
               lineHeight: 1.15,
-              letterSpacing: "-0.01em",
+              letterSpacing: "-0.025em",
               maxWidth: 1000,
             }}
           >
@@ -55,7 +55,7 @@ export async function renderOgImage({ title }: { title: string }) {
         <div
           style={{
             marginTop: 56,
-            fontFamily: "Geist Mono",
+            fontFamily: "Plex Mono",
             fontSize: 26,
             letterSpacing: "0.02em",
             color: c["fg-faint"],
@@ -68,8 +68,8 @@ export async function renderOgImage({ title }: { title: string }) {
     {
       ...ogSize,
       fonts: [
-        { name: "Geist", data: sans, weight: 500, style: "normal" },
-        { name: "Geist Mono", data: mono, weight: 400, style: "normal" },
+        { name: "Plex Sans", data: sans, weight: 600, style: "normal" },
+        { name: "Plex Mono", data: mono, weight: 400, style: "normal" },
       ],
     },
   );

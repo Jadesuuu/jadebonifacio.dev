@@ -4,7 +4,6 @@ import { compileMDX } from "next-mdx-remote/rsc";
 import rehypeShiki from "@shikijs/rehype";
 import { Container } from "@/components/Container";
 import { NextRow } from "@/components/NextRow";
-import { ConstellationBg } from "@/components/ConstellationBg";
 import { CaseStudyHeader } from "@/components/mdx/CaseStudyHeader";
 import { mdxComponents } from "@/components/mdx/mdx-components";
 import { getProject } from "@/content/projects";
@@ -69,7 +68,6 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
 
   return (
     <>
-      <ConstellationBg ambient={0.55} />
       <Container as="article" className="pt-12 md:pt-16">
         <CaseStudyHeader slug={slug} meta={frontmatter} />
         <div className="prose mt-12 md:mt-16">{content}</div>

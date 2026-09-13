@@ -65,7 +65,11 @@ export const projects: Project[] = [
     stack: ["react", "typescript", "node", "oracle", "dynamodb", "aws"],
     status: "full-time · client under nda",
     cta: "the shape of the work →",
-    hasImage: false,
+    // A stand-in, not the product: the client is under NDA. Chris Ried,
+    // Unsplash (free licence). The case study says so in its first callout.
+    hasImage: true,
+    thumbnail: "/images/work/enterprise-platform-work/thumbnail.jpg",
+    thumbnailAlt: "Syntax-highlighted code on a dark monitor — a stand-in photograph; the client's product is under NDA",
   },
 ];
 

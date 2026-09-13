@@ -57,7 +57,7 @@ function Media({ project }: { project: Project }) {
           "repeating-linear-gradient(-45deg,var(--bg-subtle),var(--bg-subtle) 8px,var(--bg) 8px,var(--bg) 16px)",
       }}
     >
-      <span className="rounded-md border border-border bg-bg px-3.5 py-2 font-mono text-[13px] text-fg-muted">
+      <span className="rounded-md border border-border bg-bg px-3.5 py-2 font-mono text-[14px] text-fg-muted">
         no screenshots — nda
       </span>
     </div>
@@ -65,22 +65,29 @@ function Media({ project }: { project: Project }) {
 }
 
 function Body({ project, href, stretched }: { project: Project; href: string; stretched: boolean }) {
-  const cta = "v2-underline mt-2 self-start font-mono text-[13px] text-fg";
+  const cta = "v2-underline mt-2 self-start font-mono text-[14px] text-fg";
   return (
     <div className="flex flex-col justify-center gap-3 p-9">
-      <p className="m-0 font-mono text-xs tracking-[0.04em] text-accent">{project.eyebrow}</p>
-      <h3 className="m-0 text-[26px] font-medium">{project.title}</h3>
-      <p className="m-0 text-[15px] leading-relaxed text-fg-muted">{project.description}</p>
-      <p className="m-0 font-mono text-xs text-fg-faint">
-        {project.stack.join(" · ")}
+      {/* Title first; the mono line sits under it as a subtitle. A small
+          tracked label above a heading is the one thing the craft floor bans
+          outright, and the home cards already read this way. */}
+      <h2 className="m-0 text-[26px] font-medium" style={{ viewTransitionName: `work-title-${project.slug}` }}>
+        {project.title}
+      </h2>
+      <p className="m-0 -mt-1.5 font-mono text-[14px] tracking-[0.04em] text-accent">{project.eyebrow}</p>
+      <p className="m-0 text-[16px] leading-relaxed text-fg-muted">{project.description}</p>
+      <p className="m-0 text-pretty font-mono text-[14px] text-fg-faint">
+        {/* nbsp before each separator: the line may break only between items, never
+            leaving a lone middot or the demo arrow on its own line. */}
+        {project.stack.join("\u00a0· ")}
         {project.demo ? (
           <span className="text-accent">
-            {" · "}
+            {"\u00a0· "}
             <a
               href={project.demo}
               target="_blank"
               rel="noopener"
-              className="relative z-10 text-accent underline decoration-transparent decoration-1 underline-offset-[3px] transition-colors hover:decoration-accent"
+              className="relative z-10 whitespace-nowrap text-accent underline decoration-transparent decoration-1 underline-offset-[3px] transition-colors hover:decoration-accent"
             >
               live demo ↗
             </a>
