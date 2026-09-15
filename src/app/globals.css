@@ -334,10 +334,13 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Skip link. Off-screen until focused, then a small mono pill under the nav.
+   Skip link. Off-screen until focused, then a small mono pill over the nav.
+   Fixed, not absolute: absolute positions it against the document, so on a
+   scrolled page focusing it parked the pill off-screen and made the browser
+   yank the page to the top to bring it into view.
    --------------------------------------------------------------------------- */
 .skip-link {
-  position: absolute;
+  position: fixed;
   top: -100px;
   left: 24px;
   z-index: 60;
@@ -346,10 +349,21 @@
   border-radius: 6px;
   background-color: var(--bg);
   color: var(--fg);
+  transition: top 150ms var(--ease-out-quiet);
 }
 
-.skip-link:focus-visible {
+/* :focus, not only :focus-visible. A mouse press focuses the link but does
+   not match :focus-visible, so the pill used to snap back to -100px on
+   mousedown; the pointer came up on whatever was underneath and the click
+   never reached the link. That is the "I clicked it and it vanished" bug. */
+.skip-link:focus {
   top: 16px;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-link { transition: none; }
 }
 
 /* ---------------------------------------------------------------------------
@@ -938,9 +952,15 @@
 .v2-hero[data-state="photo"] .v2-hero-photo { opacity: 1; }
 .v2-hero[data-state="photo"] .v2-hero-dots { opacity: 0; }
 
-/* Copy under and around the hero waits for the face to settle, then fades
-   up in 200ms. `data-settled` is written by HeroPortrait; with the canvas
-   off (reduced motion) it is written immediately. */
+/* The supporting row under the hero waits for the face to settle, then fades
+   up. `data-settled` is written by HeroPortrait; with the canvas off
+   (reduced motion) it is written immediately.
+
+   The h1 is deliberately NOT in this group. Chrome will not accept an
+   opacity-0 element as an LCP candidate, and the h1 is the largest text
+   block in the first viewport, so gating it here made LCP mean "the canvas
+   finished gathering" — a number set by CPU, DPR and viewport rather than by
+   anything paint-related, and different on every machine. */
 .v2-hero-copy {
   opacity: 0;
   transform: translateY(10px);

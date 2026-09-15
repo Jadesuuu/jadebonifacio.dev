@@ -4,9 +4,10 @@
  *
  * This is the About particle cloud, given a job. Same material — a 2D canvas
  * point cloud, about a quarter of the dots brass, faint hairlines joining
- * neighbours that brighten while things are in flight, dots near the pointer
- * pulled toward it — but one object instead of four on a timer, and a real
- * camera on a path instead of a yaw. The trophy itself does not turn.
+ * neighbours that brighten while things are in flight — but one object instead
+ * of four on a timer, and a real camera on a path instead of a yaw. The trophy
+ * itself does not turn, and nothing here follows the pointer: scroll moves the
+ * camera and that is the only thing that moves the image.
  *
  * Why a trophy: cum laude, top-3 defect resolver, the evening builds that
  * shipped. Why dots: the hero's halftone, the constellation, the toolbox
@@ -90,9 +91,6 @@ export function createStoryBackdrop(cv: HTMLCanvasElement): StoryBackdrop | null
         case "colors":
           renderer.colors(m.colA, m.colB);
           break;
-        case "pointer":
-          renderer.pointer(m.x, m.y);
-          break;
         case "cam":
           renderer.setT(m.t);
           break;
@@ -119,27 +117,6 @@ export function createStoryBackdrop(cv: HTMLCanvasElement): StoryBackdrop | null
   const mo = new MutationObserver(() => send({ type: "colors", ...colors() }));
   mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
-  // Pointer, in canvas coordinates; only forwarded while within reach of the
-  // canvas (the renderer pulls dots toward it), parked far away otherwise.
-  const reach = () => Math.min(w, h) * 0.3;
-  const near = (x: number, y: number) => x > -reach() && y > -reach() && x < w + reach() && y < h + reach();
-  let wasNear = false;
-  const onMove = (e: MouseEvent) => {
-    const r = cv.getBoundingClientRect();
-    const x = e.clientX - r.left;
-    const y = e.clientY - r.top;
-    const isNear = near(x, y);
-    if (isNear) send({ type: "pointer", x, y });
-    else if (wasNear) send({ type: "pointer", x: -9999, y: -9999 });
-    wasNear = isNear;
-  };
-  const onLeave = () => {
-    if (wasNear) send({ type: "pointer", x: -9999, y: -9999 });
-    wasNear = false;
-  };
-  window.addEventListener("mousemove", onMove, { passive: true });
-  document.documentElement.addEventListener("mouseleave", onLeave);
-
   // Only run while on screen.
   const io = new IntersectionObserver(([entry]) => send({ type: "visible", on: entry.isIntersecting }));
   io.observe(cv);
@@ -157,8 +134,6 @@ export function createStoryBackdrop(cv: HTMLCanvasElement): StoryBackdrop | null
       ro.disconnect();
       mo.disconnect();
       io.disconnect();
-      window.removeEventListener("mousemove", onMove);
-      document.documentElement.removeEventListener("mouseleave", onLeave);
       teardown();
     },
   };

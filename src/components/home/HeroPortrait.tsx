@@ -62,6 +62,18 @@ const STAGGER_MS = 400;
 const SPIN = 1.6;
 const SPREAD = 1.7;
 const RESOLVE_MS = 700;
+/** Ignition. The cloud is not switched on, it comes out like stars: each
+ *  point catches at its own moment scattered through the first IGNITE_MS,
+ *  snapping up over IGNITE_RISE to a flare IGNITE_GAIN brighter than it will
+ *  settle at and easing back down — sharp attack, slow decay, the way a spark
+ *  reads. It is free in time: the gather rides an ease-in-out, which has
+ *  travelled about 3% of the way by the moment the last point lights, so the
+ *  twinkle plays over dust that has barely begun to move and the face still
+ *  lands on the same beat as before. */
+const IGNITE_MS = 760;
+const IGNITE_RISE = 300;
+const IGNITE_PEAK = 0.34;
+const IGNITE_GAIN = 1.7;
 const TAU = Math.PI * 2;
 
 /** The lens, in px at the 640px layout width (scales with the box). Wide
@@ -106,6 +118,7 @@ type Pt = {
   lum: number; // 0..1
   col: string; // the dot-art colour: a brass duotone of the cell, re-tinted from --accent on theme change
   delay: number; // 0..1 of STAGGER_MS
+  spark: number; // 0..1 of the ignition window; scattered, not tone-ordered
   phase: number; // shimmer phase
 };
 
@@ -384,6 +397,10 @@ export function HeroPortrait() {
               // Dark points settle first (the silhouette), lit points last
               // (the face appears).
               delay: (0.15 + tone * 0.85) * (0.6 + rnd() * 0.4),
+              // Scattered on purpose. The gather is ordered (dark cells
+              // first, the lit face last); ignition ordered the same way
+              // would read as a wipe. Stars come out at random.
+              spark: rnd(),
               phase: rnd() * TAU,
             });
           }
@@ -479,7 +496,10 @@ export function HeroPortrait() {
       // Constellation lines gather strength mid-load, then fall to a whisper.
       const mid = Math.sin(Math.PI * Math.min(gather, 1));
       const lineReach = Math.min(w, h) * (0.035 + mid * 0.06);
-      const lineAlpha = (0.06 + mid * 0.4) * Math.max(dotMix, lens);
+      // Held back until the field is lit: hairlines drawn between points
+      // that have not sparked yet would arrive before the stars they join.
+      const lit = Math.min(1, elapsed / IGNITE_MS);
+      const lineAlpha = (0.06 + mid * 0.4) * Math.max(dotMix, lens) * lit;
 
       // Only the ring pushes; the lens is a reveal.
       const forces = settled && ripples.length > 0;
@@ -495,6 +515,12 @@ export function HeroPortrait() {
         // Per-point progress: global time minus this point's stagger.
         const local = Math.max(0, Math.min(1, (elapsed - p.delay * STAGGER_MS) / GATHER_MS));
         const e = easeInOutCubic(local);
+        // Ignition: 0 until this point catches, then the flare and its decay.
+        const ig = Math.max(0, Math.min(1, (elapsed - p.spark * (IGNITE_MS - IGNITE_RISE)) / IGNITE_RISE));
+        const flare =
+          ig < IGNITE_PEAK
+            ? Math.sqrt(ig / IGNITE_PEAK) * IGNITE_GAIN
+            : 1 + (IGNITE_GAIN - 1) * Math.pow(1 - (ig - IGNITE_PEAK) / (1 - IGNITE_PEAK), 2);
 
         // Tone → size/alpha, per theme. Dark ground: light areas get the big
         // dots. Cream: inverted, ink in the shadows. The silhouette floor
@@ -596,11 +622,16 @@ export function HeroPortrait() {
         // face develops; once resolved it sits at the resting whisper unless
         // the lens or a ring lifts it.
         const mix = dotMix + (1 - dotMix) * lw;
-        // Dust first: every point starts as a visible mote (alpha 0.6, 1.4px)
-        // and only takes its halftone alpha and size as it lands, so the
-        // field is present from the first frame rather than fading in late.
-        const a = Math.max(0.05, 0.6 + (alpha - 0.6) * e + shimmer) * mix;
-        const rad = (1.4 + (size - 1.4) * e) * (1 + 0.35 * lw);
+        // Dust first: every point is a mote (alpha 0.6, 1.4px) that only
+        // takes its halftone alpha and size as it lands. The mote itself is
+        // gated by the ignition flare, so the first second is stars coming
+        // out one by one into the shape of the cloud rather than the whole
+        // cloud arriving at once.
+        const a = Math.max(0.05, 0.6 + (alpha - 0.6) * e + shimmer) * mix * flare;
+        // A point comes in as a pinprick and swells to its mote over the
+        // attack, so it catches rather than simply appears.
+        const rad =
+          (1.4 + (size - 1.4) * e) * (1 + 0.35 * lw) * (0.5 + 0.5 * Math.min(1, ig / IGNITE_PEAK));
         ctx.globalAlpha = Math.min(1, a * (1 + 0.15 * lw));
         ctx.fillStyle = p.col;
         ctx.beginPath();
