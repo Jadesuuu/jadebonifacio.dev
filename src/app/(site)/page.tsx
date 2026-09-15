@@ -21,14 +21,18 @@ export default function HomePage() {
             onto a full-shell hairline (the ground the figure stands on,
             painted over the cutout's foot), then one row — the line left,
             the ask right. No text flanks the portrait; the empty sides are
-            the design. The copy waits for the face to settle before it fades
-            up (see .v2-hero-copy in globals.css). */}
+            the design. The name is present from the first paint — it is the
+            label, the portrait is the subject, and a label that arrives after
+            its subject is backwards (it also made the h1 the LCP element and
+            pinned LCP to the end of a ~2s canvas animation). Only the
+            supporting row waits for the face to settle: .v2-hero-copy--late
+            in globals.css. */}
         <section
           aria-label="Introduction"
           className="v2-hero-stage relative mx-auto max-w-[1080px] px-6 pt-10 md:px-8 md:pt-10"
         >
           <h1
-            className="v2-hero-copy font-display m-0 text-center"
+            className="font-display m-0 text-center"
             style={{ fontSize: "clamp(40px,6.5vw,72px)", lineHeight: 1.05 }}
           >
             Jade Bonifacio

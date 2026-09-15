@@ -2,7 +2,7 @@
  * The story backdrop's worker: owns the OffscreenCanvas and runs the trophy
  * renderer on its own animation loop, so painting ~6,600 dots never touches
  * the main thread — the cards and the page scroll stay at full rate whatever
- * the canvas costs. storyBackdrop.ts posts size, colours, pointer, camera
+ * the canvas costs. storyBackdrop.ts posts size, colours, camera
  * progress and visibility; nothing comes back.
  */
 
@@ -12,7 +12,6 @@ export type BackdropMsg =
   | { type: "init"; canvas: OffscreenCanvas; w: number; h: number; dpr: number; colA: string; colB: string }
   | { type: "resize"; w: number; h: number; dpr: number }
   | { type: "colors"; colA: string; colB: string }
-  | { type: "pointer"; x: number; y: number }
   | { type: "cam"; t: number }
   | { type: "visible"; on: boolean };
 
@@ -47,9 +46,6 @@ addEventListener("message", (e: MessageEvent<BackdropMsg>) => {
       break;
     case "colors":
       renderer?.colors(m.colA, m.colB);
-      break;
-    case "pointer":
-      renderer?.pointer(m.x, m.y);
       break;
     case "cam":
       renderer?.setT(m.t);
