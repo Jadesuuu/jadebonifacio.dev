@@ -78,12 +78,15 @@ export function ScrollReveal() {
           if (!entry.isIntersecting) continue;
           const el = entry.target as HTMLElement;
           countIo.unobserve(el);
-          const target = Number.parseInt(el.dataset.count ?? "0", 10);
+          const raw = el.dataset.count ?? "0";
+          const target = Number.parseInt(raw, 10);
+          // Anything after the digits ("%", " / 52") rides along unchanged.
+          const suffix = raw.replace(/^[\d,]+/, "");
           const start = performance.now();
           const duration = 1300;
           const step = (now: number) => {
             const p = Math.min((now - start) / duration, 1);
-            el.textContent = String(Math.round(target * (1 - Math.pow(1 - p, 3))));
+            el.textContent = String(Math.round(target * (1 - Math.pow(1 - p, 3)))) + suffix;
             if (p < 1) requestAnimationFrame(step);
           };
           requestAnimationFrame(step);
@@ -92,7 +95,7 @@ export function ScrollReveal() {
       { threshold: 0.6 },
     );
     for (const el of counters) {
-      el.textContent = "0";
+      el.textContent = `0${(el.dataset.count ?? "").replace(/^[\d,]+/, "")}`;
       countIo.observe(el);
     }
 
