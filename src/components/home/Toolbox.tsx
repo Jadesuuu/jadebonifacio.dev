@@ -2,6 +2,7 @@ import {
   siClaude,
   siCloudinary,
   siDocker,
+  siExpress,
   siGithubactions,
   siJest,
   siMapbox,
@@ -12,6 +13,7 @@ import {
   siNodedotjs,
   siPnpm,
   siPostgresql,
+  siPuppeteer,
   siPython,
   siReact,
   siReactquery,
@@ -24,6 +26,8 @@ import {
   siTailwindcss,
   siTypescript,
   siVercel,
+  siVite,
+  siZod,
 } from "simple-icons";
 import { ToolboxSpotlight } from "@/components/home/ToolboxSpotlight";
 
@@ -67,6 +71,9 @@ const ROTATION: Tool[] = [
   { name: "shadcn/ui", icon: siShadcnui },
   { name: "material ui", icon: siMui, brand: "#007FFF" },
   { name: "node.js", icon: siNodedotjs, brand: "#5FA04E" },
+  { name: "express", icon: siExpress },
+  { name: "vite", icon: siVite, brand: "#9135FF" },
+  { name: "zod", icon: siZod, brand: "#408AFF" },
   { name: "python", icon: siPython, brand: "#3776AB" },
   { name: "supabase (rls)", icon: siSupabase, brand: "#3FCF8E" },
   { name: "mongodb", icon: siMongodb, brand: "#47A248" },
@@ -87,6 +94,7 @@ const ROTATION: Tool[] = [
   { name: "openai api" },
   { name: "claude code", icon: siClaude, brand: "#D97757" },
   { name: "jest", icon: siJest, brand: "#C21325" },
+  { name: "puppeteer · cdp", icon: siPuppeteer, brand: "#40B5A4" },
 ];
 
 const LANGUAGES: Tool[] = [

@@ -11,6 +11,8 @@ import { Toolbox } from "@/components/home/Toolbox";
 import {
   afterHoursLead,
   afterHoursPhotos,
+  dayJobLedger,
+  dayJobLedgerLead,
   dayJobQuote,
   dayJobQuoteNote,
   dayJobScope,
@@ -87,6 +89,29 @@ export default function AboutPage() {
           ))}
         </div>
         <p className="mt-5 max-w-[65ch] font-mono text-[14px] text-fg-faint">{dayJobScope}</p>
+
+        {/* The ledger: the second tier of figures, the ones that say how the
+            work was done rather than how much. Hairline rows, the numeral in
+            the display face at card-title size so it reads as a smaller
+            sibling of the four above, the fact in body. A <dl>, because each
+            row is a value and its meaning. */}
+        <p className="mt-12 max-w-[56ch] text-[18px] leading-relaxed text-fg-muted md:mt-14">
+          {dayJobLedgerLead}
+        </p>
+        <dl data-stagger className="m-0 mt-6 border-b border-border">
+          {dayJobLedger.map((row) => (
+            <div
+              key={row.value}
+              className="grid grid-cols-[6.5ch_minmax(0,1fr)] items-baseline gap-x-6 border-t border-border py-3.5 max-[480px]:grid-cols-[6ch_minmax(0,1fr)] max-[480px]:gap-x-4"
+            >
+              <dt className="font-display m-0 text-[22px] font-medium leading-none tabular-nums tracking-[-0.015em]">
+                {row.value}
+              </dt>
+              <dd className="m-0 text-[16px] leading-relaxed text-fg-muted">{row.fact}</dd>
+            </div>
+          ))}
+        </dl>
+
         <figure className="mx-auto mt-14 max-w-[24ch] text-center md:mt-16">
           <blockquote
             className="font-display m-0"

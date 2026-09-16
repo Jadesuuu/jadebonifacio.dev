@@ -59,10 +59,10 @@ export const projects: Project[] = [
   {
     slug: "enterprise-platform-work",
     title: "Enterprise platform work",
-    eyebrow: "the day job · top-3 defect resolver",
+    eyebrow: "the day job · top-3 defect resolver, zero rework",
     description:
-      "Shipping into a large, mature codebase I didn't write, for a Japanese client, on a bilingual team. Client under NDA.",
-    stack: ["react", "typescript", "node", "oracle", "dynamodb", "aws"],
+      "Two years shipping into a 460-screen codebase I didn't write, for a Japanese client, on a 60+ engineer bilingual team. Client under NDA.",
+    stack: ["react 18", "typescript", "node · express", "oracle", "redis", "aws"],
     status: "full-time · client under nda",
     cta: "the shape of the work →",
     // A stand-in, not the product: the client is under NDA. Chris Ried,

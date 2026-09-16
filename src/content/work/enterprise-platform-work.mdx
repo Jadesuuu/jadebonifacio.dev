@@ -3,15 +3,18 @@ title: Enterprise platform work
 year: 2024–present
 kind: full-time
 status: client under NDA
-summary: Two years shipping into a large, mature codebase I didn't write, for a Japanese client, on a bilingual team.
+summary: Two years shipping into a 460-screen codebase I didn't write, for a Japanese client, on a 60+ engineer bilingual team.
 stack:
-  - React
+  - React 18
   - TypeScript
+  - Vite
   - Node
-  - Oracle
+  - Express
+  - Oracle PL/SQL
+  - Redis
   - DynamoDB
   - AWS
-scale: 206 merged PRs and 169 customer defects resolved since late 2024, most of them during UAT on a ~420-screen platform.
+scale: 222 pull requests, 204 merged (97% acceptance) · 213 of 223 owned defects shipped, zero returned for rework · code in 262 of 460 screens.
 next: jf-and-the-world
 ---
 
@@ -23,25 +26,44 @@ No screenshots: the client and product are under NDA. The photograph on the work
 
 Side projects show what I can build from zero. This is the other half: working inside a system that's been running for years, with real users depending on it, where every change has to fit code and conventions that predate me.
 
+Two years in, the ledger reads like this: 222 pull requests with 204 merged, code in 262 of the platform's 460 screens across 10 of its 11 subsystems, 223 defects owned and 213 shipped with none returned for rework, and the top-3 defect resolver across the whole program — first for the latest quarter — on an 11-engineer UAT team. The rest of this page is how.
+
 ## What I've worked on
 
-**Legacy port: WinForms to React and Node on Oracle.** A desktop application being rebuilt as a web app, screen by screen, against an Oracle database that stayed put. The hard part isn't the React. It's reading the old code well enough to preserve behavior that nobody documented, deciding when to reproduce a quirk versus fix it, and doing that in a codebase where the answer to "how does this work" is often "ask the person who wrote it years ago" — in Japanese.
+**Legacy port: C# and Java Struts on Oracle PL/SQL, rebuilt as React 18 and Node on the same Oracle.** A 460-screen Japanese property-management platform being rebuilt as a web app, screen by screen, against a database that stayed put. The hard part isn't the React. It's reading the old code well enough to preserve behavior that nobody documented — the C#, the Java, the PL/SQL, and when the source isn't enough, reflecting over the installed legacy binaries and reproducing the case live on both systems — then deciding when to reproduce a quirk versus fix it, in a codebase where the answer to "how does this work" is often "ask the person who wrote it years ago" — in Japanese.
 
-**Cross-stack defect work on a real estate management platform.** Bugs that land on my desk don't come labeled frontend or backend. A recent one: file uploads rejecting valid images. The validation logic was checking MIME types, and JPEGs arrive as several variants depending on the source. Tracing that from the user's report through the React upload flow to the validation rule, fixing it without loosening the check for everything else, and writing it up for a team that reads the ticket in a second language — that's a typical week.
+**A multi-tenant API.** Node and Express over Oracle with per-request schema switching, so one deployment serves every tenant. Zod contracts on both request and response, Redis-backed sessions and caching, OAuth2 through Passport, i18next for the JP/EN interface, and every yen through bignumber.js, because floating point and currency don't mix.
 
-**A QR-based parking system with realtime slot monitoring.** Slot events fan out over SNS and get processed off SQS, with DynamoDB holding slot state, so a scan at the gate doesn't wait on everything downstream. It was my first production message queue, and where I learned the difference between a queue and pub/sub by needing both.
+**Feature work before UAT.** Twenty-three screens carry features I built before the customer ever saw them: nine screens and dialogs end to end, from spec through implementation and integration test to customer UAT, a quick-search feature across thirteen more, and a shared subsystem header. On the implementation leaderboard that put me in the top 30% of 61 implementers, at twice the team median.
 
-**Developer tooling for the team, built on Claude Code.** I built the bug-fix pipeline the team runs on: scripts that pull tester reports from Google Sheets and Redmine, a structured analyze → fix → verify → request-review workflow as custom commands, staging log fetchers, evidence-video capture for reviewers, a small Postgres inventory for team metrics, and a dashboard that refreshes itself on EC2 four times a day. The interesting problem wasn't the prompts. It was deciding where an AI assistant is trustworthy in a codebase this size and where it isn't, then encoding those guardrails so the whole team gets them by default.
+**Cross-stack defect work during UAT.** Bugs that land on my desk don't come labeled frontend or backend. A ticket arrives in Japanese describing what a property manager saw; the cause might be a React form's submit chain, an Express route, a PL/SQL package, or a difference between the new system and the legacy one that nobody wrote down. Tracing it end to end, fixing it without loosening anything else, and writing it up for a team that reads the ticket in a second language: that's a typical week. The section below is what those weeks produced.
+
+**A QR-based parking system with realtime slot monitoring.** Slot events fan out over SNS and get processed off SQS, with DynamoDB holding slot state and token-authenticated WebSockets pushing availability to the gate, so a scan doesn't wait on everything downstream. It was my first production message queue, and where I learned the difference between a queue and pub/sub by needing both.
+
+**Developer tooling for the team, built on Claude Code.** Six skills and commands, about 960 lines, in daily team use: a Puppeteer driver that verifies a fix end to end in the browser, a Chrome DevTools Protocol frame-capture pipeline that produces the evidence video reviewers want, a screen-navigation tracer, a Slack review-request generator, bilingual return-ticket drafting, and a manual-verification pack. Around them, the pipeline the team runs on: scripts that pull tester reports from Google Sheets and Redmine, staging log fetchers, a small Postgres inventory for team metrics, and a dashboard that refreshes itself on EC2 four times a day. The interesting problem wasn't the prompts. It was deciding where an AI assistant is trustworthy in a codebase this size and where it isn't, then encoding those guardrails so the whole team gets them by default.
+
+## What broke, and what I did about it
+
+Every case study on this site has this section. The client's under NDA, so these are the shapes of the fixes, not the tickets.
+
+- **A notification failure was rolling back a move-out estimate.** An external notification call sat inside the same transaction as the primary write, so a downstream outage undid the user's work. I isolated the side effect from the write: the estimate saves, the notification retries on its own.
+- **CSV import inserted every row twice.** Found the double path, closed it, and added the sweep that checks every other import for the same shape.
+- **Tax rates read as zero on a cold start.** The shared cache was populated lazily, so the first request after a deploy computed tax on nothing. Warming it at auth bootstrap means no request ever sees an empty cache.
+- **Searches could be submitted twice.** A second click while the first search was in flight fired a second request. In-flight searches are now guarded, on the shared search control, so every screen that uses it got the fix.
+- **The move-out list search ran a COUNT it didn't need.** Removing the duplicate query halved the search time.
+- **Multibyte Japanese text overflowed Oracle byte limits.** A field sized in characters accepted input that exceeded its byte length once the characters were Japanese (ORA-12899). Byte-length guards on every affected field, then the horizontal sweep for siblings.
+
+Twenty-two of my fixes went into shared controls rather than into the screen the ticket named: search, tax, unique-text, the table atoms, the Formik submit chain. Each of those single PRs closed issues on other screens, 30+ in all, most of them not yet filed. The system's most complex registration screen, lease contracts, accounted for 19 of my defects on its own; twelve more screens accounted for five or more each.
 
 ## What the environment taught me
 
-**Working across a language barrier.** The CEO and most of the team communicate in Japanese. I've learned to write tickets, PR descriptions, and questions so they survive translation: short sentences, one idea each, screenshots over prose. It's made me a clearer communicator in English too.
+**Working across a language barrier.** The CEO and most of the team communicate in Japanese. I've learned to write tickets, PR descriptions, and questions so they survive translation: short sentences, one idea each, screenshots over prose. When a defect turns out to be a difference between the new system and the legacy one, the root-cause report goes to the customer's Redmine in both languages, stating what each system did and why. It's made me a clearer communicator in English too.
 
 **Reading before writing.** In a codebase this size, the most valuable skill is figuring out how something works before touching it. In practice that means git archaeology: reading the history of a line to decide whether what I'm looking at is a regression or a decision someone made on purpose. When there's no document, the legacy behavior is the spec until someone with authority says otherwise. Most of my time is spent tracing, not typing.
 
-**Fix the pattern, not the instance.** Every fix ends with a sweep for the same defect elsewhere. The Japanese term is 横展開: roughly, "spread it sideways." A bug on one screen is usually sitting on the six screens the same person built the same month. Half my fixes now come from that sweep, not the original ticket.
+**Fix the pattern, not the instance.** Every fix ends with a sweep for the same defect elsewhere. The Japanese term is 横展開: roughly, "spread it sideways." A bug on one screen is usually sitting on the six screens the same person built the same month. The sweeps above — separator standardization, byte-overflow guards, decimal-artifact sanitizing — each started as one ticket and ended as a pass across every sibling screen. Half my fixes now come from that sweep, not the original ticket.
 
-**Small, defensible changes.** Big refactors in a system with years of accumulated behavior break things in ways you find out about a month later. I've learned to make the smallest change that fixes the problem, and to be able to explain exactly why it's safe.
+**Small, defensible changes.** Big refactors in a system with years of accumulated behavior break things in ways you find out about a month later. I've learned to make the smallest change that fixes the problem, and to be able to explain exactly why it's safe. Zero of my 213 shipped fixes came back for rework; that number is the point of the habit.
 
 <Callout>
 In a mature codebase, the smallest change you can defend beats the cleanest change you can imagine.
