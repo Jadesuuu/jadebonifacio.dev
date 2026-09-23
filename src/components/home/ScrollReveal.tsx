@@ -12,7 +12,9 @@ import { useEffect } from "react";
  *     arrives the same way. Containers marked data-stagger reveal their own
  *     children in sequence (70ms steps, capped); a data-tools wrapper is
  *     looked through so its rows reveal separately. Timeline cards are left
- *     to StoryEffects; the cursor-glow is skipped. Reveals do not re-hide on
+ *     to StoryEffects; the cursor-glow is skipped, and so is any <section>
+ *     marked data-no-reveal (its motion is authored elsewhere, e.g. the
+ *     scrubbed rows on /work). Reveals do not re-hide on
  *     the way back up — the reader has seen it; replaying it is noise.
  *  2. Count-up — elements with data-count tick from 0 to the target once, on a
  *     650/1300ms easeOutCubic, when 60% visible.
@@ -51,6 +53,7 @@ export function ScrollReveal() {
       }
     };
     for (const section of Array.from(document.querySelectorAll("section"))) {
+      if (section.hasAttribute("data-no-reveal")) continue;
       Array.from(section.children).forEach((child) => visit(child as HTMLElement));
     }
 

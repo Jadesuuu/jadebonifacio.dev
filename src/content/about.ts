@@ -114,7 +114,7 @@ export const timeline: TimelineItem[] = [
     meta: "2025–26 · after work",
     title: "Kept shipping after hours",
     body:
-      "Still at Advanced World Solutions by day, AWS Cloud Practitioner certified in 2026. Three of the evening builds got write-ups here: HTTP Monitor, ScoutBoard, then JF & The World — live with its two intended users. The rest didn't — a QR parking lot, a property management system, a hospital Kardex, client sites.",
+      "Still at Advanced World Solutions by day, AWS Cloud Practitioner certified in 2026. Four of the evening builds got write-ups here: HTTP Monitor, ScoutBoard, JF & The World — live with its two intended users — and Reel, the job-hunt tracker. The rest didn't — a QR parking lot, a property management system, a hospital Kardex, client sites.",
     img: "/images/home/late-night.png",
     alt: "A late-night session at the desk, mid-build on a side project",
   },

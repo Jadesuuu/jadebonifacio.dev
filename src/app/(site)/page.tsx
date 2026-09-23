@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { HeroPortrait } from "@/components/home/HeroPortrait";
 import { WorkGrid } from "@/components/home/WorkGrid";
-import { projects } from "@/content/projects";
+import { homeProjects } from "@/content/projects";
 import { site } from "@/lib/site";
 
 /**
- * Home. One portrait rendered two ways, three latest works, one line of ask,
+ * Home. One portrait rendered two ways, the three newest side projects
+ * (the day job lives on /work under its own heading), one line of ask,
  * the footer. Under two screens on desktop. Everything biographical moved to
  * /about, the case-study index to /work, the form to /contact — the page earns
  * the click rather than trying to be the whole site.
@@ -80,7 +81,7 @@ export default function HomePage() {
             </h2>
             <span aria-hidden="true" className="h-px flex-1 bg-border" />
           </div>
-          <WorkGrid projects={projects} />
+          <WorkGrid projects={homeProjects} />
 
           <p className="mx-auto mt-14 max-w-[52ch] text-center text-[16px] leading-relaxed text-fg-muted md:mt-16">
             Have a role, a project, or a codebase that needs fixing?{" "}
