@@ -8,7 +8,9 @@ import type { Project } from "@/content/projects";
  * per row. A project with a hosted demo carries a nested `live demo ↗` link, so
  * its card is an <article> with the case-study link stretched over it via a
  * pseudo-element and the demo link layered above. A project without a demo is
- * one big <Link>. The NDA project has no image; it shows a hatched slot.
+ * one big <Link>. A project that cannot be shown has no image; it shows a
+ * hatched slot. The data-work-* hooks are WorkIndexMotion's (the scrubbed
+ * unveil on /work); the default CSS leaves everything visible without them.
  */
 export function WorkCard({ project, imageFirst }: { project: Project; imageFirst: boolean }) {
   const href = `/work/${project.slug}`;
@@ -21,24 +23,31 @@ export function WorkCard({ project, imageFirst }: { project: Project; imageFirst
   const media = <Media key="media" project={project} />;
   const body = <Body key="body" project={project} href={href} stretched={Boolean(project.demo)} />;
   const children = imageFirst ? [media, body] : [body, media];
+  const rowKind = imageFirst ? "image-first" : "text-first";
 
   if (project.demo) {
-    return <article className={`${shell} relative`}>{children}</article>;
+    return (
+      <article className={`${shell} relative`} data-work-row={rowKind}>
+        {children}
+      </article>
+    );
   }
   return (
-    <Link href={href} className={shell}>
+    <Link href={href} className={shell} data-work-row={rowKind}>
       {children}
     </Link>
   );
 }
 
+// overflow-hidden: the unveil settles the capture from a slight zoom, which
+// must not spill into the text column.
 const mediaBox =
-  "relative min-h-[240px] max-[840px]:order-first max-[840px]:aspect-[16/10] max-[840px]:min-h-0";
+  "relative min-h-[240px] overflow-hidden max-[840px]:order-first max-[840px]:aspect-[16/10] max-[840px]:min-h-0";
 
 function Media({ project }: { project: Project }) {
   if (project.hasImage && project.thumbnail) {
     return (
-      <div className={mediaBox}>
+      <div className={mediaBox} data-work-media>
         <Image
           src={project.thumbnail}
           alt={project.thumbnailAlt ?? `${project.title} screenshot`}
@@ -52,6 +61,7 @@ function Media({ project }: { project: Project }) {
   return (
     <div
       className={`${mediaBox} flex items-center justify-center`}
+      data-work-media
       style={{
         background:
           "repeating-linear-gradient(-45deg,var(--bg-subtle),var(--bg-subtle) 8px,var(--bg) 8px,var(--bg) 16px)",
@@ -67,13 +77,14 @@ function Media({ project }: { project: Project }) {
 function Body({ project, href, stretched }: { project: Project; href: string; stretched: boolean }) {
   const cta = "v2-underline mt-2 self-start font-mono text-[14px] text-fg";
   return (
-    <div className="flex flex-col justify-center gap-3 p-9">
-      {/* Title first; the mono line sits under it as a subtitle. A small
+    <div className="flex flex-col justify-center gap-3 p-9" data-work-body>
+      {/* An h3: the rows sit under /work's "Recent work" h2.
+          Title first; the mono line sits under it as a subtitle. A small
           tracked label above a heading is the one thing the craft floor bans
           outright, and the home cards already read this way. */}
-      <h2 className="m-0 text-[26px] font-medium" style={{ viewTransitionName: `work-title-${project.slug}` }}>
+      <h3 className="m-0 text-[26px] font-medium" style={{ viewTransitionName: `work-title-${project.slug}` }}>
         {project.title}
-      </h2>
+      </h3>
       <p className="m-0 -mt-1.5 font-mono text-[14px] tracking-[0.04em] text-accent">{project.eyebrow}</p>
       <p className="m-0 text-[16px] leading-relaxed text-fg-muted">{project.description}</p>
       <p className="m-0 text-pretty font-mono text-[14px] text-fg-faint">

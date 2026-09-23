@@ -1,0 +1,138 @@
+---
+title: Reel
+year: 2026
+kind: side project
+status: live demo · public repo · ci green
+summary: "A job-hunt tracker that does the boring part: it reads ten job sources on a schedule, scores every posting against your criteria, and reminds you exactly once when an application goes quiet."
+stack:
+  - NestJS
+  - Prisma
+  - Postgres
+  - Redis
+  - BullMQ
+  - Next.js 16
+  - TanStack Query
+  - Vitest
+scale: ten sources · 125 unit tests and 47 end-to-end tests · nine evenings, 16–24 September 2026
+links:
+  - label: live demo
+    to: demos.reel
+  - label: source
+    to: repos.reel
+next: jf-and-the-world
+---
+
+<Figure
+  src="/images/work/reel/hero.png"
+  width="1680"
+  height="880"
+  breakout
+  alt="Reel's dashboard: a sentence reading '42 new matches waiting in your inbox, 11 applications in motion, and 5 things due in the next three days', a stage funnel with counts for saved, applied, interviewing and offer, eight weeks of activity bars, and a 'Coming up' list of follow-ups by date."
+  caption="the dashboard answers 'what came in, what is due' in one sentence"
+/>
+
+## Why I built it
+
+Job hunting fails on logistics, not ambition. The good postings are spread across a dozen boards and a thousand-comment thread, and the applications you do send disappear into silence until you realise, weeks later, that you never followed up on the one that mattered. Reel turns both halves into something a computer does: it reads the boards for me, and it remembers what I forgot.
+
+I'm the user. I built it, from a full-time seat at Advanced World Solutions, for the search I'm running right now, and I use it every day, so every rough edge is one I hit myself.
+
+It was built in nine evenings in September 2026, alongside the day job at Advanced World Solutions, from a plan I wrote first and revised as the work went: the schema, the API contract, the scoring rules, the order of the steps. Claude Code typed most of it from that plan, one branch per step, and each step ends in a reviewer document written for me to study the code from. The decisions below are the ones I'd defend out loud.
+
+## What it does
+
+**Ten sources, one inbox.** The monthly Hacker News "Who is hiring?" thread, six remote-job feeds (Remotive, Remote OK, Arbeitnow, Himalayas, Jobicy, We Work Remotely), and any company careers page on Greenhouse, Lever or Ashby that you watch. Every posting is parsed into the same shape and scored against your criteria. The score is never a mystery: it is the sum of the chips beside it — `remote`, `role · full stack`, `typescript` — and the rules are plain arithmetic you can read on the settings page.
+
+<Figure
+  src="/images/work/reel/inbox.png"
+  width="1680"
+  height="880"
+  breakout
+  alt="The Reel inbox: a list of scored postings, each with a score of 110 or so beside the company and role, chips for the source, salary range, remote, role and stack that make up the score, and one posting expanded to show its text with 'Save to pipeline' and 'Apply' buttons. A row of keyboard hints reads j k move, s save, d dismiss, a apply."
+  caption="the inbox; the number on the left is the sum of the chips on the right"
+/>
+
+**A pipeline you can trust.** Saved → Applied → Interviewing → Offer, with Rejected and Withdrawn as exits. Drag a card between columns; the server enforces the allowed moves, and every change is written to an immutable timeline alongside your notes, contacts and next steps. Applications found anywhere else — a referral, LinkedIn, a friend — go in by hand and get the same treatment.
+
+<Figure
+  src="/images/work/reel/pipeline.png"
+  width="1680"
+  height="880"
+  breakout
+  alt="The Reel pipeline board: columns for Saved (3), Applied (5), Interviewing (2) and Offer (1), each card naming a company, role, location and salary, with its source stamped in the corner and its next reminder or interview date along the bottom."
+  caption="the pipeline; an illegal drop snaps back with a toast naming the allowed moves"
+/>
+
+**Reminders that don't nag twice.** Ten days after you mark something Applied, an email arrives. Move it on and the reminder cancels itself. Set your own follow-up date on any application. The job id is deterministic and the worker re-reads the database before sending, so a reminder can never fire twice or fire for something that already moved.
+
+<Figure
+  src="/images/work/reel/timeline.png"
+  width="1680"
+  height="880"
+  breakout
+  alt="An application record for Umbrella Robotics open over the pipeline, stamped OFFER, on its Timeline tab: six dated entries from 'Created as Saved' through 'Applied → Interviewing' and two notes to 'Interviewing → Offer, verbal offer, written one due Friday'."
+  caption="one application's timeline: every stage change and note, in order, forever"
+/>
+
+**Keyboard first where it pays.** The inbox is the page used most, so `j`/`k`, `s`, `d`, `a` and Enter work without a click, `g i` jumps between pages, and Ctrl+K opens a command palette. Every shortcut has a visible button equivalent and is listed under Settings.
+
+## Architecture
+
+**pnpm monorepo**, API and web app as separate workspaces, ESM throughout. The web app never imports from the API package; it mirrors the contract by hand, so the API can change shape without the UI silently depending on an internal type.
+
+**Built to run as a NestJS API on Railway and a Next.js web app on Vercel.** Postgres behind Prisma, Redis behind BullMQ. Auth is a JWT in an httpOnly cookie: invisible to XSS at the cost of a CORS configuration, and a single-user tool does not need refresh-token rotation.
+
+**The API and the worker are the same image with a different command.** The API only ever enqueues; it never waits on a job board or an email provider. The worker owns everything with a clock in it: the six-hourly `ingest-all` scheduler, the per-source `ingest-source` jobs it fans out to, and the delayed reminder jobs. Either process restarts without the other noticing. A `@Cron` decorator inside the API would have meant every replica firing the same job; BullMQ's scheduler dedupes by key, and the worker scales independently of request traffic.
+
+**Fan-out ingest, one run per source.** `ingest-all` does no fetching; it enqueues one job per enabled source and watched board. A board that times out fails and retries alone, and the settings page can show exactly which source is unhappy.
+
+**Each source is an adapter**: one class, one network call, one pure `mapX(payload)` function tested against a fixture captured from the live API. A pure `normalizePosting()` turns every adapter's output into the same `Posting` row, so the scorer, the inbox and the pipeline never learned a second shape when nine sources joined the first.
+
+**Reminders are idempotent by construction.** Job ids derive from the application id (`stale-<id>`, `followup-<id>`), so rescheduling replaces rather than duplicates. Deleting a queue job when an application moves on is best-effort; correctness lives in the re-check the processor does before it sends anything:
+
+```ts
+// The job id is derived from the application, so a reschedule replaces the
+// job instead of adding one. The processor still re-reads before sending:
+// a stale check only fires for something that is still sitting in APPLIED
+// and has not changed stage since the check was queued.
+const application = await this.prisma.application.findUnique({
+  where: { id: applicationId },
+  include: { user: { select: { email: true } } },
+});
+if (!application || application.stage !== "APPLIED") return;
+if (application.stageChangedAt.toISOString() !== stageChangedAt) return;
+
+await this.mailer.send({
+  to: application.user.email,
+  subject: `Follow up: ${application.company} — ${application.role}`,
+  text: "…",
+});
+await this.prisma.reminder.update({
+  where: { jobId: staleJobId(applicationId) },
+  data: { sentAt: new Date() },
+});
+```
+
+**One seam for the network.** Every request in the web app goes through one `apiFetch`. That is what makes the demo possible: built with `NEXT_PUBLIC_DEMO_MODE=true`, that function hands the call to an in-browser implementation of the same contract — same routes, same status codes, same validation messages — over seeded, synthetic data persisted in `localStorage`. No page, hook or component knows. Fifty-four postings across all ten sources, fourteen applications with histories, two ingest cycles, and a banner that can reset the data or fast-forward the clock ten days so pending reminders fire and their emails show up under Settings. Everything in the demo is invented; nothing names a real employer. What's hosted today is that demo build; the real deployment — Railway for the API and worker, Vercel for the web — is written up in the repo's deploy guide.
+
+**Tests.** 125 unit tests across 13 files with Vitest: the parser, the ten adapter mappers, the normaliser, the scorer, the stage machine and the stats summary are plain functions with no framework in them, and services are tested with mocked Prisma and queues. 47 end-to-end tests across 7 files run with supertest against a real Postgres and Redis, through the same middleware as production, so a mistake in helmet or cookie parsing fails a test instead of shipping. CI runs lint → format → typecheck → build → unit → e2e on every push with Postgres and Redis service containers.
+
+## What broke, and what I did about it
+
+- **Hacker News entity-encodes `href` attributes.** `https:&#x2F;&#x2F;…` looked fine in the database and produced "Apply on &" in the UI. No fixture had caught it because the v1 parser never decoded attribute values. Fixing a parse bug here means adding the payload that broke it and watching the test go red first: the fixture was added, the parser decodes, a data migration repaired the stored rows, and the UI's host helper now refuses anything that doesn't look like a hostname.
+- **Prisma wanted to drop a column to rename it.** When `threadId` became `boardId`, the generated migration would have dropped the column and its 264 rows. The migration is hand-written as `ALTER TABLE … RENAME COLUMN`, and `prisma migrate diff` confirms the schema and the database agree afterwards.
+- **Every dialog sat a full width off-centre.** Tailwind 4 centres with the `translate` property; the dialog keyframes also set `transform: translate(-50%, -50%)`. The two compose. Keyframes now animate opacity and scale only; centring belongs to the utility class alone.
+- **Radix `Select` throws on an empty-string value.** "All sources" wanted an empty string as its value. The select wrapper maps the empty string to a sentinel on the way in and back on the way out, so callers keep using it for "no filter".
+- **A link styled as a button crashed the page.** Radix's `Slot` needs exactly one child; the first `Button` rendered a spinner beside its children even when `asChild` was set. `Button` now branches: `asChild` renders the slot with children only, and the spinner belongs to the real `<button>` path.
+- **An import cycle that only works because of timing.** The API client imports the demo for the seam; the demo handlers import the client's `ApiError`. ES modules tolerate it because `ApiError` is only used inside functions at call time, never at module top level. That constraint is written down in the reviewer document so nobody moves it.
+
+<Callout>
+Lesson: derive the job id from the thing it is about, and re-check the thing before you act. Deduplication you can prove beats deduplication you hope for.
+</Callout>
+
+## What I'd change
+
+- **Offset pagination, no refresh tokens, one user.** The v1 choices held because the tool is mine. A second user would want cursor pagination and session rotation; neither is hard, and neither was worth building before someone needed it.
+- **Public JSON and RSS only.** Anything that needs scraping or an API key stays out by design, which is why there is no LinkedIn. The trade is coverage for a worker that never breaks on someone else's HTML.
+- **The web app has no tests of its own.** The API is tested to the wire; the UI is tested by using it every day. The demo's in-browser API is a copy of the contract, so a drift between the two shows up as a wrong error message, not a failing test.
+- **The demo's state is one JSON blob under a version key.** Changing the shape means bumping the key and reseeding every visitor. Fine for a resume link; not a migration strategy.

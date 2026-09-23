@@ -6,6 +6,7 @@ export const links = {
   /** Served from public/. Always opened in a new tab. */
   resume: "/resume.pdf",
   repos: {
+    reel: "https://github.com/Jadesuuu/Reel",
     jfAndTheWorld: "https://github.com/Jadesuuu/jf-and-the-world",
     scoutboard: "https://github.com/Jadesuuu/scoutboard",
     httpMonitor: "https://github.com/Jadesuuu/http-monitor",
@@ -13,6 +14,8 @@ export const links = {
   },
   /** Hosted demos, when a project has one. */
   demos: {
+    /** The demo build: the same interface answering its own API calls in the browser. */
+    reel: "https://reel-web-phi.vercel.app",
     jfAndTheWorld: "https://jf-and-the-world-demo.vercel.app",
     scoutboard: "https://scoutboard-scoutboard-frontend.vercel.app",
   },
