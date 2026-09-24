@@ -150,7 +150,7 @@ export const employers: Employer[] = [
     name: "Advanced World Solutions",
     role: "research & development engineer",
     tenure: "jul 2024 – present",
-    note: "a 4602011screen japanese property platform · 60+ engineer bilingual en/jp team",
+    note: "a 460‑screen japanese property platform · 60+ engineer bilingual en/jp team",
   },
 ];
 
