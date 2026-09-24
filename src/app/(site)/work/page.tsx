@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { EmployerRow } from "@/components/home/EmployerRow";
+import { EmployerGroup } from "@/components/home/EmployerRow";
 import { ScrollReveal } from "@/components/home/ScrollReveal";
 import { WorkCard } from "@/components/home/WorkCard";
 import { WorkIndexMotion } from "@/components/home/WorkIndexMotion";
 import { smallerThings } from "@/content/about";
-import { employer, employerWork, recentWork } from "@/content/projects";
+import { dayJobLead, employers, engagementsOf, recentWork } from "@/content/projects";
 import { site } from "@/lib/site";
 
 const title = "Work";
@@ -35,9 +35,10 @@ const h2Size = { fontSize: "clamp(28px,3.6vw,38px)", lineHeight: 1.12 };
  *
  * "The day job" is the employer engagements: client work under NDA, nothing
  * to screenshot, so a card would only ever hold a hatched slot. They are a
- * ledger instead — title, the shape of the work, and the figures that travel
- * with it (EmployerRow), grouped under the employer so new engagements slot
- * in as rows. Recent work comes first because its evidence is visual and the
+ * grouped ledger instead (EmployerGroup): one group per employer, the
+ * employer in a left column spanning its engagements, each engagement a row
+ * on the right with the shape of the work and the figures that travel with
+ * it. New engagements slot in as rows; a new employer is a new group. Recent work comes first because its evidence is visual and the
  * reader is here to look; the day job's evidence is numbers, and it reads
  * better once the reader has seen what the evenings produce.
  *
@@ -72,13 +73,10 @@ export default function WorkIndexPage() {
         <h2 id="dayjob-h" className={h2} style={h2Size}>
           The day job
         </h2>
-        <p className="mt-3 text-meta-mono text-accent">
-          {employer.name.toLowerCase()} · {employer.role} · {employer.tenure}
-        </p>
-        <p className="mt-5 max-w-[56ch] text-[18px] leading-relaxed text-fg-muted">{employer.lead}</p>
-        <div data-stagger className="mt-8 border-b border-border md:mt-10">
-          {employerWork.map((project) => (
-            <EmployerRow key={project.slug} project={project} />
+        <p className="mt-4 max-w-[56ch] text-[18px] leading-relaxed text-fg-muted">{dayJobLead}</p>
+        <div className="mt-8 flex flex-col gap-12 md:mt-10">
+          {employers.map((employer) => (
+            <EmployerGroup key={employer.id} employer={employer} engagements={engagementsOf(employer)} />
           ))}
         </div>
       </section>
