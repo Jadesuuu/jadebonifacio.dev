@@ -33,6 +33,22 @@ export type Project = {
   demo?: string;
   /** Employer rows only: up to three figures, the numbers that travel with the work. */
   figures?: Figure[];
+  /** Employer rows only: the id of the employer this engagement sits under. */
+  employer?: string;
+  /** Employer rows only: when, as a lowercase mono line, e.g. "2024 – present". */
+  period?: string;
+};
+
+/** An employer on /work: its engagements hang off it as ledger rows. */
+export type Employer = {
+  id: string;
+  name: string;
+  /** Lowercase mono. */
+  role: string;
+  /** Lowercase mono, e.g. "jul 2024 – present". */
+  tenure: string;
+  /** Lowercase mono, one line of scope the section lead does not already say. */
+  note: string;
 };
 
 /**
@@ -94,6 +110,8 @@ export const projects: Project[] = [
     slug: "enterprise-platform-work",
     title: "Enterprise platform work",
     kind: "employer",
+    employer: "advanced-world-solutions",
+    period: "2024 – present",
     eyebrow: "top-3 defect resolver · zero rework",
     description:
       "Two years shipping into a 460-screen codebase I didn't write, for a Japanese client, on a 60+ engineer bilingual team. Client under NDA.",
@@ -121,15 +139,29 @@ export const employerWork = projects.filter((p) => p.kind === "employer");
 export const homeProjects = recentWork.slice(0, 3);
 
 /**
- * The employer the day-job rows sit under. One employer so far; when that
- * changes, this becomes a list and /work groups the rows by it.
+ * Employers, newest first. /work renders one grouped ledger per employer:
+ * the employer in the left column, its engagements (the `kind: "employer"`
+ * projects whose `employer` matches) as rows on the right. A new engagement
+ * at the same employer is one more project; a new employer is one more entry.
  */
-export const employer = {
-  name: "Advanced World Solutions",
-  role: "research & development engineer",
-  tenure: "jul 2024 – present",
-  lead: "Full-time since July 2024, on client work under NDA: no product names, no screenshots. What I can show is the shape of each engagement and its numbers.",
-} as const;
+export const employers: Employer[] = [
+  {
+    id: "advanced-world-solutions",
+    name: "Advanced World Solutions",
+    role: "research & development engineer",
+    tenure: "jul 2024 – present",
+    note: "a 4602011screen japanese property platform · 60+ engineer bilingual en/jp team",
+  },
+];
+
+/** The engagements under one employer, in `projects` order. */
+export function engagementsOf(employer: Employer): Project[] {
+  return employerWork.filter((p) => p.employer === employer.id);
+}
+
+/** The line under the "The day job" heading. */
+export const dayJobLead =
+  "Full-time since July 2024, on client work under NDA: no product names, no screenshots. What I can show is the shape of each engagement and its numbers.";
 
 export function getProject(slug: string): Project | undefined {
   return projects.find((p) => p.slug === slug);
