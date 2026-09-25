@@ -15,9 +15,9 @@ export const links = {
   /** Hosted demos, when a project has one. */
   demos: {
     /** The demo build: the same interface answering its own API calls in the browser. */
-    reel: "https://reel-web-phi.vercel.app",
-    jfAndTheWorld: "https://jf-and-the-world-demo.vercel.app",
-    scoutboard: "https://scoutboard-scoutboard-frontend.vercel.app",
+    reel: "https://reel.jadebonifacio.dev",
+    jfAndTheWorld: "https://jfdemo.jadebonifacio.dev",
+    scoutboard: "https://scoutboard.jadebonifacio.dev",
   },
 } as const;
 
