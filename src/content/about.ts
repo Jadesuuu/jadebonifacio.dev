@@ -3,7 +3,7 @@ import { links } from "@/content/links";
 /** Copy for /about. Quoted verbatim from the brief; edit here, not in the page. */
 
 export const who =
-  "I'm Jade Bonifacio, a full-stack developer in the Philippines. I've spent the last two years at Advanced World Solutions shipping into a 460-screen enterprise codebase for a Japanese client, and my evenings building things from zero. I'm looking for a remote role at a small startup where I can do more of the second.";
+  "I'm Jade Bonifacio, a full-stack developer in the Philippines. I've spent the last two years at Advanced World Solutions shipping into a 460-screen enterprise codebase for a Japanese client, since October 2026 also on vTD, a video desktop app for remote teams, and my evenings building things from zero. I'm looking for a remote role at a small startup where I can do more of the second.";
 
 export const howIWorkParagraphs = [
   "I read before I write. In a mature codebase the most useful thing I can do is trace how something actually works before I touch it, and I've carried that habit into my own projects.",
