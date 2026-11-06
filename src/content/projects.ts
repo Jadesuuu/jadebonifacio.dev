@@ -58,6 +58,23 @@ export type Employer = {
  */
 export const projects: Project[] = [
   {
+    slug: "budget",
+    title: "Budget",
+    kind: "side",
+    eyebrow: "review, don't type",
+    description:
+      "A budgeting app for the Philippines that reads the notifications banks already send. Transactions arrive on their own and wait in an inbox; a few taps a day keep the month accurate.",
+    stack: ["next.js 16", "supabase · rls", "cloudflare email workers", "pglite"],
+    status: "live demo · public repo",
+    cta: "read the case study →",
+    hasImage: true,
+    thumbnail: "/images/work/budget/thumbnail.png",
+    thumbnailAlt:
+      "Budget's review inbox in the Coal & Brass dark theme: a card for a 289 peso Jollibee purchase with Ignore and Confirm buttons, beside a list of six more transactions waiting",
+    repo: links.repos.budget,
+    demo: links.demos.budget,
+  },
+  {
     slug: "reel",
     title: "Reel",
     kind: "side",

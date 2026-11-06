@@ -1,0 +1,104 @@
+---
+title: Budget
+year: 2026
+kind: side project
+status: live demo · public repo
+summary: "A budgeting app for the Philippines that reads the notifications banks already send. Transactions arrive on their own and wait in an inbox; a few taps a day keep the month accurate."
+stack:
+  - Next.js 16
+  - React 19
+  - Supabase
+  - Postgres RLS
+  - Cloudflare Email Workers
+  - zod
+  - PGlite
+  - Vitest
+  - Playwright
+  - pgTAP
+scale: five banks and e-wallets parsed · 185 unit tests, 23 end-to-end tests, 11 pgTAP suites · built 11–13 October 2026
+links:
+  - label: live demo
+    to: demos.budget
+  - label: source
+    to: repos.budget
+next: reel
+---
+
+<Figure
+  src="/images/work/budget/hero.png"
+  width="1680"
+  height="880"
+  breakout
+  alt="Four phone screens of Budget, each in a different theme: the Sakura home screen with a review card for a Jollibee purchase, the Barako review inbox, the Denim spending page with a bar chart of daily spending until payday, and the Coal & Brass accounts list."
+  caption="one app, four of its eight themes; every number on these screens is made up"
+/>
+
+## Why I built it
+
+No Philippine bank gives you API access to your own account, so every budgeting app here starts with you typing. I last about a week of that. What every bank and e-wallet does send is a notification for each transaction: an email, a text, an app alert. Budget treats those as the source of truth. They arrive as pending transactions, and my job shrinks to confirming them.
+
+It's built for me and a few invited friends, each with their own private data. Claude Code and I built it in three days in October 2026, from the rules written in the repo's `CLAUDE.md`: integer centavos, RLS on every table, last four digits only, never a bank password.
+
+## What it does
+
+**A review inbox, not a form.** Captured transactions wait as cards. Swipe right or press `C` to confirm, left or `I` to ignore, `U` to undo. Possible duplicates are flagged, and money that leaves one of my accounts and lands in another is paired into a single transfer instead of counting as spending.
+
+<Figure
+  src="/images/work/budget/review.png"
+  width="1680"
+  height="880"
+  breakout
+  alt="The Budget review inbox on desktop in the Coal & Brass dark theme: a card for a 289 peso Jollibee purchase on a BPI credit card with a Food category, Ignore and Confirm buttons, and an 'Up next' list of six more pending transactions."
+  caption="the review inbox; the demo bar at the top says the data is invented"
+/>
+
+**Capture from email and phone.** Gmail filters forward bank emails to a private address. A Cloudflare Email Worker stores each one untouched, and a separate job parses it, so a parser fix can be re-run over old mail. Android forwarder apps and iPhone Shortcuts send texts and app alerts to a per-phone secret link. Parsers cover BPI, GCash, Atome, EastWest and SPayLater. When both banks report a transfer, or a text's stated balance matches, the transaction confirms itself and stays labelled so I can send it back.
+
+**What's due comes before what's spent.** Card statements, minimum payments, loan amortisation and BNPL installments sit at the top, with push reminders. The spending page turns the rest into one number: what I can spend today so the money lasts until payday.
+
+<Figure
+  src="/images/work/budget/spending.png"
+  width="1680"
+  height="880"
+  breakout
+  alt="The Budget spending page on desktop in the Denim dark theme: 1,055.25 pesos left for today, a bar chart of daily spending from the last payday to the next, and a 'Before payday' list with a BPI credit card minimum due on November 14."
+  caption="spend less today and the days after get more"
+/>
+
+**Eight themes.** Sakura, Strawberry Milk, Bubblegum Pop, Barako, Courtside, Denim, Monochrome, and Coal & Brass, each in light and dark, each with its own type and corners. It's an app you open every day, so it should feel like yours.
+
+## Privacy is in the schema
+
+Every user-owned table has row-level security, and pgTAP tests prove user A can't read or write user B's rows. Child tables reference their parent as `(id, user_id)`, so a row can never point at someone else's account. Full card numbers are masked with a Luhn check before anything is stored, including inside the raw email, because GCash bill receipts print them. Texts from unknown senders are recorded without their content.
+
+## How the demo works
+
+The demo is the same build with one flag on, and it has no backend. The server runs all seventeen migrations in-process with PGlite, Postgres compiled to WebAssembly, and seeds a made-up user. A small PostgREST-compatible layer answers supabase-js from it, so confirming a transaction runs the production `confirm_transaction` function and the balance view moves exactly as it does live.
+
+Each visitor's writes are kept as a compressed log in their own cookies. Any serverless instance can rebuild the seeded snapshot, replay that log, and arrive at the same rows the visitor saw. That only works if the database stops being random:
+
+```sql
+-- Shaped as version 4, since the app validates IDs with z.uuid(). It must stay one inlinable
+-- expression: Postgres calls built-in function OIDs directly, so only an inlined body ever replaces the original.
+create or replace function pg_catalog.gen_random_uuid() returns uuid language sql volatile as $$
+  select overlay(overlay(md5('budget-demo-' || nextval('public.demo_id_seq')) placing '4' from 13) placing '8' from 17)::uuid
+$$;
+```
+
+## What broke, and what I did about it
+
+- **A fee was flagged as a duplicate of its own transfer.** A GCash receipt yields the transfer and its fee as two rows. When the amounts matched, the fee looked like a duplicate and was ignored. Rows from the same email or text are now never duplicates of each other, enforced in SQL and covered by pgTAP.
+- **A bill without an amount.** SPayLater's reminder only states a due date. The statement amount became nullable, and a reminder adds the date without ever clearing an amount already recorded. Due soon says "Amount not stated" until a later message or a hand entry fills it in.
+- **Every query cost 200ms.** The functions ran in Washington and the database in Singapore. Moving the functions next to the database took each round trip to a few milliseconds, and the session is now checked once per request instead of once per component.
+- **Postgres ignored my replacement function.** The demo's first IDs still came out random. Postgres calls built-in functions by their OID directly, so a replacement body only takes effect when the planner can inline it. A test that builds the database twice and compares every ID caught it.
+- **"That transaction couldn't be found."** The first deterministic IDs were plain md5 hashes, and the app checks every ID with `z.uuid()`, which rejects the wrong version bits. Confirming anything in the demo failed. The IDs are now shaped as version 4.
+
+<Callout>
+Lesson: when a system has to replay what someone did, every source of randomness is a bug. Find them with a test that runs it twice.
+</Callout>
+
+## What I'd change
+
+- **The demo boots from scratch.** A cold start runs every migration and the seed, which takes a few seconds. A snapshot built at deploy time would make the first page as fast as the rest.
+- **The demo's log has a ceiling.** About 14 KB of compressed changes fits in the cookies. A long session ends with a polite message and a Reset button, which is fine for a portfolio link and wrong for anything else.
+- **iPhone capture is texts only.** Shortcuts can read SMS but not other apps' notifications, so on iPhone, banks that only notify in-app still need the email path or a manual entry.
